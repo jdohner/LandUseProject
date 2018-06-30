@@ -2,22 +2,16 @@
 
 
 
-function [fas,sstAnom] = jooshildascale_annotate2(start_year,end_year,ts,ff,varSST,Tconst);
+function [fas,sstAnom] = jooshildascale(start_year,end_year,~,~,varSST,Tconst);
 
 ts = 12; % number of data points/year
 start_yearOcean = 1800;
-%end_year = 2009+(7/12);
 Aoc = 3.62E14; % surface area of ocean, m^2, from Joos 1996
 c = 1.722E17; % unit converter, umol m^3 ppm^-1 kg^-1, from Joos 1996
 h = 75; % mixed layer depth, m, from Joos 1996
 kg = 1/9.06; % gas exchange rate, yr^-1, from Joos 1996
 
-
-
-%[dtdelpCO2a,dpCO2a,year,dt] = MLOinterpolate_increment2(ts,start_year,end_year); % get atmospheric CO2 record
 [~,dpCO2a,yearOcean,dt,~] = getObservedCO2_2(ts,start_yearOcean,end_year);
-
-%[ff1] = load_fossil2(ts); % get fossil fuel emissions
 
 
 % Response function to calculate ocean uptake
@@ -45,7 +39,7 @@ end
 
 
 %% calculate ocean uptake
-[fas,dpCO2s,sstAnom] = joos_general_fast_annotate2(yearOcean,dpCO2a,c,h,kg,Tconst,Aoc,r,dt,varSST); 
+[fas,~,sstAnom] = joosPulseResponse(yearOcean,dpCO2a,c,h,kg,Tconst,Aoc,r,dt,varSST); 
 
 i3 = find(fas(:,1) >= start_year,1);
 j3 = find(fas(:,1) >= end_year,1);

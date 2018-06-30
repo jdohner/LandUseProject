@@ -15,7 +15,7 @@
 % photosynthesis; still call it Q so it's easy to run
 
 
-function [C1dt,C2dt,delCdt,delC1,delC2] = bioboxtwo_subN_annotate(eps,Q1a,Q2a,gamma,ff1,ts,year,dpCO2a,T)
+function [C1dt,C2dt,delCdt,delC1,delC2] = bioboxtwo_subN(eps,Q1a,Q2a,gamma,ff1,ts,year,dpCO2a,T)
 
 T0 = T(1,2);
 
