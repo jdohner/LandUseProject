@@ -9,13 +9,32 @@ clear all
 
 %% define time frame, cases
 
-landusedata = 'hough03'; %hough, hansis, hough03, hough03low, const, const2;
-LUlevel = 1; % 1 for high LU, 2 for low
+% LU datasets
+% 1 = hough
+% 2 = hansis
+% 3 = hough03
+% 4 = const
+% 5 = const2
+% 6 = gcp
+% 7 = hough03 extratrop
+
+% time frames
+% a = 1850-2015.5 (optimizing 1900-2015.5)
+% b = 1850-2005.5 (optimizing 1900-2005.5)
+timeFrame = 'a'; % picking time frame over which parameters are fit
+
+numLU = 5;
+LUdata = {'hough';'hansis';'hough03';'const';'const2';'gcp';'hough03'};
+outputArray = cell(numLU+1,9);
+outputArray(1,:) = {'LUrecord','Q10','eps','atmcalc2','obsCalcDiff',...
+    'ddtUnfilt','ddtFilt','RMSEunfilt','RMSEfilt'};
+    
 oceanUptake = 2; % scaling ocean sink by +/- 30% : low = 1, medium = 2, high = 3;   
 tempDep = 1; % 1 for variable T, 0 for fixed T;
 varSST = 0; %1 if variable sst, 0 if fixed sst
 fert = 'co2'; % co2 or nitrogen fertilization
-filter = 1; % filter the data? 1 = 10 year filter; 2 = unfiltered
+filter = 2; % filter the data? 1 = 10 year filter; 2 = unfiltered
+
 
 Tconst = 18.2; % surface temperature, deg C, from Joos 1996
 ts = 12; % timesteps per year
@@ -32,7 +51,9 @@ end
 co2_preind = 600/2.12; % around 283 ppm (preindustrial)
 
 
-save('runInfo','start_year','end_year','ts','year','fert');
+save('runInfo','start_year','end_year','ts','year','fert',...
+    'oceanUptake','tempDep','varSST','filter','end_year_plot',...
+    'LUdata','timeFrame');
 
 %% load data
 
@@ -51,7 +72,11 @@ addpath(genpath(...
 
 %% fitting parameters for cases
 
-[ff, LU] = getSourceSink5(year, ts,landusedata); % for updated FF & LU
+
+
+for LU_i = 1:numLU
+    
+[ff, LU] = getSourceSink5(year, ts,LU_i); % for updated FF & LU
 
 [fas,sstAnom] = jooshildascale(start_year,end_year,ts,ff,varSST,Tconst);
 
@@ -162,7 +187,7 @@ year2 = (start_year:(1/ts):end_year_plot)';
 if end_year ~= end_year_plot
     [dtdelpCO2a_obs,dpCO2a_obs,~,~,CO2a_obs] = getObservedCO2_2(ts,start_year,end_year_plot);
     [temp_anom, ~] = tempRecord2(start_year,end_year_plot,dt);
-    [ff, LU] = getSourceSink5(year2, ts,landusedata); % for updated FF & LU
+    [ff, LU] = getSourceSink5(year2, ts, LU_i); % for updated FF & LU
     [fas,sstAnom] = jooshildascale_annotate2(start_year,end_year_plot,ts,ff,varSST,Tconst);
 end
 
@@ -192,14 +217,15 @@ j4 = find(fas(:,1) == end_year);
 newat =  [year2, ff(:,2) - Aoc*fas(:,2) + LU(:,2) + delCdt(:,2)];
 atmcalc = [year2, co2_preind+cumsum(newat(:,2)/12)];
 
-co2_diff(:,1) = year2;
-co2_diff(:,2) = CO2a_obs(:,2)-atmcalc(:,2);
+co2_diff = [year2,CO2a_obs(:,2)-atmcalc(:,2)];
 i6 = find(co2_diff(:,1) == 1959);
 j6 = find(co2_diff(:,1) == 1979);
 meandiff = mean(co2_diff(i6:j6,2)); % mean difference over 1959-1979
-atmcalc2 = atmcalc(:,2)+meandiff;
+atmcalc2 = atmcalc(:,2)+meandiff; % TODO: make this [year2, atmcalc(:,2)+meandiff]; will have to change var processing afterwards
 
 obsCalcDiff = [year2, CO2a_obs(:,2) - atmcalc2(:,1)]; 
+
+save('runOutput','atmcalc2','obsCalcDiff','Q1','epsilon');
 
 % call plotting function
 %getDriverPlots(varSST,CO2a_obs,year,atmcalc2,year3,temp_anom,...
@@ -208,3 +234,20 @@ obsCalcDiff = [year2, CO2a_obs(:,2) - atmcalc2(:,1)];
 % call parameter-saving function 
 % saveParams(tempDep,end_year,end_year_plot,landusedata,atmcalc2,...
     %obsCalcDiff,Q1,epsilon,year)
+    
+[ddtUnfilt,ddtFilt] = calcDerivs(obsCalcDiff);
+[RMSEunfilt,RMSEfilt] = calcErrors(ddtUnfilt,ddtFilt);
+[outputArray] = fillArray(LU_i,Q1,eps,atmcalc2,obsCalcDiff,outputArray,...
+    ddtUnfilt,ddtFilt,RMSEunfilt,RMSEfilt);
+
+end
+
+
+%% saving the output array
+
+
+% function to save parameters in appropriate file name
+[outputArray] = saveParams(outputArray)
+
+
+
