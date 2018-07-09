@@ -48,7 +48,7 @@ k = find(timeFrameVec(:,2)); %returns indices of non-zero elements in timeFrameV
 decon_resid(:,1) = 0;
 decon_resid(:,2) = 0;
 
-yhat0 = decon_resid;%delC10;
+yhat0 = delC10;
 
 
 
@@ -57,8 +57,8 @@ yhat0 = decon_resid;%delC10;
 % decon_resid0 = decon_resid(i:end,:);
 
 for k2 = 1:length(k);
-     % making all places with 1s be part of fit
-    yhat0(k2,2) = delC10(k2,2);
+     % making all places with 1s be left out of count
+    yhat0(k2,2) = decon_resid(k2,2);
 end
 
 yhat = yhat0(:,2); % needs to be 1927x1 for nlinfit to match either decon

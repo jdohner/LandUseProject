@@ -23,7 +23,7 @@ clear all
 % b = 1900-2005.5
 % c = 1950-1980
 
-timeFrame = 'b'; % picking time frame over which parameters are fit
+timeFrame = 'a'; % picking time frame over which parameters are fit
 
 numLU = 5;
 LUdata = {'hough';'hansis';'hough03';'const';'const2';'gcp';'hough03'};
@@ -123,7 +123,7 @@ save('decon_resid','decon_resid');
 
 if tempDep == 1
         i = find(decon_resid(:,1) == 1900);
-        [betahat,resid,J] = nlinfit(temp_anom,decon_resid(:,2),...
+        [betahat,resid,J] = nlinfit(temp_anom,decon_resid(i:end,2),...
             'tempDep_land_fit_Qs',beta); 
     
 else % tempDep == 0        
