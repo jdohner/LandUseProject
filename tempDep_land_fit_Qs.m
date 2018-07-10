@@ -58,12 +58,7 @@ k = find(timeFrameVec(:,2)); %returns indices of non-zero elements
 % it's going over the dimensions of yhat because yhat is defined by
 % decon_resid, which has gone through l_boxcar. That's problematic because
 % teh boxcar filtering shortens the record by 5 years at the end, even if
-% we'd want to include the last 5 years in the fit. I'd like to have a way
-% of doing my own filtering (maybe thru a matlab default function) that
-% doesn't produce this annoying buggy output so that I can just keep all
-% the vectors the same length through all of this, and then just change
-% parts of the vector that I want to fit to match the model output delCdt
-% or whatever it is
+% we'd want to include the last 5 years in the fit
 for k2 = 1:length(k)
      % making all places with 1s be part of fit
     yhat0(k2,2) = delC10(k2,2);

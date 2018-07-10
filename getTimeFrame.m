@@ -22,5 +22,5 @@ elseif strcmp(timeFrame,'b')
 elseif strcmp(timeFrame,'c')
     i = find(year == 1950);
     j = find(year == 1980);
-    timeFrameVec(i:j) = 1;
+    timeFrameVec(i:j,2) = 1;
 end
