@@ -19,11 +19,11 @@ clear all
 % 7 = hough03 extratrop
 
 % optimization period
-% a = 1900-2015.5
+% a = 1900-2010.5 (can't go past 5 years before end of data)
 % b = 1900-2005.5
 % c = 1950-1980
 
-timeFrame = 'b'; % picking time frame over which parameters are fit
+timeFrame = 'c'; % picking time frame over which parameters are fit
 
 numLU = 5;
 LUdata = {'hough';'hansis';'hough03';'const';'const2';'gcp';'hough03'};
@@ -52,11 +52,10 @@ if tempDep == 0
 end
 co2_preind = 600/2.12; % around 283 ppm (preindustrial)
 
-[timeFrameVec] = getTimeFrame(timeFrame,year);
 
 save('runInfo','start_year','end_year','ts','year','fert',...
     'oceanUptake','tempDep','varSST','filter','end_year_plot',...
-    'LUdata','timeFrame','timeFrameVec');
+    'LUdata','timeFrame');
 
 %% load data
 
@@ -86,12 +85,12 @@ for LU_i = 1:numLU
 % scaling ocean uptake
 if oceanUptake == 3 % high ocean uptake
     fas(:,2) = fas(:,2)*1.3;
-    disp('ocean multiplied by 1.3')
+    %disp('ocean multiplied by 1.3')
 elseif oceanUptake == 1 % low ocean uptake
         fas(:,2) = fas(:,2)*0.7;
-        disp('ocean multiplied by 0.7')
+     %   disp('ocean multiplied by 0.7')
 else
-    disp('ocean not multiplied')
+    %disp('ocean not multiplied')
 end
 
 % Calculate residual land uptake
@@ -116,6 +115,7 @@ else
     decon_resid = decon_resid(1:j,:);    
 end
 
+% decon_resid is 5 years shorter than full record
 save('decon_resid','decon_resid');
     
 
@@ -150,13 +150,13 @@ ci = nlparci(betahat,resid,J);
 
 %% Redefine values of epsilon, gamma and Q1
 if strcmp(fert,'co2')    
-    epsilon = betahat(1)
-    Q1 = betahat(2)
+    epsilon = betahat(1);
+    Q1 = betahat(2);
     Q2 = 1;
 else % nitrogen fertilization
-	epsilon = 0 
-    gamma = betahat(1)
-    Q1 = betahat(2)
+	epsilon = 0 ;
+    gamma = betahat(1);
+    Q1 = betahat(2);
     Q2 = 1;
 end
 

@@ -36,27 +36,35 @@ delCdt(:,2) = -delCdt(:,2);
 
 % 10-year moving boxcar average of model
 [delC10] = l_boxcar(delCdt,10,12,1,length(delCdt),1,2);
-
+%[delC10] = boxcar2(delCdt,10,12,1,length(delCdt),1,2);
 
 % yhat is the term that is compared to the residual flux in nlinfit. 
 % Change the index numbers here and in nonlin_land_Qs_annotate (e.g. line
 % 158) to fit to a different time period
 
-% this is what I'd modify
-k = find(timeFrameVec(:,2)); %returns indices of non-zero elements in timeFrameVec
+%% messing with fitting timeframes
 
-decon_resid(:,1) = 0;
-decon_resid(:,2) = 0;
+yhat0 = decon_resid;
 
-yhat0 = decon_resid;%delC10;
+[timeFrameVec] = getTimeFrame(timeFrame,year);
 
+% shorten timeFrameVec to match length of delC10 coming out of boxcar
+m = find(timeFrameVec == delC10(end,1));
+timeFrameVec = timeFrameVec(1:m,:);
 
+% get the indices of values to include in fit
+k = find(timeFrameVec(:,2)); %returns indices of non-zero elements
 
-% i = find(delC10(:,1) == 1900);
-% yhat0 = delC10(i:end,:);
-% decon_resid0 = decon_resid(i:end,:);
-
-for k2 = 1:length(k);
+% it's going over the dimensions of yhat because yhat is defined by
+% decon_resid, which has gone through l_boxcar. That's problematic because
+% teh boxcar filtering shortens the record by 5 years at the end, even if
+% we'd want to include the last 5 years in the fit. I'd like to have a way
+% of doing my own filtering (maybe thru a matlab default function) that
+% doesn't produce this annoying buggy output so that I can just keep all
+% the vectors the same length through all of this, and then just change
+% parts of the vector that I want to fit to match the model output delCdt
+% or whatever it is
+for k2 = 1:length(k)
      % making all places with 1s be part of fit
     yhat0(k2,2) = delC10(k2,2);
 end

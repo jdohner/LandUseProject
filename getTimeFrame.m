@@ -11,7 +11,7 @@ timeFrameVec = [year,ones(length(year),0)];
 
 if strcmp(timeFrame,'a')
     i = find(year == 1900);
-    j = find(year == 2015.5);
+    j = find(year == 2010.5);
     timeFrameVec(i:j,2) = 1;
     
 elseif strcmp(timeFrame,'b')
