@@ -9,41 +9,20 @@ clear all
 
 %% define time frame, cases
 
-% LU datasets
-% 1 = hough
-% 2 = hansis
-% 3 = hough03
-% 4 = const
-% 5 = const2
-% 6 = gcp
-% 7 = hough03 extratrop
-
-% optimization period
-% a = 1900-2015.5
-% b = 1900-2005.5
-% c = 1950-1980
-
-timeFrame = 'a'; % picking time frame over which parameters are fit
-
-numLU = 5;
-LUdata = {'hough';'hansis';'hough03';'const';'const2';'gcp';'hough03'};
-outputArray = cell(numLU+1,9);
-outputArray(1,:) = {'LUrecord','Q10','eps','atmcalc2','obsCalcDiff',...
-    'ddtUnfilt','ddtFilt','RMSEunfilt','RMSEfilt'};
-    
+landusedata = 'hough03'; %hough, hansis, hough03, hough03low, const, const2;
+LUlevel = 1; % 1 for high LU, 2 for low
 oceanUptake = 2; % scaling ocean sink by +/- 30% : low = 1, medium = 2, high = 3;   
 tempDep = 1; % 1 for variable T, 0 for fixed T;
 varSST = 0; %1 if variable sst, 0 if fixed sst
 fert = 'co2'; % co2 or nitrogen fertilization
-filter = 2; % filter the data? 1 = 10 year filter; 2 = unfiltered
-
+filter = 1; % filter the data? 1 = 10 year filter; 2 = unfiltered
 
 Tconst = 18.2; % surface temperature, deg C, from Joos 1996
 ts = 12; % timesteps per year
 dt = 1/ts;
 start_year = 1850;
-end_year = 2015.5; 
-end_year_plot = 2015.5;
+end_year = 2015.5;%2009+(7/12);%
+end_year_plot = 2015.5; %2009+(7/12);%
 year = (start_year:(1/ts):end_year)';
 Aoc = 3.62E14; % surface area of ocean, m^2, from Joos 1996
 beta = [0.5;2]; % initial guesses for model fit (epsilon, q10)
@@ -52,11 +31,8 @@ if tempDep == 0
 end
 co2_preind = 600/2.12; % around 283 ppm (preindustrial)
 
-[timeFrameVec] = getTimeFrame(timeFrame,year);
 
-save('runInfo','start_year','end_year','ts','year','fert',...
-    'oceanUptake','tempDep','varSST','filter','end_year_plot',...
-    'LUdata','timeFrame','timeFrameVec');
+save('runInfo','start_year','end_year','ts','year','fert');
 
 %% load data
 
@@ -75,11 +51,7 @@ addpath(genpath(...
 
 %% fitting parameters for cases
 
-
-
-for LU_i = 1:numLU
-    
-[ff, LU] = getSourceSink5(year, ts,LU_i); % for updated FF & LU
+[ff, LU] = getSourceSink5(year, ts,landusedata); % for updated FF & LU
 
 [fas,sstAnom] = jooshildascale(start_year,end_year,ts,ff,varSST,Tconst);
 
@@ -98,44 +70,63 @@ end
 decon_resid = [year, dtdelpCO2a_obs(:,2)-ff(:,2)+Aoc*fas(:,2)-LU(:,2)];
 
 
-%% calculate a 10-year running boxcar average of the residual land uptake
+% calculate a 10-year running boxcar average of the residual land uptake
 % don't use 10 year mean before 1957, because data are already smoothed
 % (ice core)
 
-if filter == 1 
-    % apply filter
-    i = find(decon_resid(:,1) == 1952);
-    j = find(decon_resid(:,1) >= (1956+(11/12)),1);
+i = find(decon_resid(:,1) == 1952);
+j = find(decon_resid(:,1) >= (1956+(11/12)),1);
 
-    [decon_filt0] = l_boxcar(decon_resid,10,12,i,length(decon_resid),1,2);
-    decon_resid(1:j,:) = decon_resid(1:j,:);
-    decon_resid((j+1):(length(decon_filt0)),:) = decon_filt0((j+1):end,:);
-else 
-    % shorten unfiltered record
-    j = find(decon_resid(:,1) == end_year-5);
-    decon_resid = decon_resid(1:j,:);    
-end
-
-save('decon_resid','decon_resid');
+[decon_filt0] = l_boxcar(decon_resid,10,12,i,length(decon_resid),1,2);
+decon_filt(1:j,:) = decon_resid(1:j,:);
+decon_filt((j+1):(length(decon_filt0)),:) = decon_filt0((j+1):end,:);
     
 
-%% find model fit using a nonlinear regression - IMPORTANT PART
+%% find model fit using a nonlinear regression
 
 if tempDep == 1
-        i = find(decon_resid(:,1) == 1900);
-        [betahat,resid,J] = nlinfit(temp_anom,decon_resid(i:end,2),...
+    if(filter == 1) % fit to 10-year filtered record
+        
+        % TODO: double check here that the indexing matches up with the
+        % correct year according to OG LR code (same for below)
+        i = find(decon_filt(:,1) == 1900);
+        [betahat,resid,J] = nlinfit(temp_anom,decon_filt(i:end,2),...
             'tempDep_land_fit_Qs',beta); 
+
+    elseif(filter == 2) % fit to unfiltered record
+        
+        i = find(decon_resid(:,1) == 1938);
+        j = find(decon_resid(:,1) == 1976);
+        [betahat,resid,J] = nlinfit(temp_anom,decon_resid(i:j,2),...
+            'tempDep_land_fit_Qs',beta); 
+
+    end
     
-else % tempDep == 0        
-        i = find(decon_resid(:,1) == 1900);
-        [betahat,resid,J] = nlinfit(temp_anom,decon_resid(i:end,2),...
-            'tempIndep_land_fit_Qs',beta);z
+else % tempDep == 0
+    
+        if(filter == 1) % fit to 10-year filtered record
+        
+        i = find(decon_filt(:,1) == 1900);
+        [betahat,resid,J] = nlinfit(temp_anom,decon_filt(i:end,2),...
+            'tempIndep_land_fit_Qs',beta); %change 601:end to 1081:1513; change 601 to 1297
+
+        elseif(filter == 2) % fit to unfiltered record
+        
+        i = find(decon_resid(:,1) == 1938);
+        j = find(decon_resid(:,1) == 1976);
+        [betahat,resid,J] = nlinfit(temp_anom,decon_resid(i:j,2),...
+            'tempIndep_land_fit_Qs',beta); %change 601:end to 1081:1513. After 1958: 1297; was on 1309:end
+
+    end
+    
 end
 
 %% Look at covariances and correlations between model result and calculated land uptake 
 
 [N,P] = size(temp_anom);
+
 covariance = inv(J(1:1177,:)'*J(1:1177,:))*sum(resid(1:1177,:).^2)/(N-P); 
+
 [isize,jsize] = size(covariance);
 
 for k=1:isize
@@ -144,12 +135,14 @@ for k=1:isize
     end
 end
 
-% Get uncertainties of best fit values
+%% Get uncertainties of best fit values
+
 ci = nlparci(betahat,resid,J);
 
 
 %% Redefine values of epsilon, gamma and Q1
-if strcmp(fert,'co2')    
+if strcmp(fert,'co2')
+    fert == 1 % co2 fert
     epsilon = betahat(1)
     Q1 = betahat(2)
     Q2 = 1;
@@ -169,7 +162,7 @@ year2 = (start_year:(1/ts):end_year_plot)';
 if end_year ~= end_year_plot
     [dtdelpCO2a_obs,dpCO2a_obs,~,~,CO2a_obs] = getObservedCO2_2(ts,start_year,end_year_plot);
     [temp_anom, ~] = tempRecord2(start_year,end_year_plot,dt);
-    [ff, LU] = getSourceSink5(year2, ts, LU_i); % for updated FF & LU
+    [ff, LU] = getSourceSink5(year2, ts,landusedata); % for updated FF & LU
     [fas,sstAnom] = jooshildascale_annotate2(start_year,end_year_plot,ts,ff,varSST,Tconst);
 end
 
@@ -199,15 +192,14 @@ j4 = find(fas(:,1) == end_year);
 newat =  [year2, ff(:,2) - Aoc*fas(:,2) + LU(:,2) + delCdt(:,2)];
 atmcalc = [year2, co2_preind+cumsum(newat(:,2)/12)];
 
-co2_diff = [year2,CO2a_obs(:,2)-atmcalc(:,2)];
+co2_diff(:,1) = year2;
+co2_diff(:,2) = CO2a_obs(:,2)-atmcalc(:,2);
 i6 = find(co2_diff(:,1) == 1959);
 j6 = find(co2_diff(:,1) == 1979);
 meandiff = mean(co2_diff(i6:j6,2)); % mean difference over 1959-1979
-atmcalc2 = atmcalc(:,2)+meandiff; % TODO: make this [year2, atmcalc(:,2)+meandiff]; will have to change var processing afterwards
+atmcalc2 = atmcalc(:,2)+meandiff;
 
 obsCalcDiff = [year2, CO2a_obs(:,2) - atmcalc2(:,1)]; 
-
-save('runOutput','atmcalc2','obsCalcDiff','Q1','epsilon');
 
 % call plotting function
 %getDriverPlots(varSST,CO2a_obs,year,atmcalc2,year3,temp_anom,...
@@ -216,20 +208,3 @@ save('runOutput','atmcalc2','obsCalcDiff','Q1','epsilon');
 % call parameter-saving function 
 % saveParams(tempDep,end_year,end_year_plot,landusedata,atmcalc2,...
     %obsCalcDiff,Q1,epsilon,year)
-    
-[ddtUnfilt,ddtFilt] = calcDerivs(obsCalcDiff);
-[RMSEunfilt,RMSEfilt] = calcErrors(ddtUnfilt,ddtFilt);
-[outputArray] = fillArray(LU_i,Q1,eps,atmcalc2,obsCalcDiff,outputArray,...
-    ddtUnfilt,ddtFilt,RMSEunfilt,RMSEfilt);
-
-end
-
-
-%% saving the output array
-
-
-% function to save parameters in appropriate file name
-[outputArray] = saveParams(outputArray)
-
-
-
