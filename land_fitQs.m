@@ -15,18 +15,15 @@ load decon_resid.mat
 % Get parameters
 [dtdelpCO2a,dpCO2a,~,~,CO2a] = getObservedCO2_2(ts,start_year,end_year);
 
-% To make temperature-independent: set Q1 and Q2 to 1
-
 
 if strcmp(fert,'co2')
     % For CO2 fertilization model
     epsilon = beta(1);
+    Q1 = beta(2);
     Q2 = 1;
     
-        % to make temp indep, set Q1 = 1
-    if tempDep == 1
-        Q1 = beta(2)
-    else
+    % to make temp indep, set Q1 = 1
+    if tempDep ~= 1
         Q1 = 1;
     end
 
@@ -36,12 +33,11 @@ else
     % For N fertilization model
     epsilon = 0;
     gamma = beta(1);
+    Q1 = beta(2);
     Q2 = 1; 
     
     % to make temp indep, set Q1 = 1
-    if tempDep == 1
-        Q1 = beta(2)
-    else
+    if tempDep ~= 1
         Q1 = 1;
     end
     
@@ -65,43 +61,58 @@ delCdt(:,2) = -delCdt(:,2);
 
 %% messing with fitting timeframes
 
-% up to this point delC10 matches old (after boxcar) - goes to 2010.5
-
 i = find(decon_resid == 1900);
 yhat0 = decon_resid(i:end,:);
 
 % timeFrameVec goes 1850-2015.5 (1987x2)
 [timeFrameVec] = getTimeFrame(timeFrame,year);
-% everything else (decon_resid, delC10) is 1850 to 2010.5 (1927x1)
 
 % shorten timeFrameVec to match length of delC10 coming out of boxcar
 l = find(timeFrameVec == 1900);
 m = find(timeFrameVec == delC10(end,1));
 timeFrameVec = timeFrameVec(l:m,:);
-% becomes 1327x2 (1900 to 2010.5)
 
-% get the indices of values to include in fit
-k = find(timeFrameVec(:,2)); %returns indices of non-zero elements
+% get the indices of non-zero values to include in fit
+k = find(timeFrameVec(:,2));
 
-% it's going over the dimensions of yhat because yhat is defined by
-% decon_resid, which has gone through l_boxcar. That's problematic because
-% teh boxcar filtering shortens the record by 5 years at the end, even if
-% we'd want to include the last 5 years in the fit
-
-j = find(delC10 == 1900);
+j = find(delC10(:,1) == 1900);
 delC10_cut = delC10(j:end,:);
 
-%yhat0 and delC10 are different lengths
 for k2 = 1:length(k)
-     % making all places with 1s be part of fit
+    % all places with 1s become part of fit
     yhat0(k2,2) = delC10_cut(k2,2);
 end
 
-yhat = yhat0(:,2); % needs to be 1927x1 for nlinfit to match either decon
-% or T_anom, both of which are presumably clipped at 1900. undo the
-% clipping
+yhat = yhat0(:,2);
 
-%^^something there is broken
-
-%yhat = delC10(601:end,2);
-    
+% %% debugging code
+% % seeing if using a shorter vector (only thru 2005.5 instead of full
+% % vector but with zeros at the end) influences the output Q1 value. it
+% % doesnt.
+% 
+% i = find(decon_resid == 1900);
+% j = find(decon_resid == 2000.5);
+% yhat0 = decon_resid(i:j,:);
+% 
+% % timeFrameVec goes 1850-2015.5 (1987x2)
+% [timeFrameVec] = getTimeFrame(timeFrame,year);
+% 
+% % shorten timeFrameVec to match length of delC10 coming out of boxcar
+% l = find(timeFrameVec == 1900);
+% m = find(timeFrameVec == 2000.5);
+% timeFrameVec = timeFrameVec(l:m,:);
+% 
+% % get the indices of non-zero values to include in fit
+% k = find(timeFrameVec(:,2));
+% 
+% j = find(delC10(:,1) == 1900);
+% h = find(delC10(:,1) == 2000.5);
+% delC10_cut = delC10(j:h,:);
+% 
+% for k2 = 1:length(k)
+%     % all places with 1s become part of fit
+%     yhat0(k2,2) = delC10_cut(k2,2);
+% end
+% 
+% yhat = yhat0(:,2);
+%     

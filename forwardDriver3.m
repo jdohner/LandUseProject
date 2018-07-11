@@ -22,8 +22,10 @@ clear all
 % a = 1900-2010.5 (can't go past 5 years before end of data)
 % b = 1900-2005.5
 % c = 1950-1980
+% d = 1900-2000.5 % should theoretically match output from end_year
+% = 2005.5 in old code
 
-timeFrame = 'a'; % picking time frame over which parameters are fit
+timeFrame = 'd'; % picking time frame over which parameters are fit
 
 numLU = 5;
 LUdata = {'hough';'hansis';'hough03';'const';'const2';'gcp';'hough03'};
@@ -32,7 +34,7 @@ outputArray(1,:) = {'LUrecord','Q10','eps','atmcalc2','obsCalcDiff',...
     'ddtUnfilt','ddtFilt','RMSEunfilt','RMSEfilt'};
     
 oceanUptake = 2; % scaling ocean sink by +/- 30% : low = 1, medium = 2, high = 3;   
-tempDep = 0; % 1 for variable T, 0 for fixed T;
+tempDep = 1; % 1 for variable T, 0 for fixed T;
 varSST = 0; %1 if variable sst, 0 if fixed sst
 fert = 'co2'; % co2 or nitrogen fertilization
 filter = 1; % filter the data? 1 = 10 year filter; 2 = unfiltered
@@ -102,14 +104,6 @@ decon_resid0 = [year, dtdelpCO2a_obs(:,2)-ff(:,2)+Aoc*fas(:,2)-LU(:,2)];
 % (ice core)
 
 if filter == 1 
-    % apply filter
-%     i = find(decon_resid(:,1) == 1952);
-%     j = find(decon_resid(:,1) >= (1956+(11/12)),1);
-% 
-%     [decon_filt0] = l_boxcar(decon_resid,10,12,i,length(decon_resid),1,2);
-%     decon_resid(1:j,:) = decon_resid(1:j,:);
-%     decon_resid((j+1):(length(decon_filt0)),:) = decon_filt0((j+1):end,:);
-
     % using filtered data for everything after 
     i = find(decon_resid0(:,1) == 1952);
     j = find(decon_resid0(:,1) >= (1956+(11/12)),1);
@@ -128,23 +122,21 @@ end
 save('decon_resid','decon_resid');
     
 
-%% find model fit using a nonlinear regression - IMPORTANT PART
+%% IMPORTANT PART - find model fit using a nonlinear regression 
 
-%if tempDep == 1
-        i = find(decon_resid(:,1) == 1900);
-        [betahat,resid,J] = nlinfit(temp_anom,decon_resid(i:end,2),...
-            'land_fitQs',beta);
-    % 'tempDep_land_fit_Qs',beta); 
-    %  
-    
-    
-% else % tempDep == 0        
-%         i = find(decon_resid(:,1) == 1900);
-%         [betahat,resid,J] = nlinfit(temp_anom,decon_resid(i:end,2),...
-%             'tempIndep_land_fit_Qs',beta);
-%     %  'land_fitQs',beta);
-%     
-% end
+i = find(decon_resid(:,1) == 1900);
+[betahat,resid,J] = nlinfit(temp_anom,decon_resid(i:end,2),...
+    'land_fitQs',beta);
+
+
+% debugging code
+% 
+% i = find(decon_resid(:,1) == 1900);
+% j = find(decon_resid(:,1) == 2000.5);
+% [betahat,resid,J] = nlinfit(temp_anom,decon_resid(i:j,2),...
+%     'land_fitQs',beta);
+% 
+% Q1 = betahat(2)
 
 %% Look at covariances and correlations between model result and calculated land uptake 
 
@@ -233,7 +225,7 @@ save('runOutput','atmcalc2','obsCalcDiff','Q1','epsilon');
     
 [ddtUnfilt,ddtFilt] = calcDerivs(obsCalcDiff);
 [RMSEunfilt,RMSEfilt] = calcErrors(ddtUnfilt,ddtFilt);
-[outputArray] = fillArray(LU_i,Q1,eps,atmcalc2,obsCalcDiff,outputArray,...
+[outputArray] = fillArray(LU_i,Q1,epsilon,atmcalc2,obsCalcDiff,outputArray,...
     ddtUnfilt,ddtFilt,RMSEunfilt,RMSEfilt);
 
 end
