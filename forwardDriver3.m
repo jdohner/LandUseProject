@@ -5,7 +5,7 @@
 % march 21, 2018
 % author: julia dohner, with code adapted from lauren rafelski
 
-clear all
+%clear all
 
 %% define time frame, cases
 
@@ -25,7 +25,7 @@ clear all
 % d = 1900-2000.5 % should theoretically match output from end_year
 % = 2005.5 in old code
 
-timeFrame = 'd'; % picking time frame over which parameters are fit
+timeFrame = 'a'; % picking time frame over which parameters are fit
 
 numLU = 5;
 LUdata = {'hough';'hansis';'hough03';'const';'const2';'gcp';'hough03'};

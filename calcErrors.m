@@ -8,7 +8,7 @@
 function [RMSEunfilt,RMSEfilt] = calcErrors(ddtUnfilt,ddtFilt);
 
 % unfilt - calculate error for 1958-end
-i = find(ddtUnfilt(:,1) == 1958);
+i = find(ddtUnfilt(:,1) == 1900); % 1900 for debugging purposes %1958);
 RMSEunfilt = sqrt(mean(ddtUnfilt(i:end,2).^2));
 
 % filt - calculate error for 1900-end (optimization period)

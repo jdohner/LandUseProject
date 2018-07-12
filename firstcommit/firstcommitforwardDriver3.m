@@ -5,7 +5,7 @@
 % march 21, 2018
 % author: julia dohner, with code adapted from lauren rafelski
 
-clear all
+%clear all
 
 %% define time frame, cases
 
@@ -23,7 +23,7 @@ Tconst = 18.2; % surface temperature, deg C, from Joos 1996
 ts = 12; % timesteps per year
 dt = 1/ts;
 start_year = 1850;
-end_year = 2005.5;% !!!NOTE: optimization will be only up to end_year - 5
+end_year = 2015.5;% !!!NOTE: optimization will be only up to end_year - 5
 end_year_plot = 2015.5;
 year2 = (start_year:(1/ts):end_year)';
 beta = [0.5;2]; % initial guesses for model fit (epsilon, q10)
