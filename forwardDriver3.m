@@ -100,8 +100,11 @@ save('runInfo','start_year','end_year','ts','year','fert',...
 addpath(genpath(...
     '/Users/juliadohner/Documents/MATLAB/LandUseProject/necessary_data'));
 
-[dtdelpCO2a_obs,dpCO2a_obs,~,~,CO2a_obs] = getObservedCO2_2(ts,start_year,end_year);
-
+% for debugging, getObservedCO2_2 for when trying to match OG LR code
+% output
+%[dtdelpCO2a_obs,dpCO2a_obs,~,~,CO2a_obs] = getObservedCO2_2(ts,start_year,end_year);
+%[dtdelpCO2a_obs,dpCO2a_obs,~,~,CO2a_obs] = getObservedCO2_3(ts,start_year,end_year);
+[dtdelpCO2a_obs,dpCO2a_obs,~,~,CO2a_obs] = getObservedCO2_3(ts,start_year,end_year);
 
 %% get temp record
 
@@ -209,7 +212,7 @@ end
 year2 = (start_year:(1/ts):end_year_plot)';
 
 if end_year ~= end_year_plot
-    [dtdelpCO2a_obs,dpCO2a_obs,~,~,CO2a_obs] = getObservedCO2_2(ts,start_year,end_year_plot);
+    [dtdelpCO2a_obs,dpCO2a_obs,~,~,CO2a_obs] = getObservedCO2_3(ts,start_year,end_year_plot);
     [temp_anom, ~] = tempRecord2(start_year,end_year_plot,dt);
     [ff, LU] = getSourceSink5(year2, ts, LU_i); % for updated FF & LU
     [fas,sstAnom] = jooshildascale_annotate2(start_year,end_year_plot,ts,ff,varSST,Tconst);

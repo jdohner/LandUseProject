@@ -1,16 +1,9 @@
-% getObservedCO2.m - version 2 for v3 params match
-%
-% Author: Julia Dohner, adapted from Lauren Rafelski
-% April 17, 2018
-% 
-% Outputs the observed annual increase in atmospheric CO2 (dtdelpCO2a_obs),
-% the observed increase each year from the preindustrial CO2 value
-% (dpCO2a_obs) and the observed CO2 record (CO2a_obs). The data is from a
-% merged record of the Mauna Loa CO2 record, the South Pole observatory
-% record, and ice core record from Law Dome. See README.txt for more
-% detailed description.
+%getObservedCO2_4.m
+
+% for debugging purposes
+
         
-function [dtdelpCO2a_obs,dpCO2a_obs,year,dt,CO2a_obs] = getObservedCO2_2(ts,start_year,end_year)
+function [dtdelpCO2a_obs,dpCO2a_obs,year,dt,CO2a_obs] = getObservedCO2_4(ts,start_year,end_year)
 
 dt = 1/ts;
 
@@ -56,8 +49,8 @@ co2_combine(:,2) = [MLOSPOiceinterp(1:end,2); CO2_2016mo(i:end,2)];
 %% Calculate CO2 increment with monthly resolution, in ppm/year
 
 for n = ((ts/2)+1):(length(co2_combine)-(ts/2))
-    dtdelpCO2a(n,1) = co2_combine(n,1);
-    dtdelpCO2a(n,2) = co2_combine(n+(ts/2),2) - co2_combine(n-(ts/2),2);
+    dtdelpCO2a_old(n,1) = co2_combine(n,1);
+    dtdelpCO2a_old(n,2) = co2_combine(n+(ts/2),2) - co2_combine(n-(ts/2),2);
 end
 
 i1 = find(co2_combine(:,1) >= start_year,1);
@@ -70,7 +63,7 @@ dpCO2a_obs(:,2) = co2_trunc(:,2)-co2_trunc(1,2);
 
 n = find(co2_combine(:,1) >= end_year,1);
 m = find(co2_combine(:,1) >= start_year,1);
-CO2a_obs = co2_combine(m:n,:);
+CO2a_obs_old = co2_combine(m:n,:);
 
 year = CO2a_obs(:,1);
 
