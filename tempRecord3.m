@@ -53,16 +53,27 @@ elseif strcmp(tempRecord,'III')
     
 elseif strcmp(tempRecord,'IV')
     % IV = Nino 3.4 index
+    % 1870-April 2018
+    ESRLstart = 1870;
+    ESRLend = 2018+(3/12);
     data0 = csvread('ESRLNOAA_Nino34_1870.csv');
+    year0 = (ESRLstart:dt:ESRLend)';
+    data1 = data0(:,2:13);
+    data2 = reshape(data1',[],1);
+    data3 = data2(1:length(year0));
+    temp_anom = [year0,data3];
     
 elseif strcmp(tempRecord,'V')
     % V = tropical T
+    % N/A
     
 elseif strcmp(tempRecord,'VI')
     % VI = Global Historical Climate Network 
+    % N/A
     
 elseif strcmp(tempRecord,'VII')
     % VII = MLOST 3.5 from NOAA
+    % N/A
     
 
     
