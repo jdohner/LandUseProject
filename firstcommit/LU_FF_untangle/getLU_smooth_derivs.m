@@ -166,6 +166,7 @@ gcp_resid_rloess1 = gcp_resid_rloess0(1:12:end);
 LRLU_resid_rloess1 = LRLU_resid_rloess0(1:12:end);
 LRLUex_resid_rloess1 = LRLUex_resid_rloess0(1:12:end);
 constLU_resid_rloess1 = constLU_resid_rloess0(1:12:end);
+
 year_sm = year2(1:12:end);
 year_sm_2005 = V2005_hough_resid(1:12:end,1);
 
