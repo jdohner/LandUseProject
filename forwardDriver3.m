@@ -5,7 +5,7 @@
 % march 21, 2018
 % author: julia dohner, with code adapted from lauren rafelski
 
-%clear all
+clear all
 
 %% define time frame, cases
 
@@ -57,6 +57,7 @@
 
 
 timeFrame = 'a'; % picking time frame over which parameters are fit
+tempRecord = 'VIII';
 
 numLU = 5;
 LUdata = {'hough';'hansis';'hough03';'const';'const2';'gcp';'hough03'};
@@ -75,7 +76,7 @@ Tconst = 18.2; % surface temperature, deg C, from Joos 1996
 ts = 12; % timesteps per year
 dt = 1/ts;
 start_year = 1850;
-end_year = 2016; 
+end_year = 2015.5; 
 end_year_plot = 2015.5;
 year = (start_year:(1/ts):end_year)';
 Aoc = 3.62E14; % surface area of ocean, m^2, from Joos 1996
@@ -93,9 +94,11 @@ save('runInfo','start_year','end_year','ts','year','fert',...
 %% load data
 
 % give access to data files in co2_forward_data folder
-addpath(genpath(...
-    '/Users/juliadohner/Documents/MATLAB/JLDedits_Rafelski_LandOceanModel/v3_params_match/necessary_data'))';
+% addpath(genpath(...
+%     '/Users/juliadohner/Documents/MATLAB/JLDedits_Rafelski_LandOceanModel/v3_params_match/necessary_data'))';
 
+addpath(genpath(...
+    '/Users/juliadohner/Documents/MATLAB/LandUseProject/necessary_data'));
 
 [dtdelpCO2a_obs,dpCO2a_obs,~,~,CO2a_obs] = getObservedCO2_2(ts,start_year,end_year);
 
@@ -104,8 +107,8 @@ addpath(genpath(...
 
 % temp_full covers 1850-2017+(9/12)
 % temp_anom comes out at 1850-2015.5
-[temp_anom, ~] = tempRecord2(start_year,end_year,dt);
-
+%[temp_anom, ~] = tempRecord2(start_year,end_year,dt);
+[temp_anom] = tempRecord3(tempRecord,start_year,end_year,dt);
 
 %% fitting parameters for cases
 
