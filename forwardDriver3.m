@@ -25,6 +25,37 @@
 % d = 1900-2000.5 % should theoretically match output from end_year
 % = 2005.5 in old code
 
+% temperature record
+% I = HadCRUT4_2018_05
+%   Combined land [CRUTEM4] and marine [SST anomalies from HadSST3] 
+%   temperature anomalies on a 5° by 5° grid (Morice et al., 2012)
+%
+% II = CRUTEM4_2018_05
+%   Land air temperature anomalies on a 5° by 5° grid (Jones et al., 2012)
+%
+% III = CRUTEM4v
+%   Variance adjusted version of CRUTEM4
+%
+% IV = Nino 3.4 index
+%   ESRL/NOAA Nino 3.4, 1870-present based on HadISST
+%
+% V = tropical T
+%   Following Wang et al. (2014)
+%   N/A
+%
+% VI = Global Historical Climate Network 
+%   N/A
+% 
+% VII = MLOST 3.5 from NOAA
+%   Currently unable to access data
+%   N/A
+
+
+% update variable sst data file
+% HadSST3
+%   Sea surface temperature anomalies on a 5° by 5° grid (Kennedy et al., 2011)
+
+
 timeFrame = 'a'; % picking time frame over which parameters are fit
 
 numLU = 5;
@@ -44,7 +75,7 @@ Tconst = 18.2; % surface temperature, deg C, from Joos 1996
 ts = 12; % timesteps per year
 dt = 1/ts;
 start_year = 1850;
-end_year = 2015.5; 
+end_year = 2016; 
 end_year_plot = 2015.5;
 year = (start_year:(1/ts):end_year)';
 Aoc = 3.62E14; % surface area of ocean, m^2, from Joos 1996
@@ -71,6 +102,8 @@ addpath(genpath(...
 
 %% get temp record
 
+% temp_full covers 1850-2017+(9/12)
+% temp_anom comes out at 1850-2015.5
 [temp_anom, ~] = tempRecord2(start_year,end_year,dt);
 
 

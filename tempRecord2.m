@@ -16,7 +16,7 @@
 
 function [temp_anom, T0] = tempRecord2(start_year,end_year,dt)
 
-load landwt_T_2011.mat
+load landwt_T_2011.mat % 1850-2010
 
 CRU_data = csvread('CRUTEM4-gl.csv');
     

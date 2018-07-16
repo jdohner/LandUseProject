@@ -1,0 +1,74 @@
+% tempRecord3
+%
+% july 16, 2018
+% julia dohner
+%
+% uses single full temperature records
+% in contrast to tempRecord2 where I was trying to match output from Lauren
+% Rafelski's code by appending the record she used to an updated different
+% record
+
+% I = HadCRUT4_2018_05
+% II = CRUTEM4_2018_05
+% III = CRUTEM4v
+% IV = Nino 3.4 index
+% V = tropical T
+% V = Global Historical Climate Network 
+% VI = MLOST 3.5 from NOAA
+
+function [temp_anom] = tempRecord3(tempRecord,start_year,end_year,dt)
+
+if strcmp(tempRecord,'CRUTEM4')
+
+    % Format has two lines for each year.
+    % 1) monthly mean anomalies plus an annual mean
+    % 2) coverage percentages
+    CRU_data = csvread('CRUTEM4-gl.csv');
+        
+    % processing of CRUTEM4 file - comes in weird format
+    % taking just rows with temp anomalies and cut off year values
+    CRU_startYr = CRU_data(1,1); % starts 1850
+    CRU_endYr = CRU_data(end,1) + (11/12); % ends Dec 2017
+    CRU_year = (CRU_startYr:(1/12):CRU_endYr)';
+    CRU_temp0 = CRU_data(1:2:end,2:13); % every other row for cols 2 to 13
+    CRU_temp = [CRU_year , reshape(CRU_temp0',[],1)]; % reshape to column vector
+    temp_anom = CRU_temp;
+    
+elseif strcmp(tempRecord,'I')
+    
+    Had_data = csvread('HadCRUT4_2018_05.csv');
+    
+elseif strcmp(tempRecord,'II')
+    
+    data = csvread('CRUTEM4_2018_05.csv');
+    
+elseif strcmp(tempRecord,'III')
+    
+    data = csvread('CRUTEM4v_2018_05.csv');
+    
+elseif strcmp(tempRecord,'IV')
+    % IV = Nino 3.4 index
+    data = csvread('ESRLNOAA_Nino34_1870.csv');
+    
+elseif strcmp(tempRecord,'V')
+    % V = Global Historical Climate Network 
+    % I = HadCRUT4_2018_05
+% II = CRUTEM4_2018_05
+% III = CRUTEM4v
+
+% V = tropical T
+
+
+    
+elseif strcmp(tempRecord,'VI')
+    % VI = MLOST 3.5 from NOAA
+    
+end
+
+    
+
+
+
+end
+
+
