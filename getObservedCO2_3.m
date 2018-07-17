@@ -15,7 +15,7 @@ function [dtdelpCO2a_obs,dpCO2a_obs,year,dt,CO2a_obs] = ...
 dt = 1/ts;
 
 % load CO2 record
-CO2a0 = csvread('mergedCO2_2016.csv');
+CO2a0 = csvread('mergedCO2_2018.csv');
 year0 = (CO2a0(1,1):dt:CO2a0(end,1))';
 CO2a1(:,1) = year0;
 CO2a1(:,2) = (interp1(CO2a0(:,1),CO2a0(:,2),year0)).';

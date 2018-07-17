@@ -107,7 +107,7 @@ addpath(genpath(...
 % output
 %[dtdelpCO2a_obs,dpCO2a_obs,~,~,CO2a_obs] = getObservedCO2_2(ts,start_year,end_year);
 %[dtdelpCO2a_obs,dpCO2a_obs,~,~,CO2a_obs] = getObservedCO2_3(ts,start_year,end_year);
-[dtdelpCO2a_obs,dpCO2a_obs,~,~,CO2a_obs] = getObservedCO2_3(ts,start_year,end_year);
+[dtdelpCO2a_obs,dpCO2a_obs,~,~,CO2a_obs] = getObservedCO2_2(ts,start_year,end_year);
 
 %% get temp record
 
@@ -212,7 +212,7 @@ end
 %% plotting // fixing params here
 
 if end_year ~= end_year
-    [dtdelpCO2a_obs,dpCO2a_obs,~,~,CO2a_obs] = getObservedCO2_3(ts,start_year,end_year);
+    [dtdelpCO2a_obs,dpCO2a_obs,~,~,CO2a_obs] = getObservedCO2_2(ts,start_year,end_year);
     [temp_anom, ~] = tempRecord2(start_year,end_year,dt);
     [ff, LU] = getSourceSink5(year, ts, LU_i); % for updated FF & LU
     [fas,sstAnom] = jooshildascale_annotate2(start_year,end_year,ts,ff,varSST,Tconst);
