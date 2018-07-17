@@ -55,6 +55,7 @@ co2_combine(:,2) = [MLOSPOiceinterp(1:end,2); CO2_2016mo(i:end,2)];
 
 %% Calculate CO2 increment with monthly resolution, in ppm/year
 
+% calculating since 1640
 for n = ((ts/2)+1):(length(co2_combine)-(ts/2))
     dtdelpCO2a(n,1) = co2_combine(n,1);
     dtdelpCO2a(n,2) = co2_combine(n+(ts/2),2) - co2_combine(n-(ts/2),2);
@@ -64,9 +65,11 @@ i1 = find(co2_combine(:,1) >= start_year,1);
 j1 = find(co2_combine(:,1) >= end_year,1);
 co2_trunc = co2_combine(i1:j1,:);
 
-%% Calculate change in atmospheric concentration
+%% Calculate change in atmospheric concentration since 1850
 dpCO2a_obs(:,1) = co2_trunc(:,1); 
 dpCO2a_obs(:,2) = co2_trunc(:,2)-co2_trunc(1,2);
+% does not start at 0
+% doesn't match
 
 n = find(co2_combine(:,1) >= end_year,1);
 m = find(co2_combine(:,1) >= start_year,1);

@@ -49,6 +49,10 @@ clear all
 % VII = MLOST 3.5 from NOAA
 %   Currently unable to access data
 %   N/A
+%
+% VIII = temp record from LR/my attempts to match LR (use for debugging)
+%   landwt_T_2011.mat combined with CRUTEM4
+%
 
 
 % update variable sst data file
@@ -77,7 +81,6 @@ ts = 12; % timesteps per year
 dt = 1/ts;
 start_year = 1850;
 end_year = 2015.5; 
-end_year_plot = 2015.5;
 year = (start_year:(1/ts):end_year)';
 Aoc = 3.62E14; % surface area of ocean, m^2, from Joos 1996
 beta = [0.5;2]; % initial guesses for model fit (epsilon, q10)
@@ -88,7 +91,7 @@ co2_preind = 600/2.12; % around 283 ppm (preindustrial)
 
 
 save('runInfo','start_year','end_year','ts','year','fert',...
-    'oceanUptake','tempDep','varSST','filter','end_year_plot',...
+    'oceanUptake','tempDep','varSST','filter',...
     'LUdata','timeFrame');
 
 %% load data
@@ -208,20 +211,17 @@ end
 
 %% plotting // fixing params here
 
-% get all records again for new end_year (for full plot)
-year2 = (start_year:(1/ts):end_year_plot)';
-
-if end_year ~= end_year_plot
-    [dtdelpCO2a_obs,dpCO2a_obs,~,~,CO2a_obs] = getObservedCO2_3(ts,start_year,end_year_plot);
-    [temp_anom, ~] = tempRecord2(start_year,end_year_plot,dt);
-    [ff, LU] = getSourceSink5(year2, ts, LU_i); % for updated FF & LU
-    [fas,sstAnom] = jooshildascale_annotate2(start_year,end_year_plot,ts,ff,varSST,Tconst);
+if end_year ~= end_year
+    [dtdelpCO2a_obs,dpCO2a_obs,~,~,CO2a_obs] = getObservedCO2_3(ts,start_year,end_year);
+    [temp_anom, ~] = tempRecord2(start_year,end_year,dt);
+    [ff, LU] = getSourceSink5(year, ts, LU_i); % for updated FF & LU
+    [fas,sstAnom] = jooshildascale_annotate2(start_year,end_year,ts,ff,varSST,Tconst);
 end
 
 % Run the best fit values in the model again to plot
 if strcmp(fert,'co2')
     [C1dt,C2dt,delCdt,delC1,delC2] = bioboxtwo_sub10(...
-        epsilon,Q1,Q2,ts,year2,dpCO2a_obs,temp_anom); 
+        epsilon,Q1,Q2,ts,year,dpCO2a_obs,temp_anom); 
 else % N fertilization
     [C1dt,C2dt,delCdt,delC1,delC2] = bioboxtwo_subN(...
         epsilon,Q1,Q2,gamma,ff,ts,year,dpCO2a,temp_anom);
@@ -241,22 +241,22 @@ end
 i4 = find(fas(:,1) == start_year);
 j4 = find(fas(:,1) == end_year);
 
-newat =  [year2, ff(:,2) - Aoc*fas(:,2) + LU(:,2) + delCdt(:,2)];
-atmcalc = [year2, co2_preind+cumsum(newat(:,2)/12)];
+newat =  [year, ff(:,2) - Aoc*fas(:,2) + LU(:,2) + delCdt(:,2)];
+atmcalc = [year, co2_preind+cumsum(newat(:,2)/12)];
 
-co2_diff = [year2,CO2a_obs(:,2)-atmcalc(:,2)];
+co2_diff = [year,CO2a_obs(:,2)-atmcalc(:,2)];
 i6 = find(co2_diff(:,1) == 1959);
 j6 = find(co2_diff(:,1) == 1979);
 meandiff = mean(co2_diff(i6:j6,2)); % mean difference over 1959-1979
 atmcalc2 = atmcalc(:,2)+meandiff; % TODO: make this [year2, atmcalc(:,2)+meandiff]; will have to change var processing afterwards
 
-obsCalcDiff = [year2, CO2a_obs(:,2) - atmcalc2(:,1)]; 
+obsCalcDiff = [year, CO2a_obs(:,2) - atmcalc2(:,1)]; 
 
 save('runOutput','atmcalc2','obsCalcDiff','Q1','epsilon');
 
 % call plotting function
-%getDriverPlots(varSST,CO2a_obs,year,atmcalc2,year3,temp_anom,...
-%    sstAnom,decon_filt,delC10,yhat2,LU,ff,fas,Aoc,obsCalcDiff)
+getDriverPlots(varSST,CO2a_obs,year,atmcalc2,year,temp_anom,...
+   sstAnom,decon_resid,delC10,yhat2,LU,ff,fas,Aoc,obsCalcDiff)
 
 % call parameter-saving function 
 % saveParams(tempDep,end_year,end_year_plot,landusedata,atmcalc2,...
