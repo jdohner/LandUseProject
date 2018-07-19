@@ -17,6 +17,15 @@ clear all
 % 5 = const2
 % 6 = gcp
 % 7 = hough03 extratrop
+% 8 = CABLE from GCP
+% 9 = CABLE higher, includes C loss from grazing & harvest
+% 10 = LPX-Bern HYDE
+% 11 = LPX-Bern LUH
+% 12 = Yue et al. (2018)
+% 13 = Yue et al. (2018) without age dynamics
+% 14 = CLM4.5
+% 15 = ORCHIDEE-MICT
+% 16 = OC-N
 
 % optimization period
 % a = 1900-2010.5 (can't go past 5 years before end of data)

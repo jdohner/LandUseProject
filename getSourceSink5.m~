@@ -77,88 +77,8 @@ else
         data = datacell{1};
         LU_2016(:,1) = data(:,1);
         LU_2016(:,2) = data(:,2);
-        % annual, need to put into monthly
-        % PgC/yr
 
-    elseif LU_i == 9 % CABLE higher, grazing & harvest (C loss)
-        fid = fopen('CABLE_LUC.dat','r'); % open for reading (r) permission
-        datacell = textscan(fid, '%f%f%f', 'HeaderLines', 1, 'Collect', 1);
-        fclose(fid);
-        data = datacell{1};
-        LU_2016(:,1) = data(:,1);
-        LU_2016(:,2) = data(:,3);
-        % annual, need to put into monthly
-        % PgC/yr
-        
-    elseif LU_i == 10 % LPX-Bern HYDE
-        LU_2016 = csvread('ELUC_HydeLU_GCP2017_LPX-BERN.csv',1);
-        % annual 1850-2016
-        % PgC/yr
-        
-    elseif LU_i == 11 % LPX-Bern LUH
-        LU_2016 = csvread('ELUC_LUH_GCP2017_LPX-BERN.csv',1);
-        % annual 1850-2016
-        % PgC/yr
-        
-    elseif LU_i == 12 % Yue et al. (2018)
-        LU_2016 = csvread('Yue_Globe_ELUC.csv',1);
-        % annual 1500 to 2005
-        % PgC/yr
-        % need first and 5th columns
-        
-    elseif LU_i == 13 % Yue et al. (2018) without age dynamics
-        LU_2016 = csvread('Yue_Globe_ELUC_noAgeDyn.csv',1);
-        % annual 1500 to 2005
-        % PgC/yr
-        % need first and 5th columns
-        
-    elseif LU_i == 14 % CLM4.5
-        %ncdisp('TRENDY2017_S3_LAND_USE_FLUX.nc')
-        % see all the fill/missing values
-        latData  = ncread('TRENDY2017_S3_LAND_USE_FLUX.nc','lat');
-        lonData  = ncread('TRENDY2017_S3_LAND_USE_FLUX.nc','lon');
-        % flux in gC/m^2/s
-        fluxData = ncread('TRENDY2017_S3_LAND_USE_FLUX.nc','LAND_USE_FLUX');
-        % days since 1860-01-01 00:00:00
-        timeData = ncread('TRENDY2017_S3_LAND_USE_FLUX.nc','time');
-        
-    elseif LU_i == 15 % ORCHIDEE-MICT
-        % get S2
-        fidS2 = fopen('ORCHIDEE-MICT_S2_zonalNBP.txt','r'); % open for reading (r) permission
-        datacell = textscan(fidS2, '%f%f%f', 'HeaderLines', 1, 'Collect', 1);
-        fclose(fidS2);
-        data = datacell{1};
-        LU_2016(:,1) = data(:,1);
-        LU_2016(:,2) = data(:,3);
-        % second column is global
-        
-        % get S3
-        fidS3 = fopen('ORCHIDEE-MICT_S3_zonalNBP.txt','r'); % open for reading (r) permission
-        datacell = textscan(fidS3, '%f%f%f', 'HeaderLines', 1, 'Collect', 1);
-        fclose(fidS3);
-        data = datacell{1};
-        LU_2016(:,1) = data(:,1);
-        LU_2016(:,2) = data(:,3);   
-        % second column is global
-        
-    elseif LU_i == 16 % OC-N
-        % get S2
-        fidS2 = fopen('OCN_S2_nbp_by_lat.txt','r'); % open for reading (r) permission
-        datacell = textscan(fidS2, '%f%f%f', 'HeaderLines', 1, 'Collect', 1);
-        fclose(fidS2);
-        data = datacell{1};
-        LU_2016(:,1) = data(:,1);
-        LU_2016(:,2) = data(:,3);
-        % second column is global
-        
-        % get S3
-        fidS3 = fopen('OCN_S3_nbp_by_lat.txt','r'); % open for reading (r) permission
-        datacell = textscan(fidS3, '%f%f%f', 'HeaderLines', 1, 'Collect', 1);
-        fclose(fidS3);
-        data = datacell{1};
-        LU_2016(:,1) = data(:,1);
-        LU_2016(:,2) = data(:,3);   
-        % second column is global
+    elseif LU_i == 9 % CABLE higher, livestock grazing and crop harvest (C loss)
         
     end
 
