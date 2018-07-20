@@ -72,8 +72,10 @@ clear all
 timeFrame = 'a'; % picking time frame over which parameters are fit
 tempRecord = 'VIII';
 
-numLU = 5;
-LUdata = {'hough';'hansis';'hough03';'const';'const2';'gcp';'hough03'};
+numLU = 11;
+LUdata = {'hough';'hansis';'hough03';'const';'const2';'gcp';'hough03_extraTrop';...
+    'CABLE';'CABLE_hi';'LPX_hyde';'LPX_LUH';'Yue_age';'Yue_noAge';...
+    'CLM45';'ORCHIDEE_MICT';'OC_N'};
 outputArray = cell(numLU+1,9);
 outputArray(1,:) = {'LUrecord','Q10','eps','atmcalc2','obsCalcDiff',...
     'ddtUnfilt','ddtFilt','RMSEunfilt','RMSEfilt'};
