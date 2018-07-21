@@ -25,7 +25,8 @@ CRUend = 2018 + (4/12);
     
 if strcmp(tempRecord,'I')
     
-    % I = HadCRUT4_2018_05
+    % I = HadCRUT4_2018_05 (combined mean land and SST anomalies)
+    % 1850-2018+4/12 | monthly
     data0 = csvread('HadCRUT4_2018_05.csv');
     year0 = (CRUstart:dt:CRUend)';
     data1 = data0(1:2:end,2:13); % every other row, cols 2-13
@@ -34,7 +35,8 @@ if strcmp(tempRecord,'I')
     temp_anom0 = [year0,data3];
     
 elseif strcmp(tempRecord,'II')
-    % II = CRUTEM4_2018_05
+    % II = CRUTEM4_2018_05 (land air T anomalies)
+    % 1850-2018+4/12 | monthly
     data0 = csvread('CRUTEM4_2018_05.csv');
     year0 = (CRUstart:dt:CRUend)';
     data1 = data0(1:2:end,2:13); % every other row, cols 2-13
@@ -43,7 +45,8 @@ elseif strcmp(tempRecord,'II')
     temp_anom0 = [year0,data3];
     
 elseif strcmp(tempRecord,'III')
-    % III = CRUTEM4v
+    % III = CRUTEM4v (Variance adjusted version of CRUTEM4)
+    % 1850-2018+4/12 | monthly
     data0 = csvread('CRUTEM4v_2018_05.csv');
     year0 = (CRUstart:dt:CRUend)';
     data1 = data0(1:2:end,2:13); % every other row, cols 2-13
@@ -53,7 +56,7 @@ elseif strcmp(tempRecord,'III')
     
 elseif strcmp(tempRecord,'IV')
     % IV = Nino 3.4 index
-    % 1870-April 2018
+    % 1870-April 2018 | monthly
     ESRLstart = 1870;
     ESRLend = 2018+(3/12);
     data0 = csvread('ESRLNOAA_Nino34_1870.csv');
@@ -115,8 +118,6 @@ end
 i = find(temp_anom0 == start_year);
 j = find(temp_anom0 == end_year);
 temp_anom = temp_anom0(i:j,:);
-
-
 
 end
 

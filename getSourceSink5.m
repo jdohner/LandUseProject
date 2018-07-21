@@ -38,7 +38,7 @@ elseif LU_i == 2 % hansis 2015
 
 elseif LU_i == 3 % hough 03 (Rafelski "high land use")
     % 1850-2016 | GtC/yr | monthly
-    LUdata = csvread('LR_LU.csv'); 
+    LUdata = csvread('Houghton03_1850-2016.csv',2); 
     startYr = find(LUdata(:,1) == year(1));
     endYr = find(LUdata(:,1) == year(end));
     LU = [LUdata(startYr:endYr,1),LUdata(startYr:endYr,2)*d];
@@ -83,7 +83,7 @@ elseif LU_i == 6 % gcp
 
 elseif LU_i == 7 % hough 03 extratropical ("LR low")
     % 1850-2016 | GtC/yr | monthly
-    LUdata = csvread('LR_LUex.csv'); 
+    LUdata = csvread('Houghton03_1850-2016_extratropOnly.csv',2); 
     startYr = find(LUdata(:,1) == year(1));
     endYr = find(LUdata(:,1) == year(end));
     LU = [LUdata(startYr:endYr,1),LUdata(startYr:endYr,2)*d];
