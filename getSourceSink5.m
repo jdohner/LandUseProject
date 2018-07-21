@@ -142,10 +142,25 @@ elseif LU_i == 14 % CLM4.5 TODO
     latData  = ncread('TRENDY2017_S3_LAND_USE_FLUX.nc','lat');
     lonData  = ncread('TRENDY2017_S3_LAND_USE_FLUX.nc','lon');
     % flux in gC/m^2/s
+    % dimensions are lon (rows) x lat (columns) x time (3rd dim)
     fluxData = ncread('TRENDY2017_S3_LAND_USE_FLUX.nc','LAND_USE_FLUX');
     % days since 1860-01-01 00:00:00
     timeData = ncread('TRENDY2017_S3_LAND_USE_FLUX.nc','time');
 
+    date0 = 1860;
+    d2 = 1/365; % converting days to years
+    date1 = timeData*d2 + date0;
+    LU(:,1) = date1;
+    
+    for i = 1:length(date1)
+        a = fluxData(:,:,i);
+        LU(i,2) = nanmean2(a);
+    end
+    
+    % I'm getting something very interesting here, not sure why there's the
+    % oscillations at every month
+    % also deal with units - this arrives in grams C/m^2/sec
+    
 elseif LU_i == 15 % ORCHIDEE-MICT
     % 1850-2016 | GtC/yr | annual
     % global LULCC flux is S2 - S3
