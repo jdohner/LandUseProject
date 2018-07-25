@@ -119,23 +119,51 @@ elseif LU_i == 11 % LPX-Bern LUH
     LUdata = csvread('LPX-BERN_LUH_1860-2016.csv',1);
     LUinterp = (interp1([1850;LUdata(:,1)],[LUdata(1,2);LUdata(:,2)],year));
     LU = [year, LUinterp.*d];
+    
+elseif LU_i == 12 % ORCHIDEE-MICT
+    % 1850-2016 | GtC/yr | annual
+    % global LULCC flux is S2 - S3
 
-elseif LU_i == 12 % Yue et al. (2018)
-    % 1500-2005 | GtC/yr | annual
-    LUdata = csvread('Yue_1500-2005.csv',1);
-    LUinterp = (interp1(LUdata(:,1),LUdata(:,5),year));
-    LU = [year, LUinterp*d];
-    % annual 1500 to 2005
-    % need first and 5th columns
+    % get S2
+    % 5 cols: year, global, north, tropics, south
+    fidS2 = fopen('ORCHIDEE-MICT_S2_1860-2016.txt','r'); 
+    datacell = textscan(fidS2, '%f%f%f%f%f', 'HeaderLines', 1, 'Collect', 1);
+    fclose(fidS2);
+    LUdata = datacell{1};
+    S2_2016mo_0 = (interp1([1850;LUdata(:,1)],[LUdata(1,2);LUdata(:,2)],year));
 
-elseif LU_i == 13 % Yue et al. (2018) without age dynamics
-    % 1500-2005 | GtC/yr | annual
-    LUdata = csvread('Yue_1500-2005_noAgeDyn.csv',1);
-    LUinterp = (interp1(LUdata(:,1),LUdata(:,5),year));
-    LU = [year, LUinterp*d];
-    % annual 1500 to 2005
-    % need first and 5th columns
+    % get S3
+    % 5 cols: year, global, north, tropics, south
+    fidS2 = fopen('ORCHIDEE-MICT_S3_1860-2016.txt','r'); 
+    datacell = textscan(fidS2, '%f%f%f%f%f', 'HeaderLines', 1, 'Collect', 1);
+    fclose(fidS2);
+    LUdata = datacell{1};
+    S3_2016mo_0 = (interp1([1850;LUdata(:,1)],[LUdata(1,2);LUdata(:,2)],year));
 
+    LU = [year, (S2_2016mo_0 - S3_2016mo_0)*d];
+
+elseif LU_i == 13 % OC-N
+    % 1860-2016 | GtC/yr | annual
+    % global LULCC flux is S2 - S3
+
+    % get S2
+    % 5 cols: year, global, north, tropics, south
+    fidS2 = fopen('OCN_S2_1860-2016.txt','r');
+    datacell = textscan(fidS2, '%f%f%f%f%f', 'HeaderLines', 1, 'Collect', 1);
+    fclose(fidS2);
+    LUdata = datacell{1};
+    S2_2016mo_0 = (interp1([1850;LUdata(:,1)],[LUdata(1,2);LUdata(:,2)],year));
+
+    % get S3
+    % 5 cols: year, global, north, tropics, south
+    fidS2 = fopen('OCN_S3_1860-2016.txt','r');
+    datacell = textscan(fidS2, '%f%f%f%f%f', 'HeaderLines', 1, 'Collect', 1);
+    fclose(fidS2);
+    LUdata = datacell{1};
+    S3_2016mo_0 = (interp1([1850;LUdata(:,1)],[LUdata(1,2);LUdata(:,2)],year));
+
+    LU = [year, (S2_2016mo_0 - S3_2016mo_0)*d];
+    
 elseif LU_i == 14 % CLM4.5 TODO
     %ncdisp('TRENDY2017_S3_LAND_USE_FLUX.nc')
     % see all the fill/missing values
@@ -161,49 +189,28 @@ elseif LU_i == 14 % CLM4.5 TODO
     % oscillations at every month
     % also deal with units - this arrives in grams C/m^2/sec
     
-elseif LU_i == 15 % ORCHIDEE-MICT
-    % 1850-2016 | GtC/yr | annual
-    % global LULCC flux is S2 - S3
 
-    % get S2
-    % 5 cols: year, global, north, tropics, south
-    fidS2 = fopen('ORCHIDEE-MICT_S2_1860-2016.txt','r'); 
-    datacell = textscan(fidS2, '%f%f%f%f%f', 'HeaderLines', 1, 'Collect', 1);
-    fclose(fidS2);
-    LUdata = datacell{1};
-    S2_2016mo_0 = (interp1([1850;LUdata(:,1)],[LUdata(1,2);LUdata(:,2)],year));
+    
+    
+    
 
-    % get S3
-    % 5 cols: year, global, north, tropics, south
-    fidS2 = fopen('ORCHIDEE-MICT_S3_1860-2016.txt','r'); 
-    datacell = textscan(fidS2, '%f%f%f%f%f', 'HeaderLines', 1, 'Collect', 1);
-    fclose(fidS2);
-    LUdata = datacell{1};
-    S3_2016mo_0 = (interp1([1850;LUdata(:,1)],[LUdata(1,2);LUdata(:,2)],year));
+elseif LU_i == 15 % Yue et al. (2018)
+    % 1500-2005 | GtC/yr | annual
+    LUdata = csvread('Yue_1500-2005.csv',1);
+    LUinterp = (interp1(LUdata(:,1),LUdata(:,5),year));
+    LU = [year, LUinterp*d];
+    % annual 1500 to 2005
+    % need first and 5th columns
 
-    LU = [year, (S2_2016mo_0 - S3_2016mo_0)*d];
+elseif LU_i == 16 % Yue et al. (2018) without age dynamics
+    % 1500-2005 | GtC/yr | annual
+    LUdata = csvread('Yue_1500-2005_noAgeDyn.csv',1);
+    LUinterp = (interp1(LUdata(:,1),LUdata(:,5),year));
+    LU = [year, LUinterp*d];
+    % annual 1500 to 2005
+    % need first and 5th columns
 
-elseif LU_i == 16 % OC-N
-    % 1860-2016 | GtC/yr | annual
-    % global LULCC flux is S2 - S3
 
-    % get S2
-    % 5 cols: year, global, north, tropics, south
-    fidS2 = fopen('OCN_S2_1860-2016.txt','r');
-    datacell = textscan(fidS2, '%f%f%f%f%f', 'HeaderLines', 1, 'Collect', 1);
-    fclose(fidS2);
-    LUdata = datacell{1};
-    S2_2016mo_0 = (interp1([1850;LUdata(:,1)],[LUdata(1,2);LUdata(:,2)],year));
-
-    % get S3
-    % 5 cols: year, global, north, tropics, south
-    fidS2 = fopen('OCN_S3_1860-2016.txt','r');
-    datacell = textscan(fidS2, '%f%f%f%f%f', 'HeaderLines', 1, 'Collect', 1);
-    fclose(fidS2);
-    LUdata = datacell{1};
-    S3_2016mo_0 = (interp1([1850;LUdata(:,1)],[LUdata(1,2);LUdata(:,2)],year));
-
-    LU = [year, (S2_2016mo_0 - S3_2016mo_0)*d];
         
 end
 

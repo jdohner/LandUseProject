@@ -5,6 +5,8 @@
 % march 21, 2018
 % author: julia dohner, with code adapted from lauren rafelski
 
+
+
 clear all
 
 %% define time frame, cases
@@ -21,11 +23,13 @@ clear all
 % 9 = CABLE higher, includes C loss from grazing & harvest
 % 10 = LPX-Bern HYDE
 % 11 = LPX-Bern LUH
-% 12 = Yue et al. (2018)
-% 13 = Yue et al. (2018) without age dynamics
+% 12 = ORCHIDEE-MICT
+% 13 = OC-N
 % 14 = CLM4.5
-% 15 = ORCHIDEE-MICT
-% 16 = OC-N
+% 15 = Yue et al. (2018)
+% 16 = Yue et al. (2018) without age dynamics
+
+
 
 % optimization period
 % a = 1900-2010.5 (can't go past 5 years before end of data)
@@ -72,12 +76,13 @@ clear all
 timeFrame = 'a'; % picking time frame over which parameters are fit
 tempRecord = 'VIII';
 
-numLU = 11;
-LUdata = {'hough';'hansis';'hough03';'const';'const2';'gcp';'hough03_extraTrop';...
-    'CABLE';'CABLE_hi';'LPX_hyde';'LPX_LUH';'Yue_age';'Yue_noAge';...
-    'CLM45';'ORCHIDEE_MICT';'OC_N'};
-outputArray = cell(numLU+1,9);
-outputArray(1,:) = {'LUrecord','Q10','eps','atmcalc2','obsCalcDiff',...
+numCases = 13;
+LUname = {'Houghton 2017';'Hansis 2015';'Houghton 2003';'Constant';...
+    'Constant*2';'GCP';'Houghton 2003 low';...
+    'CABLE';'CABLE high';'LPX HYDE';'LPX LUH';'ORCHIDEE-MICT';'OC-N';...
+    'CLM45';'Yue 2018';'Yue 2018 noAge'};
+outputArray = cell(numCases+1,10);
+outputArray(1,:) = {'LUname','LUdata','Q10','eps','atmcalc2','obsCalcDiff',...
     'ddtUnfilt','ddtFilt','RMSEunfilt','RMSEfilt'};
     
 oceanUptake = 2; % scaling ocean sink by +/- 30% : low = 1, medium = 2, high = 3;   
@@ -103,7 +108,7 @@ co2_preind = 600/2.12; % around 283 ppm (preindustrial)
 
 save('runInfo','start_year','end_year','ts','year','fert',...
     'oceanUptake','tempDep','varSST','filter',...
-    'LUdata','timeFrame');
+    'LUname','timeFrame');
 
 %% load data
 
@@ -133,7 +138,7 @@ addpath(genpath(...
 
 
 
-for LU_i = 1:numLU
+for LU_i = 1:numCases
     
 [ff, LU] = getSourceSink5(year, ts,LU_i); % for updated FF & LU
 
@@ -277,7 +282,7 @@ save('runOutput','atmcalc2','obsCalcDiff','Q1','epsilon');
     
 [ddtUnfilt,ddtFilt] = calcDerivs(obsCalcDiff);
 [RMSEunfilt,RMSEfilt] = calcErrors(ddtUnfilt,ddtFilt);
-[outputArray] = fillArray(LU_i,Q1,epsilon,atmcalc2,obsCalcDiff,outputArray,...
+[outputArray] = fillArray(LU,LU_i,Q1,epsilon,atmcalc2,obsCalcDiff,outputArray,...
     ddtUnfilt,ddtFilt,RMSEunfilt,RMSEfilt);
 
 end
