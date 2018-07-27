@@ -19,6 +19,7 @@ clear all
 % G = filtering of residual from deconvolution (3 cases)
 % H = ocean uptake
 % I = co2 vs N fert
+% J = t-dependent photosynthesis or respiration
 
 vary = 'A';
 
@@ -31,6 +32,7 @@ elseif strcmp(vary,'F') numCases = 6;
 elseif strcmp(vary,'G') numCases = 3;
 elseif strcmp(vary,'H') numCases = 3;
 elseif strcmp(vary,'I') numCases = 2;
+elseif strcmp(vary,'J') numCases = 2;
 else % see README for cases
     numCases = 1;
     LU_i = 1;
@@ -40,8 +42,9 @@ else % see README for cases
     varSST_i = 1;
     timeConst_i = 1;
     filtDecon_i = 1;
-    fert = 1;
-    oceanUp = 1;
+    fert_i = 1;
+    oceanUp_i = 1;
+    photResp_i = 1;
 end
 
 
@@ -80,7 +83,7 @@ for j = 1:numCases
     
 % get the indices for variables being looped/held fixed    
 [LU_i,opt_i,Tdata_i,tempDep_i,varSST_i,timeConst_i,filtDecon_i,...
-    fert_i,oceanUp_i,rowLabels] = getLoopingVar(vary,j);
+    fert_i,oceanUp_i,photResp_i,rowLabels] = getLoopingVar(vary,j);
 
 
 if tempDep_i == 2 % temp-independent
@@ -89,11 +92,13 @@ end
 
 save('runInfo','start_year','end_year','ts','year','fert_i',...
     'oceanUp_i','tempDep_i','varSST_i','filtDecon_i',...
-    'rowLabels','opt_i');
+    'rowLabels','opt_i','photResp_i');
 
 [temp_anom] = tempRecord3(Tdata_i,start_year,end_year,dt);
     
 [ff, LU] = getSourceSink6(LU_i); % for updated FF & LU
+
+save('ff','ff')
 
 [fas,sstAnom] = jooshildascale(start_year,end_year,ts,ff,varSST_i,Tconst);
 
@@ -156,6 +161,7 @@ ci = nlparci(betahat,resid,J);
 %% Redefine values of epsilon, gamma and Q1
 if fert_i == 1   
     epsilon = betahat(1);
+    gamma = 0;
     Q1 = betahat(2);
     Q2 = 1;
 else % nitrogen fertilization
@@ -175,14 +181,20 @@ if end_year ~= end_year
     [fas,sstAnom] = jooshildascale_annotate2(start_year,end_year,ts,ff,varSST,Tconst);
 end
 
-% Run the best fit values in the model again to plot
-if fert_i == 1
-    [C1dt,C2dt,delCdt,delC1,delC2] = bioboxtwo_sub10(...
-        epsilon,Q1,Q2,ts,year,dpCO2a_obs,temp_anom); 
-else % N fertilization
-    [C1dt,C2dt,delCdt,delC1,delC2] = bioboxtwo_subN(...
-        epsilon,Q1,Q2,gamma,ff,ts,year,dpCO2a,temp_anom);
-end
+% % Run the best fit values in the model again to plot
+% if fert_i == 1
+%     [C1dt,C2dt,delCdt,delC1,delC2] = bioboxtwo_sub10(...
+%         epsilon,Q1,Q2,ts,year,dpCO2a_obs,temp_anom); 
+% else % N fertilization
+%     [C1dt,C2dt,delCdt,delC1,delC2] = bioboxtwo_subN(...
+%         epsilon,Q1,Q2,gamma,ff,ts,year,dpCO2a,temp_anom);
+% end
+
+[C1dt,C2dt,delCdt,delC1,delC2] = bioboxtwo(epsilon,Q1,Q2,ts,year,...
+    dpCO2a_obs,temp_anom,gamma,photResp_i);
+
+
+
 delCdt(:,2) = -delCdt(:,2); % change sign of land uptake
 
 % 10 year moving boxcar average of model result
@@ -222,13 +234,14 @@ save('runOutput','atmcalc2','obsCalcDiff','Q1','epsilon');
 [ddtUnfilt,ddtFilt] = calcDerivs(obsCalcDiff);
 [RMSEunfilt,RMSEfilt] = calcErrors(ddtUnfilt,ddtFilt);
 [outputArray] = fillArray(j,Q1,epsilon,atmcalc2,obsCalcDiff,outputArray,...
-    ddtUnfilt,ddtFilt,RMSEunfilt,RMSEfilt)
+    ddtUnfilt,ddtFilt,RMSEunfilt,RMSEfilt);
 
 end
 
 
 %% saving the output array
 
+outputArray
 
 % function to save parameters in appropriate file name
 %[outputArray] = saveParams(outputArray)

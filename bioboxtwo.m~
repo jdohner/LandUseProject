@@ -6,8 +6,8 @@
 % Julia Dohner
 
 
-function [C1dt,C2dt,delCdt,delC1,delC2] = bioboxtwo(epsilon,Q1,Q2,ts,year,...
-    dpCO2a,T,gamma,photResp_i)
+function [C1dt,C2dt,delCdt,delC1,delC2] = bioboxtwo(epsilon,Q1a,Q2a,ts,year,...
+    dpCO2a,T,gamma,fert_i,photResp_i)
 
 load ff
 
@@ -49,21 +49,21 @@ for ii = 1:length(year)
     if photResp_i == 1
         % fast box
         C1dt(ii,2) = Ka1*(Catm + epsilon*dpCO2a(ii,2) + gamma*ff(ii+a-1,2)*Catm) - ...
-        K1a*Q1^((T(ii,2)-T0)/10)*(C1 + delC1(ii,2)); 
+        K1a*Q1a^((T(ii,2)-T0)/10)*(C1 + delC1(ii,2)); 
 
         % slow box (equation (3) in Rafelski 2009
         C2dt(ii,2) = Ka2*(Catm + epsilon*dpCO2a(ii,2)+ gamma*ff(ii+a-1,2)*Catm) - ...
-        K2a*Q2^((T(ii,2)-T0)/10)*(C2 + delC2(ii,2)); 
+        K2a*Q2a^((T(ii,2)-T0)/10)*(C2 + delC2(ii,2)); 
 
     elseif photResp_i == 2
         %T-dependent photosynthesis
         C1dt(ii,2) = Ka1*(Catm + epsilon*dpCO2a(ii,2)+ gamma*ff(ii+a-1,2)*Catm)...
-            *(1 + Q1*(T(ii,2)-T0)) - K1a*(C1 + delC1(ii,2));
+            *(1 + Q1a*(T(ii,2)-T0)) - K1a*(C1 + delC1(ii,2));
         % - K1a*Q1a^((T(ii,2)-T0)/10)*(C1 + delC1(ii,2)); 
 
       
         C2dt(ii,2) = Ka2*(Catm + epsilon*dpCO2a(ii,2)+ gamma*ff(ii+a-1,2)*Catm)...
-            *(1 + Q2*(T(ii,2)-T0)) -  K2a*(C2 + delC2(ii,2)); 
+            *(1 + Q2a*(T(ii,2)-T0)) -  K2a*(C2 + delC2(ii,2)); 
         % - K2a*Q2a^((T(ii,2)-T0)/10)*(C2 + delC2(ii,2)); 
 
     end

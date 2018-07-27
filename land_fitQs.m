@@ -26,9 +26,14 @@ if fert_i == 1
     if tempDep_i == 2
         Q1 = 1;
     end
-
+    gamma = 0;
     
-    [C1dt,C2dt,delCdt,delC1,delC2] = bioboxtwo_sub10(epsilon,Q1,Q2,ts,year,dpCO2a,temp_anom); 
+    %[C1dt,C2dt,delCdt,delC1,delC2] = bioboxtwo_sub10(epsilon,Q1,Q2,ts,year,dpCO2a,temp_anom); 
+%     [C1dt,C2dt,delCdt,delC1,delC2] = bioboxtwo(epsilon,Q1,Q2,...
+%     ts,year,dpCO2a,T,gamma)
+
+[C1dt,C2dt,delCdt,delC1,delC2] = bioboxtwo(epsilon,Q1,Q2,ts,year,...
+    dpCO2a,temp_anom,gamma,photResp_i);
 else 
     % For N fertilization model
     epsilon = 0;
@@ -41,8 +46,15 @@ else
         Q1 = 1;
     end
     
-    [fas,ff,LU,LUex] = getSourceSink3(year2,ts);
-    [C1dt,C2dt,delCdt,delC1,delC2] = bioboxtwo_subN(epsilon,Q1,Q2,gamma,ff(601:end,:),ts,year,dpCO2a,temp_anom);
+    %[fas,ff,LU,LUex] = getSourceSink3(year2,ts);
+    %[C1dt,C2dt,delCdt,delC1,delC2] = bioboxtwo_subN(epsilon,Q1,Q2,gamma,ff(601:end,:),ts,year,dpCO2a,temp_anom);
+%     [C1dt,C2dt,delCdt,delC1,delC2] = bioboxtwo(eps,Q1,Q2a,...
+%     ts,year,dpCO2a,T,gamma)
+
+[C1dt,C2dt,delCdt,delC1,delC2] = bioboxtwo(epsilon,Q1,Q2,ts,year,...
+    dpCO2a,temp_anom,gamma,photResp_i)
+
+
 end
 
 

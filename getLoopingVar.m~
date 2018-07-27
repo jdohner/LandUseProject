@@ -6,7 +6,7 @@
 % Sets indicdes of variables to be looped and vars to be held constant
 
 function [LU_i,opt_i,Tdata_i,tempDep_i,varSST_i,timeConst_i,filtDecon_i,...
-    fert_i,oceanUp_i,photResp_i,rowLabels] = getLoopingVar(vary,j);
+    fert_i,oceanUp_i,rowLabels,photResp_i = 1;] = getLoopingVar(vary,j);
 
 
     % which variable to loop through?
@@ -135,17 +135,6 @@ function [LU_i,opt_i,Tdata_i,tempDep_i,varSST_i,timeConst_i,filtDecon_i,...
         oceanUp_i = 1;
         photResp_i = 1;
         rowLabels = {'CO2-fert','N-fert'};
-    elseif strcmp(vary,'I') % loop temp-dependent photosynthesis or respiration
-        LU_i = 1;
-        opt_i = 1;
-        Tdata_i = 1;
-        tempDep_i = 1;
-        varSST_i = 1;
-        timeConst_i = 1;
-        filtDecon_i = 1;
-        fert_i = 1;
-        oceanUp_i = 1;
-        photResp_i = j;
-        rowLabels = {'T-dep Respiration','T-dep Photosynthesis'};end
+    end
 
 end
