@@ -142,7 +142,9 @@ Aoc = 3.62E14; % surface area of ocean, m^2, from Joos 1996
 co2_preind = 600/2.12; % around 283 ppm (preindustrial)
 
 
-
+save('runInfo','start_year','end_year','ts','year','fert',...
+    'oceanUptake','tempDep_i','varSST_i','filtDecon_i',...
+    'LUname','opt_i');
 
 %% load data
 
@@ -166,28 +168,17 @@ addpath(genpath(...
 % temp_full covers 1850-2017+(9/12)
 % temp_anom comes out at 1850-2015.5
 %[temp_anom, ~] = tempRecord2(start_year,end_year,dt);
-
+[temp_anom] = tempRecord3(Tdata_i,start_year,end_year,dt);
 
 %% fitting parameters for cases
 
-beta = [0.5;2]; % initial guesses for model fit (epsilon, q10)
+
 
 for j = 1:numCases
     
 % get the indices for variables being looped/held fixed    
 [LU_i,opt_i,Tdata_i,tempDep_i,varSST_i,timeConst_i,filtDecon_i]...
     = getLoopingVar(vary,j);
-
-
-% if tempDep_i == 2 % temp-independent
-%     beta = [0.5,1];
-% end
-
-save('runInfo','start_year','end_year','ts','year','fert',...
-    'oceanUptake','tempDep_i','varSST_i','filtDecon_i',...
-    'LUname','opt_i');
-
-[temp_anom] = tempRecord3(Tdata_i,start_year,end_year,dt);
     
 [ff, LU] = getSourceSink5(year, ts,LU_i); % for updated FF & LU
 

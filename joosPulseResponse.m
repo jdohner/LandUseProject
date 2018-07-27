@@ -1,7 +1,7 @@
 % Pulse response model using response function "r"
 % 7/15/09: add "dpCO2s" to output
 
-function [fas,dpCO2s,T]= joosPulseResponse(yearOcean,dpCO2a,c,h,kg,Tconst,Aoc,r,dt,varSST)
+function [fas,dpCO2s,T]= joosPulseResponse(yearOcean,dpCO2a,c,h,kg,Tconst,Aoc,r,dt,varSST_i)
 
 dpCO2s = zeros(length(dpCO2a),2); % dissolved CO2
 dpCO2s(:,1) = dpCO2a(:,1);
@@ -9,7 +9,7 @@ fas = zeros(length(yearOcean),2);
 integral = zeros(length(yearOcean),length(yearOcean));
 delDIC = zeros(length(yearOcean),2);
 
-if varSST == 1
+if varSST_i == 2 % variable SST
     load newsst_2011.mat;
     hadcrut = csvread('HadCRUT4.csv');
     % interpolate to monthly
@@ -40,7 +40,7 @@ for m = 1:(length(yearOcean)-1)
     delDIC(m+1,2) = (c/h)*w(m)*dt; % change in DIC
 
     %Calculate dpCO2s from DIC - from Joos 1996
-    if varSST == 0 % fixed sst
+    if varSST_i == 1 % fixed sst
         dpCO2s(m+1,2) = (1.5568 - (1.3993E-2)*Tconst)*delDIC(m+1,2) + (7.4706-0.20207*Tconst)*10^(-3)*...
         (delDIC(m+1,2))^2 - (1.2748-0.12015*Tconst)*10^(-5)*(delDIC(m+1,2))^3 + (2.4491-0.12639*Tconst)...
         *10^(-7)*(delDIC(m+1,2))^4 - (1.5468-0.15326*Tconst)*10^(-10)*(delDIC(m+1,2))^5;
@@ -65,6 +65,6 @@ delDIC(zero1,1) = NaN;
 zero2 = find(dpCO2s(:,2) == 0);
 dpCO2s(zero2,2)  = NaN;
 
-if varSST == 0
+if varSST_i == 1
     T = Tconst;
 end

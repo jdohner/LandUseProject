@@ -2,7 +2,7 @@
 
 
 
-function [fas,sstAnom] = jooshildascale(start_year,end_year,~,~,varSST,Tconst);
+function [fas,sstAnom] = jooshildascale(start_year,end_year,~,~,varSST_i,Tconst);
 
 ts = 12; % number of data points/year
 start_yearOcean = 1800;
@@ -31,7 +31,7 @@ for n = 1:length(yearOcean)
      end
 end
 
-if varSST == 0
+if varSST_i == 1 % constant SST
     T = Tconst;
 end
 
@@ -39,7 +39,7 @@ end
 
 
 %% calculate ocean uptake
-[fas,~,sstAnom] = joosPulseResponse(yearOcean,dpCO2a,c,h,kg,Tconst,Aoc,r,dt,varSST); 
+[fas,~,sstAnom] = joosPulseResponse(yearOcean,dpCO2a,c,h,kg,Tconst,Aoc,r,dt,varSST_i); 
 
 i3 = find(fas(:,1) >= start_year,1);
 j3 = find(fas(:,1) >= end_year,1);

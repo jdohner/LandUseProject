@@ -23,7 +23,7 @@ if strcmp(fert,'co2')
     Q2 = 1;
     
     % to make temp indep, set Q1 = 1
-    if tempDep ~= 1
+    if tempDep_i == 2
         Q1 = 1;
     end
 
@@ -37,7 +37,7 @@ else
     Q2 = 1; 
     
     % to make temp indep, set Q1 = 1
-    if tempDep ~= 1
+    if tempDep_i == 2
         Q1 = 1;
     end
     
@@ -65,7 +65,7 @@ i = find(decon_resid == 1900);
 yhat0 = decon_resid(i:end,:);
 
 % timeFrameVec goes 1850-2015.5 (1987x2)
-[timeFrameVec] = getTimeFrame(timeFrame,year);
+[timeFrameVec] = getTimeFrame(opt_i,year);
 
 % shorten timeFrameVec to match length of delC10 coming out of boxcar
 l = find(timeFrameVec == 1900);
