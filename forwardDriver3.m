@@ -172,6 +172,8 @@ addpath(genpath(...
 
 beta = [0.5;2]; % initial guesses for model fit (epsilon, q10)
 
+saveInputData;
+
 for j = 1:numCases
     
 % get the indices for variables being looped/held fixed    
@@ -189,7 +191,7 @@ save('runInfo','start_year','end_year','ts','year','fert',...
 
 [temp_anom] = tempRecord3(Tdata_i,start_year,end_year,dt);
     
-[ff, LU] = getSourceSink5(year, ts,LU_i); % for updated FF & LU
+[ff, LU] = getSourceSink6(LU_i); % for updated FF & LU
 
 [fas,sstAnom] = jooshildascale(start_year,end_year,ts,ff,varSST_i,Tconst);
 
