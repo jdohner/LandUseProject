@@ -11,7 +11,7 @@ clear all
 
 % which variable to loop through?
 % A = land use (13 cases)
-% B = optimization time frame (10 cases)
+% B = optimization time frame (4 cases)
 % C = temperature record (4 cases)
 % D = fixed vs var T (2 cases)
 % E = fixed vs var SST (2 cases)
@@ -20,10 +20,10 @@ clear all
 % H = ocean uptake
 % I = co2 vs N fert
 
-vary = 'A';
+vary = 'D';
 
 if strcmp(vary,'A')     numCases = 13;    
-elseif strcmp(vary,'B') numCases = 10;
+elseif strcmp(vary,'B') numCases = 4;
 elseif strcmp(vary,'C') numCases = 4;
 elseif strcmp(vary,'D') numCases = 2;    
 elseif strcmp(vary,'E') numCases = 2;    
@@ -53,7 +53,7 @@ end
 %     'CABLE';'CABLE high';'LPX HYDE';'LPX LUH';'ORCHIDEE-MICT';'OC-N';...
 %     'CLM45';'Yue 2018';'Yue 2018 noAge'};
 outputArray = cell(numCases+1,9);
-outputArray(1,:) = {'LUname','Q10','eps','atmcalc2','obsCalcDiff',...
+outputArray(1,:) = {'Run Version','Q10','eps','atmcalc2','obsCalcDiff',...
     'ddtUnfilt','ddtFilt','RMSEunfilt','RMSEfilt'};
 
 Tconst = 18.2; % surface temperature, deg C, from Joos 1996
@@ -88,9 +88,9 @@ for j = 1:numCases
     fert_i,oceanUp_i,rowLabels] = getLoopingVar(vary,j);
 
 
-% if tempDep_i == 2 % temp-independent
-%     beta = [0.5,1];
-% end
+if tempDep_i == 2 % temp-independent
+    beta = [0.5,1];
+end
 
 save('runInfo','start_year','end_year','ts','year','fert_i',...
     'oceanUp_i','tempDep_i','varSST_i','filtDecon_i',...

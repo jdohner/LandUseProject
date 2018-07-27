@@ -28,4 +28,5 @@ elseif opt_i == 4
     i = find(year == 1900);
     j = find(year == 2000.5);
     timeFrameVec(i:j,2) = 1;
+    
 end

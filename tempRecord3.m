@@ -23,7 +23,7 @@ CRUstart = 1850;
 CRUend = 2018 + (4/12);
 % timepoint 2018 counts as the first month in year, thus subtract 1
     
-if Tdata_i == 1
+if Tdata_i == 2
     
     % I = HadCRUT4_2018_05 (combined mean land and SST anomalies)
     % 1850-2018+4/12 | monthly
@@ -34,7 +34,7 @@ if Tdata_i == 1
     data3 = data2(1:length(year0));
     temp_anom0 = [year0,data3];
     
-elseif Tdata_i == 2
+elseif Tdata_i == 3
     % II = CRUTEM4_2018_05 (land air T anomalies)
     % 1850-2018+4/12 | monthly
     data0 = csvread('CRUTEM4_2018_05.csv');
@@ -44,7 +44,7 @@ elseif Tdata_i == 2
     data3 = data2(1:length(year0));
     temp_anom0 = [year0,data3];
     
-elseif Tdata_i == 3
+elseif Tdata_i == 4
     % III = CRUTEM4v (Variance adjusted version of CRUTEM4)
     % 1850-2018+4/12 | monthly
     data0 = csvread('CRUTEM4v_2018_05.csv');
@@ -54,7 +54,7 @@ elseif Tdata_i == 3
     data3 = data2(1:length(year0));
     temp_anom0 = [year0,data3];
     
-elseif Tdata_i == 4
+elseif Tdata_i == 5
     % IV = Nino 3.4 index
     % 1870-April 2018 | monthly
     ESRLstart = 1870;
@@ -66,19 +66,19 @@ elseif Tdata_i == 4
     data3 = data2(1:length(year0));
     temp_anom0 = [year0,data3];
     
-elseif Tdata_i == 5
+elseif Tdata_i == 6
     % V = tropical T
     % N/A
     
-elseif Tdata_i == 6
+elseif Tdata_i == 7
     % VI = Global Historical Climate Network 
     % N/A
     
-elseif Tdata_i == 7
+elseif Tdata_i == 8
     % VII = MLOST 3.5 from NOAA
     % N/A
     
-elseif Tdata_i == 8
+elseif Tdata_i == 1
     % temp record from LR/my attempts to match LR (use for debugging)
     load landwt_T_2011.mat % 1850-2010
 
