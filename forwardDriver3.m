@@ -20,7 +20,7 @@ clear all
 % H = ocean uptake
 % I = co2 vs N fert
 
-vary = 'H';
+vary = 'A';
 
 if strcmp(vary,'A')     numCases = 13;    
 elseif strcmp(vary,'B') numCases = 4;
@@ -47,11 +47,6 @@ end
 
 %% define time frame, cases
 
-%numCases = 13;
-% LUname = {'Houghton 2017';'Hansis 2015';'Houghton 2003';'Constant';...
-%     'Constant*2';'GCP';'Houghton 2003 low';...
-%     'CABLE';'CABLE high';'LPX HYDE';'LPX LUH';'ORCHIDEE-MICT';'OC-N';...
-%     'CLM45';'Yue 2018';'Yue 2018 noAge'};
 outputArray = cell(numCases+1,9);
 outputArray(1,:) = {'Run Version','Q10','eps','atmcalc2','obsCalcDiff',...
     'ddtUnfilt','ddtFilt','RMSEunfilt','RMSEfilt'};
@@ -175,7 +170,7 @@ end
 
 if end_year ~= end_year
     [dtdelpCO2a_obs,dpCO2a_obs,~,~,CO2a_obs] = getObservedCO2_3(ts,start_year,end_year);
-    [temp_anom, ~] = tempRecord2(start_year,end_year,dt);
+    [temp_anom] = tempRecord3(Tdata_i,start_year,end_year,dt);
     [ff, LU] = getSourceSink5(year, ts, LU_i); % for updated FF & LU
     [fas,sstAnom] = jooshildascale_annotate2(start_year,end_year,ts,ff,varSST,Tconst);
 end
@@ -227,7 +222,7 @@ save('runOutput','atmcalc2','obsCalcDiff','Q1','epsilon');
 [ddtUnfilt,ddtFilt] = calcDerivs(obsCalcDiff);
 [RMSEunfilt,RMSEfilt] = calcErrors(ddtUnfilt,ddtFilt);
 [outputArray] = fillArray(j,Q1,epsilon,atmcalc2,obsCalcDiff,outputArray,...
-    ddtUnfilt,ddtFilt,RMSEunfilt,RMSEfilt);
+    ddtUnfilt,ddtFilt,RMSEunfilt,RMSEfilt)
 
 end
 
