@@ -16,7 +16,7 @@ load decon_resid.mat
 [dtdelpCO2a,dpCO2a,~,~,CO2a] = getObservedCO2_2(ts,start_year,end_year);
 
 
-if strcmp(fert,'co2')
+if fert_i == 1
     % For CO2 fertilization model
     epsilon = beta(1);
     Q1 = beta(2);

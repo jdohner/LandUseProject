@@ -47,7 +47,7 @@ delC2(length(year)+1,1) = year(length(year),1)+dt;
 
 
 
-if strcmp(fert,'co2')
+if fert_i == 1
 % this loop is the same as in oceanpulseresponse- need to be the same as in
 % ocean pulse response in higher level code, then call next what's below
     
@@ -83,7 +83,7 @@ if strcmp(fert,'co2')
 
     end
 
-elseif strcmp(fert,'N')
+elseif fert_i == 2
     
     a = find(ff1(:,1) == year(1));
     

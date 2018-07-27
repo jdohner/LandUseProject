@@ -17,6 +17,8 @@ clear all
 % E = fixed vs var SST (2 cases)
 % F = values for fast box time constant (6 cases)
 % G = filtering of residual from deconvolution (3 cases)
+% H = ocean uptake
+% I = co2 vs N fert
 
 vary = 'A';
 
@@ -26,7 +28,9 @@ elseif strcmp(vary,'C') numCases = 4;
 elseif strcmp(vary,'D') numCases = 2;    
 elseif strcmp(vary,'E') numCases = 2;    
 elseif strcmp(vary,'F') numCases = 6;
-elseif strcmp(vary,'G') numCases = 3;    
+elseif strcmp(vary,'G') numCases = 3;
+elseif strcmp(vary,'H') numCases = 3;
+elseif strcmp(vary,'I') numCases = 2;
 else % see README for cases
     numCases = 1;
     LU_i = 1;
@@ -43,19 +47,14 @@ end
 
 %% define time frame, cases
 
-numCases = 13;
-LUname = {'Houghton 2017';'Hansis 2015';'Houghton 2003';'Constant';...
-    'Constant*2';'GCP';'Houghton 2003 low';...
-    'CABLE';'CABLE high';'LPX HYDE';'LPX LUH';'ORCHIDEE-MICT';'OC-N';...
-    'CLM45';'Yue 2018';'Yue 2018 noAge'};
-outputArray = cell(numCases+1,10);
-outputArray(1,:) = {'LUname','LUdata','Q10','eps','atmcalc2','obsCalcDiff',...
+%numCases = 13;
+% LUname = {'Houghton 2017';'Hansis 2015';'Houghton 2003';'Constant';...
+%     'Constant*2';'GCP';'Houghton 2003 low';...
+%     'CABLE';'CABLE high';'LPX HYDE';'LPX LUH';'ORCHIDEE-MICT';'OC-N';...
+%     'CLM45';'Yue 2018';'Yue 2018 noAge'};
+outputArray = cell(numCases+1,9);
+outputArray(1,:) = {'LUname','Q10','eps','atmcalc2','obsCalcDiff',...
     'ddtUnfilt','ddtFilt','RMSEunfilt','RMSEfilt'};
-    
-oceanUptake = 2; % scaling ocean sink by +/- 30% : low = 1, medium = 2, high = 3;   
-fert = 'co2'; % co2 or N fertilization
-%filter = 1; % filter the data? 1 = 10 year filter; 2 = unfiltered
-
 
 Tconst = 18.2; % surface temperature, deg C, from Joos 1996
 ts = 12; % timesteps per year
@@ -85,17 +84,17 @@ saveInputData; % load and process FF and LU data
 for j = 1:numCases
     
 % get the indices for variables being looped/held fixed    
-[LU_i,opt_i,Tdata_i,tempDep_i,varSST_i,timeConst_i,filtDecon_i]...
-    = getLoopingVar(vary,j);
+[LU_i,opt_i,Tdata_i,tempDep_i,varSST_i,timeConst_i,filtDecon_i,...
+    fert_i,oceanUp_i,rowLabels] = getLoopingVar(vary,j);
 
 
 % if tempDep_i == 2 % temp-independent
 %     beta = [0.5,1];
 % end
 
-save('runInfo','start_year','end_year','ts','year','fert',...
-    'oceanUptake','tempDep_i','varSST_i','filtDecon_i',...
-    'LUname','opt_i');
+save('runInfo','start_year','end_year','ts','year','fert_i',...
+    'oceanUp_i','tempDep_i','varSST_i','filtDecon_i',...
+    'rowLabels','opt_i');
 
 [temp_anom] = tempRecord3(Tdata_i,start_year,end_year,dt);
     
@@ -104,9 +103,9 @@ save('runInfo','start_year','end_year','ts','year','fert',...
 [fas,sstAnom] = jooshildascale(start_year,end_year,ts,ff,varSST_i,Tconst);
 
 % scaling ocean uptake
-if oceanUptake == 3 % high
+if oceanUp_i == 3 % high
     fas(:,2) = fas(:,2)*1.3;
-elseif oceanUptake == 1 % low
+elseif oceanUp_i == 2 % low
         fas(:,2) = fas(:,2)*0.7;
 end
 
@@ -121,16 +120,16 @@ decon_resid0 = [year, dtdelpCO2a_obs(:,2)-ff(:,2)+Aoc*fas(:,2)-LU(:,2)];
 if filtDecon_i == 1 
     % using filtered data for everything after 
     i = find(decon_resid0(:,1) == 1952);
-    j = find(decon_resid0(:,1) >= (1956+(11/12)),1);
+    k = find(decon_resid0(:,1) >= (1956+(11/12)),1);
 
     [decon_filt0] = l_boxcar(decon_resid0,10,12,i,length(decon_resid0),1,2);
-    decon_resid(1:j,:) = decon_resid0(1:j,:);
-    decon_resid((j+1):(length(decon_filt0)),:) = decon_filt0((j+1):end,:);
+    decon_resid(1:k,:) = decon_resid0(1:k,:);
+    decon_resid((k+1):(length(decon_filt0)),:) = decon_filt0((k+1):end,:);
 
 elseif  filtDecon_i == 2
     % shorten unfiltered record
-    j = find(decon_resid(:,1) == end_year-5);
-    decon_resid = decon_resid(1:j,:);    
+    k = find(decon_resid(:,1) == end_year-5);
+    decon_resid = decon_resid(1:k,:);    
 end
 
 % decon_resid is 5 years shorter than full record
@@ -150,8 +149,8 @@ covariance = inv(J(1:1177,:)'*J(1:1177,:))*sum(resid(1:1177,:).^2)/(N-P);
 [isize,jsize] = size(covariance);
 
 for k=1:isize
-    for j=1:jsize
-        correlation(k,j) = covariance(k,j)/sqrt(covariance(k,k)*covariance(j,j));
+    for x=1:jsize
+        correlation(k,j) = covariance(k,x)/sqrt(covariance(k,k)*covariance(x,x));
     end
 end
 
@@ -160,7 +159,7 @@ ci = nlparci(betahat,resid,J);
 
 
 %% Redefine values of epsilon, gamma and Q1
-if strcmp(fert,'co2')    
+if fert_i == 1   
     epsilon = betahat(1);
     Q1 = betahat(2);
     Q2 = 1;
@@ -182,7 +181,7 @@ if end_year ~= end_year
 end
 
 % Run the best fit values in the model again to plot
-if strcmp(fert,'co2')
+if fert_i == 1
     [C1dt,C2dt,delCdt,delC1,delC2] = bioboxtwo_sub10(...
         epsilon,Q1,Q2,ts,year,dpCO2a_obs,temp_anom); 
 else % N fertilization
@@ -227,7 +226,7 @@ save('runOutput','atmcalc2','obsCalcDiff','Q1','epsilon');
     
 [ddtUnfilt,ddtFilt] = calcDerivs(obsCalcDiff);
 [RMSEunfilt,RMSEfilt] = calcErrors(ddtUnfilt,ddtFilt);
-[outputArray] = fillArray(LU,LU_i,Q1,epsilon,atmcalc2,obsCalcDiff,outputArray,...
+[outputArray] = fillArray(j,Q1,epsilon,atmcalc2,obsCalcDiff,outputArray,...
     ddtUnfilt,ddtFilt,RMSEunfilt,RMSEfilt);
 
 end
@@ -237,7 +236,7 @@ end
 
 
 % function to save parameters in appropriate file name
-[outputArray] = saveParams(outputArray)
+%[outputArray] = saveParams(outputArray)
 
 
 
