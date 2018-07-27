@@ -109,8 +109,8 @@ function [LU_i,opt_i,Tdata_i,tempDep_i,varSST_i,timeConst_i,filtDecon_i,...
         varSST_i = 1;
         timeConst_i = 1;
         filtDecon_i = 1;
-        fert_i = j;
-        oceanUp_i = 1;
+        fert_i = 1;
+        oceanUp_i = j;
         rowLabels = {'Med Ocean Uptake','Low Ocean Uptake','High Ocean Uptake'};
     elseif strcmp(vary,'I') % loop co2 vs N fert
         LU_i = 1;
@@ -120,8 +120,8 @@ function [LU_i,opt_i,Tdata_i,tempDep_i,varSST_i,timeConst_i,filtDecon_i,...
         varSST_i = 1;
         timeConst_i = 1;
         filtDecon_i = 1;
-        fert_i = 1;
-        oceanUp_i = j;
+        fert_i = j;
+        oceanUp_i = 1;
         rowLabels = {'CO2-fert','N-fert'};
     end
 

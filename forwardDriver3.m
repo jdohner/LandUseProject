@@ -20,7 +20,7 @@ clear all
 % H = ocean uptake
 % I = co2 vs N fert
 
-vary = 'D';
+vary = 'H';
 
 if strcmp(vary,'A')     numCases = 13;    
 elseif strcmp(vary,'B') numCases = 4;
