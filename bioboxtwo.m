@@ -7,9 +7,9 @@
 
 
 function [C1dt,C2dt,delCdt,delC1,delC2] = bioboxtwo(epsilon,Q1,Q2,ts,year,...
-    dpCO2a,T,gamma,photResp_i)
+    dpCO2a,T,gamma,photResp_i,timeConst_i)
 
-load ff
+load ff;
 
 T0 = T(1,2);
 dt = 1/ts;
@@ -21,8 +21,29 @@ C1 = 110/2.12; % fast biosphere box, from old model
 C2 = 1477/2.12; % slow biosphere box, changed to be same as 1 box
 
 % Rate constants
+
 K1a = 1/2.5; 
-Ka1 = K1a*C1/Catm;
+Ka1 = K1a*C1/Catm; 
+
+% cutting rate constants for fast box
+if timeConst_i == 2
+    K1a = K1a*(1/2);
+    Ka1 = Ka1*(1/2);
+elseif timeConst_i == 3
+    K1a = K1a*(1/4);
+    Ka1 = Ka1*(1/4);
+elseif timeConst_i == 4
+    K1a = K1a*(1/8);
+    Ka1 = Ka1*(1/8);
+elseif timeConst_i == 5
+    K1a = K1a*(1/10);
+    Ka1 = Ka1*(1/10);
+end
+% elseif timeConst_i == 6
+%     K1a = K1a*(1/10000);
+%     Ka1 = Ka1*(1/10000);
+% end
+
 K2a = 1/60; % slow box to atmosphere
 Ka2 = K2a*C2/Catm;
 

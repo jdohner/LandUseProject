@@ -15,48 +15,25 @@ load decon_resid.mat
 % Get parameters
 [dtdelpCO2a,dpCO2a,~,~,CO2a] = getObservedCO2_2(ts,start_year,end_year);
 
-
-if fert_i == 1
-    % For CO2 fertilization model
+if fert_i == 1 % CO2 fert
     epsilon = beta(1);
-    Q1 = beta(2);
-    Q2 = 1;
-    
-    % to make temp indep, set Q1 = 1
-    if tempDep_i == 2
-        Q1 = 1;
-    end
     gamma = 0;
-    
-    %[C1dt,C2dt,delCdt,delC1,delC2] = bioboxtwo_sub10(epsilon,Q1,Q2,ts,year,dpCO2a,temp_anom); 
-%     [C1dt,C2dt,delCdt,delC1,delC2] = bioboxtwo(epsilon,Q1,Q2,...
-%     ts,year,dpCO2a,T,gamma)
-
-[C1dt,C2dt,delCdt,delC1,delC2] = bioboxtwo(epsilon,Q1,Q2,ts,year,...
-    dpCO2a,temp_anom,gamma,photResp_i);
-else 
-    % For N fertilization model
+else % N fert
     epsilon = 0;
     gamma = beta(1);
-    Q1 = beta(2);
-    Q2 = 1; 
-    
-    % to make temp indep, set Q1 = 1
-    if tempDep_i == 2
-        Q1 = 1;
-    end
-    
-    %[fas,ff,LU,LUex] = getSourceSink3(year2,ts);
-    %[C1dt,C2dt,delCdt,delC1,delC2] = bioboxtwo_subN(epsilon,Q1,Q2,gamma,ff(601:end,:),ts,year,dpCO2a,temp_anom);
-%     [C1dt,C2dt,delCdt,delC1,delC2] = bioboxtwo(eps,Q1,Q2a,...
-%     ts,year,dpCO2a,T,gamma)
-
-[C1dt,C2dt,delCdt,delC1,delC2] = bioboxtwo(epsilon,Q1,Q2,ts,year,...
-    dpCO2a,temp_anom,gamma,photResp_i)
-
-
 end
 
+if tempDep_i == 1 % to make temp indep, set Q1 = 1
+    Q1 = beta(2);
+else
+    Q1 = 1;
+end
+
+Q2 = 1; 
+
+
+[C1dt,C2dt,delCdt,delC1,delC2] = bioboxtwo(epsilon,Q1,Q2,ts,year,...
+    dpCO2a,temp_anom,gamma,photResp_i,timeConst_i);
 
 
 % get modeled fluxes into boxes out from above loop

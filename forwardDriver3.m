@@ -21,7 +21,7 @@ clear all
 % I = co2 vs N fert
 % J = t-dependent photosynthesis or respiration
 
-vary = 'A';
+vary = 'F';
 
 if strcmp(vary,'A')     numCases = 13;    
 elseif strcmp(vary,'B') numCases = 4;
@@ -50,8 +50,8 @@ end
 
 %% define time frame, cases
 
-outputArray = cell(numCases+1,9);
-outputArray(1,:) = {'Run Version','Q10','eps','atmcalc2','obsCalcDiff',...
+outputArray = cell(numCases+1,10);
+outputArray(1,:) = {'Run Version','Q10','epsilon','gamma','atmcalc2','obsCalcDiff',...
     'ddtUnfilt','ddtFilt','RMSEunfilt','RMSEfilt'};
 
 Tconst = 18.2; % surface temperature, deg C, from Joos 1996
@@ -92,7 +92,7 @@ end
 
 save('runInfo','start_year','end_year','ts','year','fert_i',...
     'oceanUp_i','tempDep_i','varSST_i','filtDecon_i',...
-    'rowLabels','opt_i','photResp_i');
+    'rowLabels','opt_i','photResp_i','timeConst_i');
 
 [temp_anom] = tempRecord3(Tdata_i,start_year,end_year,dt);
     
@@ -181,21 +181,12 @@ if end_year ~= end_year
     [fas,sstAnom] = jooshildascale_annotate2(start_year,end_year,ts,ff,varSST,Tconst);
 end
 
-% % Run the best fit values in the model again to plot
-% if fert_i == 1
-%     [C1dt,C2dt,delCdt,delC1,delC2] = bioboxtwo_sub10(...
-%         epsilon,Q1,Q2,ts,year,dpCO2a_obs,temp_anom); 
-% else % N fertilization
-%     [C1dt,C2dt,delCdt,delC1,delC2] = bioboxtwo_subN(...
-%         epsilon,Q1,Q2,gamma,ff,ts,year,dpCO2a,temp_anom);
-% end
-
+% Run the best fit values in the model again to plot
 [C1dt,C2dt,delCdt,delC1,delC2] = bioboxtwo(epsilon,Q1,Q2,ts,year,...
-    dpCO2a_obs,temp_anom,gamma,photResp_i);
-
-
+    dpCO2a_obs,temp_anom,gamma,photResp_i,timeConst_i);
 
 delCdt(:,2) = -delCdt(:,2); % change sign of land uptake
+
 
 % 10 year moving boxcar average of model result
 [delC10] = l_boxcar(delCdt,10,12,1,length(delCdt),1,2);
@@ -227,13 +218,10 @@ save('runOutput','atmcalc2','obsCalcDiff','Q1','epsilon');
 % getDriverPlots(varSST,CO2a_obs,year,atmcalc2,year,temp_anom,...
 %    sstAnom,decon_resid,delC10,yhat2,LU,ff,fas,Aoc,obsCalcDiff)
 
-% call parameter-saving function 
-% saveParams(tempDep,end_year,end_year_plot,landusedata,atmcalc2,...
-    %obsCalcDiff,Q1,epsilon,year)
     
 [ddtUnfilt,ddtFilt] = calcDerivs(obsCalcDiff);
 [RMSEunfilt,RMSEfilt] = calcErrors(ddtUnfilt,ddtFilt);
-[outputArray] = fillArray(j,Q1,epsilon,atmcalc2,obsCalcDiff,outputArray,...
+[outputArray] = fillArray(j,Q1,epsilon,gamma,atmcalc2,obsCalcDiff,outputArray,...
     ddtUnfilt,ddtFilt,RMSEunfilt,RMSEfilt);
 
 end

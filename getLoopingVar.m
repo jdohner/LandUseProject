@@ -135,7 +135,7 @@ function [LU_i,opt_i,Tdata_i,tempDep_i,varSST_i,timeConst_i,filtDecon_i,...
         oceanUp_i = 1;
         photResp_i = 1;
         rowLabels = {'CO2-fert','N-fert'};
-    elseif strcmp(vary,'I') % loop temp-dependent photosynthesis or respiration
+    elseif strcmp(vary,'J') % loop temp-dependent photosynthesis or respiration
         LU_i = 1;
         opt_i = 1;
         Tdata_i = 1;
