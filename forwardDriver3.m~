@@ -128,30 +128,9 @@ if filtDecon_i == 1
 
 elseif  filtDecon_i == 2
     % shorten unfiltered record
-    k = find(decon_resid0(:,1) == end_year-5);
-    decon_resid = decon_resid0(1:k,:);    
-
-elseif filtDecon_i == 3
-    
-    % using filtered data for everything after 
-    i = find(decon_resid0(:,1) == 1952);
-    k = find(decon_resid0(:,1) >= (1956+(11/12)),1);
-
-    [decon_filt0] = l_boxcar(decon_resid0,10,12,i,length(decon_resid0),1,2);
-    decon_residFilt(1:k,:) = decon_resid0(1:k,:);
-    decon_residFilt((k+1):(length(decon_filt0)),:) = decon_filt0((k+1):end,:);
-
-    % shorten unfiltered record
-    k = find(decon_resid0(:,1) == end_year-5);
-    decon_residUnfilt = decon_resid0(1:k,:);  
-    
-    % difference
-    decon_resid = [decon_residUnfilt(:,1) , ...
-        decon_residFilt(:,2)-decon_residUnfilt(:,2)];
-    
-
+    k = find(decon_resid(:,1) == end_year-5);
+    decon_resid = decon_resid(1:k,:);    
 end
-
 
 % decon_resid is 5 years shorter than full record
 save('decon_resid','decon_resid');
