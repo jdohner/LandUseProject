@@ -15,36 +15,25 @@ load decon_resid.mat
 % Get parameters
 [dtdelpCO2a,dpCO2a,~,~,CO2a] = getObservedCO2_2(ts,start_year,end_year);
 
-
-if strcmp(fert,'co2')
-    % For CO2 fertilization model
+if fert_i == 1 % CO2 fert
     epsilon = beta(1);
-    Q1 = beta(2);
-    Q2 = 1;
-    
-    % to make temp indep, set Q1 = 1
-    if tempDep ~= 1
-        Q1 = 1;
-    end
-
-    
-    [C1dt,C2dt,delCdt,delC1,delC2] = bioboxtwo_sub10(epsilon,Q1,Q2,ts,year,dpCO2a,temp_anom); 
-else 
-    % For N fertilization model
+    gamma = 0;
+else % N fert
     epsilon = 0;
     gamma = beta(1);
-    Q1 = beta(2);
-    Q2 = 1; 
-    
-    % to make temp indep, set Q1 = 1
-    if tempDep ~= 1
-        Q1 = 1;
-    end
-    
-    [fas,ff,LU,LUex] = getSourceSink3(year2,ts);
-    [C1dt,C2dt,delCdt,delC1,delC2] = bioboxtwo_subN(epsilon,Q1,Q2,gamma,ff(601:end,:),ts,year,dpCO2a,temp_anom);
 end
 
+if tempDep_i == 1 % to make temp indep, set Q1 = 1
+    Q1 = beta(2);
+else
+    Q1 = 1;
+end
+
+Q2 = 1; 
+
+
+[C1dt,C2dt,delCdt,delC1,delC2] = bioboxtwo(epsilon,Q1,Q2,ts,year,...
+    dpCO2a,temp_anom,gamma,photResp_i,timeConst_i);
 
 
 % get modeled fluxes into boxes out from above loop
@@ -65,7 +54,7 @@ i = find(decon_resid == 1900);
 yhat0 = decon_resid(i:end,:);
 
 % timeFrameVec goes 1850-2015.5 (1987x2)
-[timeFrameVec] = getTimeFrame(timeFrame,year);
+[timeFrameVec] = getTimeFrame(opt_i,year);
 
 % shorten timeFrameVec to match length of delC10 coming out of boxcar
 l = find(timeFrameVec == 1900);

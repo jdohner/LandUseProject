@@ -1,0 +1,87 @@
+{\rtf1\ansi\ansicpg1252\cocoartf1561\cocoasubrtf600
+{\fonttbl\f0\fswiss\fcharset0 Helvetica;}
+{\colortbl;\red255\green255\blue255;}
+{\*\expandedcolortbl;;}
+\margl1440\margr1440\vieww12120\viewh8840\viewkind0
+\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural\partightenfactor0
+
+\f0\fs24 \cf0 README.txt\
+\
+LandUseProject\
+\
+\pard\pardeftab720\ri0\partightenfactor0
+\cf0 non-integer values are for keeping track of cases outside of script \
+(i.e. CLM-V style)\
+\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural\partightenfactor0
+\cf0 \
+\pard\pardeftab720\ri0\partightenfactor0
+\cf0 \
+LU datasets\
+1 = hough\
+2 = hansis\
+3 = hough03\
+4 = const\
+5 = const2\
+6 = gcp\
+7 = hough03 extratrop\
+8 = CABLE from GCP\
+9 = CABLE higher, includes C loss from grazing & harvest\
+10 = LPX-Bern HYDE\
+11 = LPX-Bern LUH\
+12 = ORCHIDEE-MICT\
+13 = OC-N\
+14 = CLM4.5\
+15 = Yue et al. (2018)\
+16 = Yue et al. (2018) without age dynamics\
+ \
+ \
+Optimization period\
+1 (a) = 1900-2010.5 (can't go past 5 years before end of data)\
+2 (b) = 1900-2005.5\
+3 (c) = 1950-1980\
+4 (d) = 1900-2000.5 % should theoretically match output from end_year\
+= 2005.5 in old code\
+ \
+temperature record\
+2 (I) = HadCRUT4_2018_05\
+  Combined land [CRUTEM4] and marine [SST anomalies from HadSST3] \
+  temperature anomalies on a 5\'b0 by 5\'b0 grid (Morice et al., 2012)\
+ \
+3 (II) = CRUTEM4_2018_05\
+  Land air temperature anomalies on a 5\'b0 by 5\'b0 grid (Jones et al., 2012)\
+ \
+4 (III) = CRUTEM4v\
+  Variance adjusted version of CRUTEM4\
+ \
+45(IV) = Nino 3.4 index\
+  ESRL/NOAA Nino 3.4, 1870-present based on HadISST\
+ \
+6 (V) = tropical T\
+  Following Wang et al. (2014)\
+  N/A\
+ \
+7 (VI) = Global Historical Climate Network \
+  N/A\
+ \
+8 (VII) = MLOST 3.5 from NOAA\
+  Currently unable to access data\
+  N/A\
+ \
+1 (VIII) = temp record from LR/my attempts to match LR (use for debugging)\
+  landwt_T_2011.mat combined with CRUTEM4\
+ \
+update variable sst data file\
+HadSST3\
+Sea surface temperature anomalies on a 5\uc0\u730  by 5\u730  grid (Kennedy et al., 2011)\
+\
+\
+Ocean Uptake\
+M (1) = medium\
+L (2) = low\
+H (3) = high\
+\
+Fertilization\
+No prefix (1) = co2\
+N (2) = nitrogen fert\
+\
+}
