@@ -7,7 +7,7 @@
 
 
 
-clear all
+clear all; close all
 
 % which variable to loop through?
 % A = land use (13 cases)
@@ -21,7 +21,7 @@ clear all
 % I = co2 vs N fert
 % J = t-dependent photosynthesis or respiration
 
-vary = 'G';
+vary = 'J';
 
 if strcmp(vary,'A')     numCases = 13;    
 elseif strcmp(vary,'B') numCases = 4;
@@ -50,9 +50,9 @@ end
 
 %% define time frame, cases
 
-outputArray = cell(numCases+1,10);
-outputArray(1,:) = {'Run Version','Q10','epsilon','gamma','atmcalc2','obsCalcDiff',...
-    'ddtUnfilt','ddtFilt','RMSEunfilt','RMSEfilt'};
+outputArray = cell(numCases+1,11);
+outputArray(1,:) = {'Run Version','Q10','epsilon','gamma','input data',...
+    'atmcalc2','obsCalcDiff','ddtUnfilt','ddtFilt','RMSEunfilt','RMSEfilt'};
 
 Tconst = 18.2; % surface temperature, deg C, from Joos 1996
 ts = 12; % timesteps per year
@@ -239,14 +239,30 @@ save('runOutput','atmcalc2','obsCalcDiff','Q1','epsilon');
 % getDriverPlots(varSST,CO2a_obs,year,atmcalc2,year,temp_anom,...
 %    sstAnom,decon_resid,delC10,yhat2,LU,ff,fas,Aoc,obsCalcDiff)
 
-    
+% consolidate data
+if strcmp(vary,'A') % vary land use
+    inputData = LU;
+elseif strcmp(vary,'C') % vary T record
+    inputData = temp_anom;
+elseif strcmp(vary,'F'); % vary fast box time constant
+    inputData = C1dt; % flux into fast box
+elseif strcmp(vary,'G'); 
+    inputData = decon_resid;
+elseif strcmp(vary,'H');
+    inputData = [fas(:,1),fas(:,2).*Aoc];
+else
+    inputData = NaN;
+end
+
+
 [ddtUnfilt,ddtFilt] = calcDerivs(obsCalcDiff);
 [RMSEunfilt,RMSEfilt] = calcErrors(ddtUnfilt,ddtFilt);
-[outputArray] = fillArray(j,Q1,epsilon,gamma,atmcalc2,obsCalcDiff,outputArray,...
-    ddtUnfilt,ddtFilt,RMSEunfilt,RMSEfilt);
+[outputArray] = fillArray(j,Q1,epsilon,gamma,inputData,atmcalc2,...
+    obsCalcDiff,outputArray,ddtUnfilt,ddtFilt,RMSEunfilt,RMSEfilt);
 
 end
 
+plotRunComparisons(outputArray, numCases,vary)
 
 %% saving the output array
 

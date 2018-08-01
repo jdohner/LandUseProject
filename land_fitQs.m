@@ -56,6 +56,8 @@ yhat0 = decon_resid(i:end,:);
 % timeFrameVec goes 1850-2015.5 (1987x2)
 [timeFrameVec] = getTimeFrame(opt_i,year);
 
+save('timeFrameVec','timeFrameVec');
+
 % shorten timeFrameVec to match length of delC10 coming out of boxcar
 l = find(timeFrameVec == 1900);
 m = find(timeFrameVec == delC10(end,1));

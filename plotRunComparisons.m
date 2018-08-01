@@ -3,45 +3,54 @@
 % julia dohner
 % july 24, 2018
 
-function plotRunComparisons(outputArray, numCases);
+function plotRunComparisons(outputArray, numCases,vary);
 
-%% LU datasets plot
-figure
-legendInfo = {};
-colorVec = lines(13);
-hold on
+if ~isnan(outputArray{2,5}) 
+    % varied input datasets plot - ONLY for varied LU, T record,
+    % timeconst, filter/no filter decon resid, ocean uptake
+    figure('NumberTitle', 'off', 'Name', 'Input Data');
+    legendInfo = {};
+    colorVec = lines(numCases);
+    hold on
 
-for i = 1:numCases
-    LU = outputArray{i+1,2};
-    legendInfo{i} = [outputArray{i+1,1}];
-    plot(LU(:,1),LU(:,2),'Color',colorVec(i,:))
+    for i = 1:numCases
+        inputData = outputArray{i+1,5};
+        legendInfo{i} = [outputArray{i+1,1}];
+
+        plot(inputData(:,1),inputData(:,2),'Color',colorVec(i,:))
+    end
+    hold off
+
+    legend(legendInfo,'location','northwest')
+    xlabel('Year','FontSize', 18)
+    set(gca,'FontSize',18)
+    ylabel('PgC/yr','FontSize', 18)
+    set(gca,'FontSize',18)
+    xlim([1840 2016])
+    if strcmp(vary,'G') % for decon filt/nofilt
+        ylim([-2 2])
+    else
+        ylim([-1 2])
+    end
+    yticks([0:6])
+    grid
 end
-hold off
-
-legend(legendInfo,'location','northwest')
-xlabel('Year','FontSize', 18)
-set(gca,'FontSize',18)
-ylabel('PgC/yr','FontSize', 18)
-set(gca,'FontSize',18)
-xlim([1840 2016])
-ylim([0 2])
-yticks([0:6])
-grid
 
 %% residual fluxes plot 
 
-%legendInfo = {};
 colorVec = lines(13);
-figure
+figure('NumberTitle', 'off', 'Name', 'Residual Fluxes');
 
 for i = 1:numCases
-    ddtUnfilt = outputArray{i+1,7};
+    legendInfo{i} = [outputArray{i+1,1}];
+    
+    ddtUnfilt = outputArray{i+1,8};
     hold on
     h1 = subplot(2,1,1);
     plot(ddtUnfilt(:,1),ddtUnfilt(:,2),'Color',colorVec(i,:))
     hold off
     
-    ddtFilt = outputArray{i+1,8};
+    ddtFilt = outputArray{i+1,9};
     hold on
     h2 = subplot(2,1,2);
     plot(ddtFilt(:,1),ddtFilt(:,2),'Color',colorVec(i,:))
