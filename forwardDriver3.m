@@ -21,7 +21,7 @@ clear all; close all
 % I = co2 vs N fert
 % J = t-dependent photosynthesis or respiration
 
-vary = 'C';
+vary = 'J';
 
 if strcmp(vary,'A')     numCases = 13;    
 elseif strcmp(vary,'B') numCases = 4;

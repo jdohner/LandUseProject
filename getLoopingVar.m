@@ -47,7 +47,7 @@ function [LU_i,opt_i,Tdata_i,tempDep_i,varSST_i,timeConst_i,filtDecon_i,...
         fert_i = 1;
         oceanUp_i = 1;
         photResp_i = 1;
-        rowLabels = {'1900-2010.5','1900-2005.5','1950-1980','1900-2005.5'};
+        rowLabels = {'1900-2010.5','1900-2005.5','1950-1980','1900-2000.5'};
     elseif strcmp(vary,'C') % loop temp record
         LU_i = 1;
         opt_i = 1;

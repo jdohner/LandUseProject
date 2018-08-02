@@ -11,6 +11,7 @@ if ~isnan(outputArray{2,5})
     figure('NumberTitle', 'off', 'Name', 'Input Data');
     legendInfo = {};
     colorVec = lines(numCases);
+    subplot(3,1,1)
     hold on
 
     for i = 1:numCases
@@ -41,11 +42,56 @@ if ~isnan(outputArray{2,5})
         ylabel('PgC/yr','FontSize', 18)
     end
     grid
+
+
+
+for i = 1:numCases
+    legendInfo{i} = [outputArray{i+1,1}];
+    
+    ddtUnfilt = outputArray{i+1,8};
+    hold on
+    h1 = subplot(3,1,2);
+    plot(ddtUnfilt(:,1),ddtUnfilt(:,2),'Color',colorVec(i,:))
+    hold off
+    
+    ddtFilt = outputArray{i+1,9};
+    hold on
+    h2 = subplot(3,1,3);
+    plot(ddtFilt(:,1),ddtFilt(:,2),'Color',colorVec(i,:))
+    hold off
+    %legendInfo{i} = [outputArray{i+1,1}];
 end
+hold off
 
-%% residual fluxes plot 
+% want to set plot features indivudally for subplots
+title(h1, 'Unfiltered Residual Fluxes')
+legend(h1,legendInfo,'location','northwest')
+xlabel(h1,'Year','FontSize', 18)
+set(h1,'FontSize',18)
+ylabel(h1,'PgC/yr','FontSize', 18)
+set(h1,'FontSize',18)
+xlim(h1,[1840 2016])
+ylim(h1,[-4 4])
+yticks(h1,[-4:4])
+grid(h1)
 
-colorVec = lines(13);
+title(h2,'Filtered Residal Fluxes')
+legend(h2,legendInfo,'location','northwest')
+xlabel(h2,'Year','FontSize', 18)
+set(h2,'FontSize',18)
+ylabel(h2,'PgC/yr','FontSize', 18)
+set(h2,'FontSize',18)
+xlim(h2,[1840 2016])
+ylim(h2,[-4 4])
+yticks(h2,[-4:4])
+grid(h2)
+
+
+else
+    
+% residual fluxes plot
+
+colorVec = lines(numCases);
 figure('NumberTitle', 'off', 'Name', 'Residual Fluxes');
 
 for i = 1:numCases
@@ -94,5 +140,7 @@ grid(h2)
 % will need to find a way to plot temp-dep runs here - re-run forward
 % driver with tempDep = 0?
 
+
+end
 
 end
