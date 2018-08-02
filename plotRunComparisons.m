@@ -24,15 +24,22 @@ if ~isnan(outputArray{2,5})
     legend(legendInfo,'location','northwest')
     xlabel('Year','FontSize', 18)
     set(gca,'FontSize',18)
-    ylabel('PgC/yr','FontSize', 18)
+    
     set(gca,'FontSize',18)
     xlim([1840 2016])
     if strcmp(vary,'G') % for decon filt/nofilt
         ylim([-2 2])
+        yticks([-2:2])
+        ylabel('PgC/yr','FontSize', 18)
+    elseif strcmp(vary,'C') % temp records
+        ylim([-2 2])
+        yticks([-2:2])
+        ylabel('degrees C','FontSize', 18)
     else
         ylim([-1 2])
+        yticks([-1:2])
+        ylabel('PgC/yr','FontSize', 18)
     end
-    yticks([0:6])
     grid
 end
 

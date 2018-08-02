@@ -7,15 +7,19 @@
 
 % NOTE: errors calculated 1900-2014
 
-function [RMSEunfilt,RMSEfilt] = calcErrors(ddtUnfilt,ddtFilt);
+function [RMSEunfilt,RMSEfilt,RMSEfiltShort] = calcErrors(ddtUnfilt,ddtFilt);
 
 % unfilt - calculate error for 1958-end
 i = find(ddtUnfilt(:,1) == 1958); % 1900 for debugging purposes %1958);
 RMSEunfilt = sqrt(mean(ddtUnfilt(i:end,2).^2));
 
+% filt - calculate error for 1958-end 
+j = find(ddtFilt(:,1) == 1958);
+RMSEfiltShort = sqrt(mean(ddtFilt(j:end,2).^2));
+
 % filt - calculate error for 1900-end (optimization period)
-j = find(ddtFilt(:,1) == 1900);
-RMSEfilt = sqrt(mean(ddtFilt(j:end,2).^2));
+k = find(ddtFilt(:,1) == 1900);
+RMSEfilt = sqrt(mean(ddtFilt(k:end,2).^2));
 
 end
 

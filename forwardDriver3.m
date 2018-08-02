@@ -21,7 +21,7 @@ clear all; close all
 % I = co2 vs N fert
 % J = t-dependent photosynthesis or respiration
 
-vary = 'J';
+vary = 'C';
 
 if strcmp(vary,'A')     numCases = 13;    
 elseif strcmp(vary,'B') numCases = 4;
@@ -50,9 +50,10 @@ end
 
 %% define time frame, cases
 
-outputArray = cell(numCases+1,11);
+outputArray = cell(numCases+1,12);
 outputArray(1,:) = {'Run Version','Q10','epsilon','gamma','input data',...
-    'atmcalc2','obsCalcDiff','ddtUnfilt','ddtFilt','RMSEunfilt','RMSEfilt'};
+    'atmcalc2','obsCalcDiff','ddtUnfilt','ddtFilt','RMSEfilt 1900-2014'...
+    'RMSEfilt 1958-2014','RMSEunfilt 1958-2014'};
 
 Tconst = 18.2; % surface temperature, deg C, from Joos 1996
 ts = 12; % timesteps per year
@@ -256,9 +257,10 @@ end
 
 
 [ddtUnfilt,ddtFilt] = calcDerivs(obsCalcDiff);
-[RMSEunfilt,RMSEfilt] = calcErrors(ddtUnfilt,ddtFilt);
+[RMSEunfilt,RMSEfilt,RMSEfiltShort] = calcErrors(ddtUnfilt,ddtFilt);
 [outputArray] = fillArray(j,Q1,epsilon,gamma,inputData,atmcalc2,...
-    obsCalcDiff,outputArray,ddtUnfilt,ddtFilt,RMSEunfilt,RMSEfilt);
+    obsCalcDiff,outputArray,ddtUnfilt,ddtFilt,RMSEunfilt,RMSEfiltShort,...
+    RMSEfilt);
 
 end
 

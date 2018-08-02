@@ -9,7 +9,8 @@
 
 function [outputArray] = fillArray(j,Q1,epsilon,gamma,inputData,...
                                     atmCalc2,obsCalcDiff,outputArray,...
-                                    ddtUnfilt,ddtFilt,RMSEunfilt,RMSEfilt)
+                                    ddtUnfilt,ddtFilt,RMSEunfilt,...
+                                    RMSEfiltShort,RMSEfilt)
 
 load runInfo.mat
 
@@ -22,8 +23,10 @@ outputArray(j+1,6) = {atmCalc2};
 outputArray(j+1,7) = {obsCalcDiff};
 outputArray(j+1,8) = {ddtUnfilt};
 outputArray(j+1,9) = {ddtFilt};
-outputArray(j+1,10) = {RMSEunfilt};
-outputArray(j+1,11) = {RMSEfilt};
+outputArray(j+1,10) = {RMSEfilt};
+outputArray(j+1,11) = {RMSEfiltShort};
+outputArray(j+1,12) = {RMSEunfilt};
+
 
 end
 
