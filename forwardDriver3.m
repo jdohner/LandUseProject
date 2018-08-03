@@ -209,6 +209,7 @@ end
 
 delCdt(:,2) = -delCdt(:,2); % change sign of land uptake
 
+
 % TODO combine the two lines below
 % 10 year moving boxcar average of model result
 [delC10] = l_boxcar(delCdt,10,12,1,length(delCdt),1,2);
@@ -257,6 +258,8 @@ else
     inputData = NaN;
 end
 
+C1dt = [C1dt(:,1), C1dt(:,2)*-1];
+C2dt = [C2dt(:,1), C2dt(:,2)*-1];
 
 [ddtUnfilt,ddtFilt] = calcDerivs(obsCalcDiff);
 [RMSEunfilt,RMSEfilt,RMSEfiltShort] = calcErrors(ddtUnfilt,ddtFilt);

@@ -209,6 +209,7 @@ end
 
 delCdt(:,2) = -delCdt(:,2); % change sign of land uptake
 
+
 % TODO combine the two lines below
 % 10 year moving boxcar average of model result
 [delC10] = l_boxcar(delCdt,10,12,1,length(delCdt),1,2);
@@ -246,9 +247,11 @@ if strcmp(vary,'A') % vary land use
 elseif strcmp(vary,'C') % vary T record
     inputData = temp_anom;
 elseif strcmp(vary,'F'); % vary fast box time constant
-    inputData = C1dt*-1; % flux into fast box
+    inputData = [C1dt(:,1), C1dt(:,2)*-1]; % flux into fast box
 elseif strcmp(vary,'G'); 
-    inputData = decon_resid;
+    %inputData = decon_resid;
+    inputData = [C1dt(:,1), C1dt(:,2)*-1]; % flux into fast box
+    %inputData = delCdt;
 elseif strcmp(vary,'H');
     inputData = [fas(:,1),fas(:,2).*Aoc];
 else
