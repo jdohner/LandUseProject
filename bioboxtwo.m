@@ -14,34 +14,46 @@ load ff;
 T0 = T(1,2);
 dt = 1/ts;
 
+multiplier = 1;
+% cutting rate constants for fast box
+if timeConst_i == 2
+   multiplier = 2;
+elseif timeConst_i == 3
+    multiplier = 4;
+elseif timeConst_i == 4
+    multiplier = 8;
+elseif timeConst_i == 5
+    multiplier = 100;
+end
+
+
 % Define box sizes in ppm
 
 Catm = 600/2.12; % around 283 ppm (preindustrial)
-C1 = 110/2.12; % fast biosphere box, from old model
+C1 = (110/2.12)*multiplier; % fast biosphere box, from old model
 C2 = 1477/2.12; % slow biosphere box, changed to be same as 1 box
 
 % Rate constants
 
-K1a = 1/2.5; 
+K1a = 1/(2.5*multiplier); 
 Ka1 = K1a*C1/Catm; 
 
-% cutting rate constants for fast box
-if timeConst_i == 2
-    K1a = K1a*(1/2);
-    Ka1 = Ka1*(1/2);
-elseif timeConst_i == 3
-    K1a = K1a*(1/4);
-    Ka1 = Ka1*(1/4);
-elseif timeConst_i == 4
-    K1a = K1a*(1/8);
-    Ka1 = Ka1*(1/8);
-elseif timeConst_i == 5
-    K1a = K1a*(1/10);
-    Ka1 = Ka1*(1/10);
-end
-% elseif timeConst_i == 6
-%     K1a = K1a*(1/10000);
-%     Ka1 = Ka1*(1/10000);
+% % cutting rate constants for fast box
+% if timeConst_i == 2
+%     K1a = K1a*(1/2);
+%     %Ka1 = Ka1*(1/2);
+% elseif timeConst_i == 3
+%     K1a = K1a*(1/4);
+%     %Ka1 = Ka1*(1/4);
+% elseif timeConst_i == 4
+%     K1a = K1a*(1/8);
+%     %Ka1 = Ka1*(1/8);
+% elseif timeConst_i == 5
+%     K1a = K1a*(1/16);
+%     %Ka1 = Ka1*(1/16);
+% % elseif timeConst_i == 6
+% %     K1a = K1a*(1);
+% %     Ka1 = Ka1*(1);
 % end
 
 K2a = 1/60; % slow box to atmosphere
@@ -69,7 +81,7 @@ for ii = 1:length(year)
     % T-dependent respiration
     if photResp_i == 1
         % fast box
-        C1dt(ii,2) = Ka1*(Catm + epsilon*dpCO2a(ii,2) + gamma*ff(ii+a-1,2)*Catm) - ...
+        C1dt(ii,2) = Ka1*(Catm + 0*epsilon*dpCO2a(ii,2) + gamma*ff(ii+a-1,2)*Catm) - ...
         K1a*Q1^((T(ii,2)-T0)/10)*(C1 + delC1(ii,2)); 
 
         % slow box (equation (3) in Rafelski 2009

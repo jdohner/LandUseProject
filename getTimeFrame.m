@@ -9,6 +9,8 @@ function [timeFrameVec] = getTimeFrame(opt_i,year);
 
 timeFrameVec = [year,ones(length(year),0)];
 
+%opt_i == 3;
+
 if opt_i == 1
     i = find(year == 1900);
     j = find(year == 2010.5);
@@ -20,8 +22,8 @@ elseif opt_i == 2
     timeFrameVec(i:j,2) = 1;
     
 elseif opt_i == 3
-    i = find(year == 1950);
-    j = find(year == 1980);
+    i = find(year == 1959);
+    j = find(year == 2010.5);
     timeFrameVec(i:j,2) = 1;
     
 elseif opt_i == 4

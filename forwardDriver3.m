@@ -21,14 +21,14 @@ clear all; close all
 % I = co2 vs N fert
 % J = t-dependent photosynthesis or respiration
 
-vary = 'J';
+vary = 'D';
 
 if strcmp(vary,'A')     numCases = 13;    
 elseif strcmp(vary,'B') numCases = 4;
 elseif strcmp(vary,'C') numCases = 4;
 elseif strcmp(vary,'D') numCases = 2;    
 elseif strcmp(vary,'E') numCases = 2;    
-elseif strcmp(vary,'F') numCases = 6;
+elseif strcmp(vary,'F') numCases = 5;
 elseif strcmp(vary,'G') numCases = 3;
 elseif strcmp(vary,'H') numCases = 3;
 elseif strcmp(vary,'I') numCases = 2;
@@ -148,7 +148,7 @@ elseif filtDecon_i == 3
     
     % difference
     decon_resid = [decon_residUnfilt(:,1) , ...
-        decon_residFilt(:,2)-decon_residUnfilt(:,2)];
+        decon_residUnfilt(:,2)-decon_residFilt(:,2)];
     
 
 end
