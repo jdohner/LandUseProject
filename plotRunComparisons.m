@@ -5,6 +5,8 @@
 
 function plotRunComparisons(outputArray, numCases,vary);
 
+d = 2.31; % ppm to PgC conversion factor (formerly 1/2.31 opp direction)
+
 if ~isnan(outputArray{2,5}) 
     % varied input datasets plot - ONLY for varied LU, T record,
     % timeconst, filter/no filter decon resid, ocean uptake
@@ -18,7 +20,7 @@ if ~isnan(outputArray{2,5})
         inputData = outputArray{i+1,5};
         legendInfo{i} = [outputArray{i+1,1}];
 
-        plot(inputData(:,1),inputData(:,2),'Color',colorVec(i,:))
+        plot(inputData(:,1),(inputData(:,2).*d),'Color',colorVec(i,:))
     end
     hold off
 
@@ -29,9 +31,12 @@ if ~isnan(outputArray{2,5})
     set(gca,'FontSize',18)
     xlim([1840 2016])
     if strcmp(vary,'G') % for decon filt/nofilt
-        ylim([-2 2])
-        yticks([-2:2])
+        ylim([-5 5])
+        yticks([-5:5])
         ylabel('PgC/yr','FontSize', 18)
+%         ylim([-1 2])
+%         yticks([-1:2])
+%         ylabel('PgC/yr','FontSize', 18)
     elseif strcmp(vary,'C') % temp records
         ylim([-2 2])
         yticks([-2:2])

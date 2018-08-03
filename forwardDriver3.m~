@@ -246,11 +246,9 @@ if strcmp(vary,'A') % vary land use
 elseif strcmp(vary,'C') % vary T record
     inputData = temp_anom;
 elseif strcmp(vary,'F'); % vary fast box time constant
-    inputData = [C1dt(:,1), C1dt(:,2)*-1]; % flux into fast box
+    inputData = C1dt*-1; % flux into fast box
 elseif strcmp(vary,'G'); 
-    %inputData = decon_resid;
-    inputData = [C1dt(:,1), C1dt(:,2)*-1]; % flux into fast box
-    %inputData = delCdt;
+    inputData = decon_resid;
 elseif strcmp(vary,'H');
     inputData = [fas(:,1),fas(:,2).*Aoc];
 else
