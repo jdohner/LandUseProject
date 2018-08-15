@@ -7,7 +7,7 @@
 
 
 function [C1dt,C2dt,delCdt,delC1,delC2] = bioboxtwo(epsilon,Q1,Q2,ts,year,...
-    dpCO2a,T,gamma,photResp_i,timeConst_i)
+    dpCO2a,T,gamma,photResp_i,timeConst_i,zeroBio_i)
 
 load ff;
 
@@ -67,8 +67,23 @@ C1dt(:,1) = year;
 C2dt(:,1) = year;
 delC1(length(year)+1,1) = year(length(year),1)+dt;
 delC2(length(year)+1,1) = year(length(year),1)+dt;
+p1 = 1;
+p2 = 1;
 
 a = find(ff(:,1) == year(1));
+
+if zeroBio_i == 2 % zero out epsilon
+    p1 = 0; % epsilon
+    p2 = 1; % delC1
+elseif zeroBio_i == 3 % zero out delC1
+    p1 = 1;
+    p2 = 0;
+elseif zeroBio_i == 4 % zero out both epsilon and delC1
+    p1 = 0;
+    p2 = 0;
+end
+    
+    
 
 for ii = 1:length(year)
     % fast box (equation (3) in Rafelski 2009
@@ -81,8 +96,8 @@ for ii = 1:length(year)
     % T-dependent respiration
     if photResp_i == 1
         % fast box
-        C1dt(ii,2) = Ka1*(Catm + 0*epsilon*dpCO2a(ii,2) + gamma*ff(ii+a-1,2)*Catm) - ...
-        K1a*Q1^((T(ii,2)-T0)/10)*(C1 + 0*delC1(ii,2)); 
+        C1dt(ii,2) = Ka1*(Catm + p1*epsilon*dpCO2a(ii,2) + gamma*ff(ii+a-1,2)*Catm) - ...
+        K1a*Q1^((T(ii,2)-T0)/10)*(C1 + p2*delC1(ii,2)); 
 
         % slow box (equation (3) in Rafelski 2009
         C2dt(ii,2) = Ka2*(Catm + epsilon*dpCO2a(ii,2)+ gamma*ff(ii+a-1,2)*Catm) - ...

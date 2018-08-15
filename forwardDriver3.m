@@ -7,7 +7,7 @@
 
 
 
-clear all; close all
+clear all; %close all
 
 % which variable to loop through?
 % A = land use (13 cases)
@@ -20,8 +20,9 @@ clear all; close all
 % H = ocean uptake
 % I = co2 vs N fert
 % J = t-dependent photosynthesis or respiration
+% K = loop through cancelling out eps, ?Ci
 
-vary = 'G';
+vary = 'K';
 
 if strcmp(vary,'A')     numCases = 13;    
 elseif strcmp(vary,'B') numCases = 4;
@@ -33,6 +34,7 @@ elseif strcmp(vary,'G') numCases = 3;
 elseif strcmp(vary,'H') numCases = 3;
 elseif strcmp(vary,'I') numCases = 2;
 elseif strcmp(vary,'J') numCases = 2;
+elseif strcmp(vary,'K') numCases = 4;
 else % see README for cases
     numCases = 1;
     LU_i = 1;
@@ -45,6 +47,7 @@ else % see README for cases
     fert_i = 1;
     oceanUp_i = 1;
     photResp_i = 1;
+    zeroBio_i = 1;
 end
 
 
@@ -84,7 +87,7 @@ for j = 1:numCases
     
 % get the indices for variables being looped/held fixed    
 [LU_i,opt_i,Tdata_i,tempDep_i,varSST_i,timeConst_i,filtDecon_i,...
-    fert_i,oceanUp_i,photResp_i,rowLabels] = getLoopingVar(vary,j);
+    fert_i,oceanUp_i,photResp_i,zeroBio_i,rowLabels] = getLoopingVar(vary,j);
 
 
 if tempDep_i == 2 % temp-independent
@@ -93,7 +96,7 @@ end
 
 save('runInfo','start_year','end_year','ts','year','fert_i',...
     'oceanUp_i','tempDep_i','varSST_i','filtDecon_i',...
-    'rowLabels','opt_i','photResp_i','timeConst_i');
+    'rowLabels','opt_i','photResp_i','timeConst_i','zeroBio_i');
 
 [temp_anom] = tempRecord3(Tdata_i,start_year,end_year,dt);
     
@@ -205,16 +208,19 @@ end
 
 % Run the best fit values in the model again to plot
 [C1dt,C2dt,delCdt,delC1,delC2] = bioboxtwo(epsilon,Q1,Q2,ts,year,...
-    dpCO2a_obs,temp_anom,gamma,photResp_i,timeConst_i);
+    dpCO2a_obs,temp_anom,gamma,photResp_i,timeConst_i,zeroBio_i);
+
+plotBioboxes(delCdt,C1dt,C2dt);
 
 delCdt(:,2) = -delCdt(:,2); % change sign of land uptake
 
 
 % TODO combine the two lines below
 % 10 year moving boxcar average of model result
-[delC10] = l_boxcar(delCdt,10,12,1,length(delCdt),1,2);
+%[delC10] = l_boxcar(delCdt,10,12,1,length(delCdt),1,2);
 
 if filtDecon_i == 1 % 10-yr filter applied
+    [delC10] = l_boxcar(delCdt,10,12,1,length(delCdt),1,2);
     yhat2 = delC10(:,2);
 elseif filtDecon_i == 2
     yhat2 = delCdt(:,2);   

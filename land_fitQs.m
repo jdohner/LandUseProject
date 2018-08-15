@@ -33,7 +33,7 @@ Q2 = 1;
 
 
 [C1dt,C2dt,delCdt,delC1,delC2] = bioboxtwo(epsilon,Q1,Q2,ts,year,...
-    dpCO2a,temp_anom,gamma,photResp_i,timeConst_i);
+    dpCO2a,temp_anom,gamma,photResp_i,timeConst_i,zeroBio_i);
 
 
 % get modeled fluxes into boxes out from above loop

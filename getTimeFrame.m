@@ -9,7 +9,7 @@ function [timeFrameVec] = getTimeFrame(opt_i,year);
 
 timeFrameVec = [year,ones(length(year),0)];
 
-%opt_i = 3;
+opt_i = 3;
 
 if opt_i == 1
     i = find(year == 1900);

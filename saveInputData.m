@@ -189,19 +189,31 @@ Boden2016(:,2) = FFinterp*d;
     lonData  = ncread('TRENDY2017_S3_LAND_USE_FLUX.nc','lon');
     % flux in gC/m^2/s
     % dimensions are lon (rows) x lat (columns) x time (3rd dim)
-    fluxData = ncread('TRENDY2017_S3_LAND_USE_FLUX.nc','LAND_USE_FLUX');
+    fluxData0 = ncread('TRENDY2017_S3_LAND_USE_FLUX.nc','LAND_USE_FLUX');
     % days since 1860-01-01 00:00:00
-    timeData = ncread('TRENDY2017_S3_LAND_USE_FLUX.nc','time');
+    timeData = ncread('TRENDY2017_S3_LAND_USE_FLUX.nc','time'); % monthly
 
     date0 = 1860;
     d2 = 1/365; % converting days to years
     date1 = timeData*d2 + date0;
     CLM45_2016(:,1) = date1;
     
+    % make sure you know what you're doing when you manipulate the time
+    % stuff, and also that the x axis is incrementing evenly
+    
     for i = 1:length(date1)
-        a = fluxData(:,:,i);
-        CLM45_2016(i,2) = nanmean2(a);
+        a = fluxData0(:,:,i);
+        fluxData1(i) = nanmean2(a);
+        %CLM45_2016(i,2) = nanmean2(a);
+        % do weighted average by cosine of latitude, gaussian weighting
+        % check ncl documentation piece - wgt_areaave
     end
+    
+    % convert flux from gC/m^2/s to PgC/yr
+    Aland = 1.4842895e+14; % surface area of land in meters^2
+    d3 = 3.154e+7; % seconds/year   
+    d4 = 1e-15; % grams/petagrams
+    CLM45_2016(:,2) = fluxData1*Aland*d3*d4;
     
     clear lonData latData fluxData timeData date0 date1 LUdata LUinterp;
     
