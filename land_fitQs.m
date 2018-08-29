@@ -51,7 +51,7 @@ delCdt(:,2) = -delCdt(:,2);
 %% messing with fitting timeframes
 
 i = find(decon_resid == 1900);
-yhat0 = decon_resid(i:end,:);
+yhat0 = decon_resid(i:end,:); % yhat is 1900-end
 
 % timeFrameVec goes 1850-2015.5 (1987x2)
 [timeFrameVec] = getTimeFrame(opt_i,year);
@@ -61,17 +61,18 @@ save('timeFrameVec','timeFrameVec');
 % shorten timeFrameVec to match length of delC10 coming out of boxcar
 l = find(timeFrameVec == 1900);
 m = find(timeFrameVec == delC10(end,1));
-timeFrameVec = timeFrameVec(l:m,:);
+timeFrameVec = timeFrameVec(l:m,:); % timeFrameVec now 1900-2010.5
 
 % get the indices of non-zero values to include in fit
-k = find(timeFrameVec(:,2));
+indicesVec = find(timeFrameVec(:,2));
 
 j = find(delC10(:,1) == 1900);
-delC10_cut = delC10(j:end,:);
+delC10_cut = delC10(j:end,:); % shorten delC10 to 1900-2010.5
 
-for k2 = 1:length(k)
+for l = 1:length(indicesVec)
     % all places with 1s become part of fit
-    yhat0(k2,2) = delC10_cut(k2,2);
+    m = indicesVec(l);
+    yhat0(m,2) = delC10_cut(m,2);
 end
 
 yhat = yhat0(:,2);

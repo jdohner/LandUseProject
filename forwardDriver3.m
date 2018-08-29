@@ -22,7 +22,7 @@ clear all; %close all
 % J = t-dependent photosynthesis or respiration
 % K = loop through cancelling out eps, ?Ci
 
-vary = 'K';
+vary = 'G';
 
 if strcmp(vary,'A')     numCases = 13;    
 elseif strcmp(vary,'B') numCases = 4;
@@ -210,7 +210,7 @@ end
 [C1dt,C2dt,delCdt,delC1,delC2] = bioboxtwo(epsilon,Q1,Q2,ts,year,...
     dpCO2a_obs,temp_anom,gamma,photResp_i,timeConst_i,zeroBio_i);
 
-plotBioboxes(delCdt,C1dt,C2dt);
+%plotBioboxes(delCdt,C1dt,C2dt);
 
 delCdt(:,2) = -delCdt(:,2); % change sign of land uptake
 
