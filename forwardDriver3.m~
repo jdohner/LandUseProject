@@ -22,7 +22,7 @@ clear all; %close all
 % J = t-dependent photosynthesis or respiration
 % K = loop through cancelling out eps, ?Ci
 
-vary = 'G';
+vary = 'K';
 
 if strcmp(vary,'A')     numCases = 13;    
 elseif strcmp(vary,'B') numCases = 4;
@@ -60,8 +60,7 @@ outputArray(1,:) = {'Run Version','Q10','epsilon','gamma','input data',...
 
 if strcmp(vary,'K') % create array to hold land box flux values
     landFluxArray = cell(numCases,4);
-    landFluxArray(1,:) = {'Run Version','C1dt','C2dt','delCdt'};
-end
+    landFluxArray(1,:
 
 Tconst = 18.2; % surface temperature, deg C, from Joos 1996
 ts = 12; % timesteps per year
@@ -215,7 +214,7 @@ end
 [C1dt,C2dt,delCdt,delC1,delC2] = bioboxtwo(epsilon,Q1,Q2,ts,year,...
     dpCO2a_obs,temp_anom,gamma,photResp_i,timeConst_i,zeroBio_i);
 
-
+plotBioboxes(delCdt,C1dt,C2dt);
 
 delCdt(:,2) = -delCdt(:,2); % change sign of land uptake
 
@@ -278,17 +277,9 @@ C2dt = [C2dt(:,1), C2dt(:,2)*-1];
     obsCalcDiff,outputArray,ddtUnfilt,ddtFilt,RMSEunfilt,RMSEfiltShort,...
     RMSEfilt);
 
-if strcmp(vary,'K')
-    [landFluxArray] = fillLandFluxArray(landFluxArray,j,C1dt,C2dt,delCdt);
-end
-
 end
 
 plotRunComparisons(outputArray, numCases,vary)
-
-if strcmp(vary,'K')
-plotBioboxes(landFluxArray,numCases,vary);
-end
 
 %% saving the output array
 
