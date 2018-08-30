@@ -4,6 +4,8 @@
 % julia dohner
 %
 % script to output plots for forward driver
+%
+% NOT CURRENTLY BEING CALLED 8/30/18
 
 function getDriverPlots(varSST,CO2a_obs,year,atmcalc2,year3,temp_anom,...
     sstAnom,decon_filt,delC10,yhat2,LU,ff,fas,Aoc,obsCalcDiff)

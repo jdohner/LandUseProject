@@ -69,7 +69,7 @@ end
 hold off
 
 % want to set plot features indivudally for subplots
-title(h1, 'Unfiltered Residual Fluxes')
+title(h1, 'Obs-Model Flux Discrepancy (unsmoothed)')
 legend(h1,legendInfo,'location','northwest')
 xlabel(h1,'Year','FontSize', 18)
 set(h1,'FontSize',18)
@@ -80,7 +80,7 @@ ylim(h1,[-4 4])
 yticks(h1,[-4:4])
 grid(h1)
 
-title(h2,'Filtered Residal Fluxes')
+title(h2,'Obs-Model Flux Discrepancy (smoothed)')
 legend(h2,legendInfo,'location','northwest')
 xlabel(h2,'Year','FontSize', 18)
 set(h2,'FontSize',18)
@@ -97,7 +97,7 @@ else
 % residual fluxes plot
 
 colorVec = lines(numCases);
-figure('NumberTitle', 'off', 'Name', 'Residual Fluxes');
+figure('NumberTitle', 'off', 'Name', 'Obs-Model Flux Discrepancies');
 
 for i = 1:numCases
     legendInfo{i} = [outputArray{i+1,1}];
@@ -118,7 +118,7 @@ end
 hold off
 
 % want to set plot features indivudally for subplots
-title(h1, 'Unfiltered Residual Fluxes')
+title(h1, 'Obs-Model Flux Discrepancy (unsmoothed)')
 legend(h1,legendInfo,'location','northwest')
 xlabel(h1,'Year','FontSize', 18)
 set(h1,'FontSize',18)
@@ -129,7 +129,7 @@ ylim(h1,[-4 4])
 yticks(h1,[-4:4])
 grid(h1)
 
-title(h2,'Filtered Residal Fluxes')
+title(h2,'Obs-Model Flux Discrepancy (smoothed)')
 legend(h2,legendInfo,'location','northwest')
 xlabel(h2,'Year','FontSize', 18)
 set(h2,'FontSize',18)
