@@ -41,8 +41,19 @@ Q2 = 1;
 delCdt(:,2) = -delCdt(:,2); 
 
 % 10-year moving boxcar average of model
-[delC10] = l_boxcar(delCdt,1,12,1,length(delCdt),1,2);
-%[delC10] = boxcar2(delCdt,10,12,1,length(delCdt),1,2);
+
+if filt_i == 1 | filt_i == 4 % 10-year filter, regular and unfilt-filt
+    
+    [delC10] = l_boxcar(delCdt,10,12,1,length(delCdt),1,2);
+    
+elseif filt_i == 2 | filt_i == 5 % 1-year filter, regular and unfilt-filt
+    
+    [delC10] = l_boxcar(delCdt,1,12,1,length(delCdt),1,2);
+    
+else % unfiltered
+    delC10 = delCdt;
+end
+
 
 % yhat is the term that is compared to the residual flux in nlinfit. 
 % Change the index numbers here and in nonlin_land_Qs_annotate (e.g. line

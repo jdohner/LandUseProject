@@ -30,7 +30,7 @@ elseif strcmp(vary,'C') numCases = 4;
 elseif strcmp(vary,'D') numCases = 2;    
 elseif strcmp(vary,'E') numCases = 2;    
 elseif strcmp(vary,'F') numCases = 5;
-elseif strcmp(vary,'G') numCases = 3;
+elseif strcmp(vary,'G') numCases = 5;
 elseif strcmp(vary,'H') numCases = 3;
 elseif strcmp(vary,'I') numCases = 2;
 elseif strcmp(vary,'J') numCases = 2;
@@ -43,7 +43,7 @@ else % see README for cases
     tempDep_i = 1;
     varSST_i = 1;
     timeConst_i = 1;
-    filtDecon_i = 1;
+    filt_i = 1;
     fert_i = 1;
     oceanUp_i = 1;
     photResp_i = 1;
@@ -91,7 +91,7 @@ saveInputData; % load and process FF and LU data
 for j = 1:numCases
     
 % get the indices for variables being looped/held fixed    
-[LU_i,opt_i,Tdata_i,tempDep_i,varSST_i,timeConst_i,filtDecon_i,...
+[LU_i,opt_i,Tdata_i,tempDep_i,varSST_i,timeConst_i,filt_i,...
     fert_i,oceanUp_i,photResp_i,zeroBio_i,rowLabels] = getLoopingVar(vary,j);
 
 
@@ -100,7 +100,7 @@ if tempDep_i == 2 % temp-independent
 end
 
 save('runInfo','start_year','end_year','ts','year','fert_i',...
-    'oceanUp_i','tempDep_i','varSST_i','filtDecon_i',...
+    'oceanUp_i','tempDep_i','varSST_i','filt_i',...
     'rowLabels','opt_i','photResp_i','timeConst_i','zeroBio_i');
 
 [temp_anom] = tempRecord3(Tdata_i,start_year,end_year,dt);
@@ -126,7 +126,7 @@ decon_resid0 = [year, dtdelpCO2a_obs(:,2)-ff(:,2)+Aoc*fas(:,2)-LU(:,2)];
 % don't use 10 year mean before 1957, because data are already smoothed
 % (ice core)
 
-if filtDecon_i == 1 
+if filt_i == 1 % 10-year filter
     % using filtered data for everything after 
     i = find(decon_resid0(:,1) == 1952);
     k = find(decon_resid0(:,1) >= (1956+(11/12)),1);
@@ -134,13 +134,21 @@ if filtDecon_i == 1
     [decon_filt0] = l_boxcar(decon_resid0,1,12,i,length(decon_resid0),1,2);
     decon_resid(1:k,:) = decon_resid0(1:k,:);
     decon_resid((k+1):(length(decon_filt0)),:) = decon_filt0((k+1):end,:);
+    
+elseif filt_i == 2 % 1-year filter
+    i = find(decon_resid0(:,1) == 1952);
+    k = find(decon_resid0(:,1) >= (1956+(11/12)),1);
 
-elseif  filtDecon_i == 2
+    [decon_filt0] = l_boxcar(decon_resid0,1,12,i,length(decon_resid0),1,2);
+    decon_resid(1:k,:) = decon_resid0(1:k,:);
+    decon_resid((k+1):(length(decon_filt0)),:) = decon_filt0((k+1):end,:);   
+
+elseif  filt_i == 3 % unfiltered
     % shorten unfiltered record
     k = find(decon_resid0(:,1) == end_year-5);
     decon_resid = decon_resid0(1:k,:);    
 
-elseif filtDecon_i == 3
+elseif filt_i == 4 % unfilt - filt 10-year
     
     % using filtered data for everything after 
     i = find(decon_resid0(:,1) == 1952);
@@ -157,6 +165,26 @@ elseif filtDecon_i == 3
     % difference (only the high-freq noise)
     decon_resid = [decon_residUnfilt(:,1) , ...
         decon_residUnfilt(:,2)-decon_residFilt(:,2)];
+    
+elseif filt_i == 5 % unfilt - filt 1-year
+    
+    % using filtered data for everything after 
+    i = find(decon_resid0(:,1) == 1952);
+    k = find(decon_resid0(:,1) >= (1956+(11/12)),1);
+
+    [decon_filt0] = l_boxcar(decon_resid0,1,12,i,length(decon_resid0),1,2);
+    decon_residFilt(1:k,:) = decon_resid0(1:k,:);
+    decon_residFilt((k+1):(length(decon_filt0)),:) = decon_filt0((k+1):end,:);
+
+    % shorten unfiltered record
+    k = find(decon_resid0(:,1) == end_year-5);
+    decon_residUnfilt = decon_resid0(1:k,:);  
+    decon_residFilt = decon_residFilt(1:k,:);
+    
+    % difference (only the high-freq noise)
+    decon_resid = [decon_residUnfilt(:,1) , ...
+        decon_residUnfilt(:,2)-decon_residFilt(:,2)];
+    
     
 
 end
@@ -224,10 +252,10 @@ delCdt(:,2) = -delCdt(:,2); % change sign of land uptake
 % 10 year moving boxcar average of model result
 %[delC10] = l_boxcar(delCdt,10,12,1,length(delCdt),1,2);
 
-if filtDecon_i == 1 % 10-yr filter applied
+if filt_i == 1 % 10-yr filter applied
     [delC10] = l_boxcar(delCdt,10,12,1,length(delCdt),1,2);
     yhat2 = delC10(:,2);
-elseif filtDecon_i == 2
+elseif filt_i == 2
     yhat2 = delCdt(:,2);   
 end
 

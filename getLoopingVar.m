@@ -5,7 +5,7 @@
 % 
 % Sets indicdes of variables to be looped and vars to be held constant
 
-function [LU_i,opt_i,Tdata_i,tempDep_i,varSST_i,timeConst_i,filtDecon_i,...
+function [LU_i,opt_i,Tdata_i,tempDep_i,varSST_i,timeConst_i,filt_i,...
     fert_i,oceanUp_i,photResp_i,zeroBio_i,rowLabels] = getLoopingVar(vary,j);
 
 
@@ -29,7 +29,7 @@ function [LU_i,opt_i,Tdata_i,tempDep_i,varSST_i,timeConst_i,filtDecon_i,...
         tempDep_i = 1;
         varSST_i = 1;
         timeConst_i = 1;
-        filtDecon_i = 1;
+        filt_i = 1;
         fert_i = 1;
         oceanUp_i = 1;
         photResp_i = 1;
@@ -45,7 +45,7 @@ function [LU_i,opt_i,Tdata_i,tempDep_i,varSST_i,timeConst_i,filtDecon_i,...
         tempDep_i = 1;
         varSST_i = 1;
         timeConst_i = 1;
-        filtDecon_i = 1;
+        filt_i = 1;
         fert_i = 1;
         oceanUp_i = 1;
         photResp_i = 1;
@@ -58,7 +58,7 @@ function [LU_i,opt_i,Tdata_i,tempDep_i,varSST_i,timeConst_i,filtDecon_i,...
         tempDep_i = 1;
         varSST_i = 1;
         timeConst_i = 1;
-        filtDecon_i = 1;
+        filt_i = 1;
         fert_i = 1;
         oceanUp_i = 1;
         photResp_i = 1;
@@ -73,7 +73,7 @@ function [LU_i,opt_i,Tdata_i,tempDep_i,varSST_i,timeConst_i,filtDecon_i,...
         tempDep_i = j;
         varSST_i = 1;
         timeConst_i = 1;
-        filtDecon_i = 1;
+        filt_i = 1;
         fert_i = 1;
         oceanUp_i = 1;
         photResp_i = 1;
@@ -86,7 +86,7 @@ function [LU_i,opt_i,Tdata_i,tempDep_i,varSST_i,timeConst_i,filtDecon_i,...
         tempDep_i = 1;
         varSST_i = j;
         timeConst_i = 1;
-        filtDecon_i = 1;
+        filt_i = 1;
         fert_i = 1;
         oceanUp_i = 1;
         photResp_i = 1;
@@ -99,7 +99,7 @@ function [LU_i,opt_i,Tdata_i,tempDep_i,varSST_i,timeConst_i,filtDecon_i,...
         tempDep_i = 1;
         varSST_i = 1;
         timeConst_i = j;
-        filtDecon_i = 1;
+        filt_i = 1;
         fert_i = 1;
         oceanUp_i = 1;
         photResp_i = 1;
@@ -113,12 +113,13 @@ function [LU_i,opt_i,Tdata_i,tempDep_i,varSST_i,timeConst_i,filtDecon_i,...
         tempDep_i = 1;
         varSST_i = 1;
         timeConst_i = 1;
-        filtDecon_i = j;
+        filt_i = j;
         fert_i = 1;
         oceanUp_i = 1;
         photResp_i = 1;
         zeroBio_i = 1;
-        rowLabels = {'Filtered decon','Unfiltered decon','Unfilt-filt decon'};
+        rowLabels = {'10-year Filter','1-year Filter','Unfiltered',...
+            'Unfilt-filt 10-year','Unfilt-filt 1-year'};
     elseif strcmp(vary,'H') % loop ocean uptake
         LU_i = 1;
         opt_i = 1;
@@ -126,7 +127,7 @@ function [LU_i,opt_i,Tdata_i,tempDep_i,varSST_i,timeConst_i,filtDecon_i,...
         tempDep_i = 1;
         varSST_i = 1;
         timeConst_i = 1;
-        filtDecon_i = 1;
+        filt_i = 1;
         fert_i = 1;
         oceanUp_i = j;
         photResp_i = 1;
@@ -139,7 +140,7 @@ function [LU_i,opt_i,Tdata_i,tempDep_i,varSST_i,timeConst_i,filtDecon_i,...
         tempDep_i = 1;
         varSST_i = 1;
         timeConst_i = 1;
-        filtDecon_i = 1;
+        filt_i = 1;
         fert_i = j;
         oceanUp_i = 1;
         photResp_i = 1;
@@ -152,7 +153,7 @@ function [LU_i,opt_i,Tdata_i,tempDep_i,varSST_i,timeConst_i,filtDecon_i,...
         tempDep_i = 1;
         varSST_i = 1;
         timeConst_i = 1;
-        filtDecon_i = 1;
+        filt_i = 1;
         fert_i = 1;
         oceanUp_i = 1;
         photResp_i = j;
@@ -166,7 +167,7 @@ function [LU_i,opt_i,Tdata_i,tempDep_i,varSST_i,timeConst_i,filtDecon_i,...
         tempDep_i = 1;
         varSST_i = 1;
         timeConst_i = 1;
-        filtDecon_i = 1;
+        filt_i = 3;
         fert_i = 1;
         oceanUp_i = 1;
         photResp_i = 1;
