@@ -131,7 +131,7 @@ if filtDecon_i == 1
     i = find(decon_resid0(:,1) == 1952);
     k = find(decon_resid0(:,1) >= (1956+(11/12)),1);
 
-    [decon_filt0] = l_boxcar(decon_resid0,10,12,i,length(decon_resid0),1,2);
+    [decon_filt0] = l_boxcar(decon_resid0,1,12,i,length(decon_resid0),1,2);
     decon_resid(1:k,:) = decon_resid0(1:k,:);
     decon_resid((k+1):(length(decon_filt0)),:) = decon_filt0((k+1):end,:);
 
