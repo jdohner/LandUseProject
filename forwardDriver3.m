@@ -9,6 +9,8 @@
 
 clear all; %close all
 
+tic
+
 % which variable to loop through?
 % A = land use (13 cases)
 % B = optimization time frame (4 cases)
@@ -22,7 +24,7 @@ clear all; %close all
 % J = t-dependent photosynthesis or respiration
 % K = loop through cancelling out eps, ?Ci
 
-vary = 'K';
+vary = 'A';
 
 if strcmp(vary,'A')     numCases = 13;    
 elseif strcmp(vary,'B') numCases = 4;
@@ -309,6 +311,9 @@ C2dt = [C2dt(:,1), C2dt(:,2)*-1];
 if strcmp(vary,'K')
     [landFluxArray] = fillLandFluxArray(landFluxArray,j,C1dt,C2dt,delCdt);
 end
+
+toc
+
 
 end
 
