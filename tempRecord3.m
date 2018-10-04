@@ -22,6 +22,8 @@ function [temp_anom] = tempRecord3(Tdata_i,start_year,end_year,dt)
 CRUstart = 1850;
 CRUend = 2018 + (4/12);
 % timepoint 2018 counts as the first month in year, thus subtract 1
+
+Tdata_i = 2;
     
 if Tdata_i == 2
     

@@ -27,6 +27,13 @@ load inputData.mat
 
 ff = Boden2016;
 
+% ff_paris = [Boden2016(:,1), Boden2016(:,2) ; 2020, 4.5 ; 2100 , 4.5];
+% year_paris = 1850:(1/12):2100;
+% ffParis_interp0 = (interp1(ff_paris(:,1),ff_paris(:,2),year_paris)).';
+% ffParis_interp = [year_paris', ffParis_interp0];
+% 
+% ff = ffParis_interp;
+
 if LU_i == 1 % Houghton 2017
     LU = Houghton2017;
     
@@ -84,6 +91,7 @@ elseif LU_i == 15 % Yue et al. (2018)
 elseif LU_i == 16 % Yue et al. (2018) without age dynamics
     % 1500-2005 | GtC/yr | annual
     LU = Yue2005_noAge;
+    
         
 end
 

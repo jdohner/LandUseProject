@@ -8,6 +8,7 @@
 % NOTE: errors calculated 1900-2014
 
 function [RMSEunfilt,RMSEfilt,RMSEfiltShort] = calcErrors(ddtUnfilt,ddtFilt);
+% ddtUnfilt & filt are in PgC/yr
 
 % unfilt - calculate error for 1958-end
 i = find(ddtUnfilt(:,1) == 1958); % 1900 for debugging purposes %1958);

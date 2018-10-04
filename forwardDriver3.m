@@ -13,7 +13,7 @@ tic
 
 % which variable to loop through?
 % A = land use (13 cases)
-% B = optimization time frame (4 cases)
+% B = optimization time frame (6 cases)
 % C = temperature record (4 cases)
 % D = fixed vs var T (2 cases)
 % E = fixed vs var SST (2 cases)
@@ -24,10 +24,10 @@ tic
 % J = t-dependent photosynthesis or respiration
 % K = loop through cancelling out eps, ?Ci
 
-vary = 'A';
+vary = 'B';
 
 if strcmp(vary,'A')     numCases = 13;    
-elseif strcmp(vary,'B') numCases = 4;
+elseif strcmp(vary,'B') numCases = 6;
 elseif strcmp(vary,'C') numCases = 4;
 elseif strcmp(vary,'D') numCases = 2;    
 elseif strcmp(vary,'E') numCases = 2;    
@@ -40,8 +40,8 @@ elseif strcmp(vary,'K') numCases = 4;
 else % see README for cases
     numCases = 1;
     LU_i = 1;
-    opt_i = 1;
-    Tdata_i = 1;
+    opt_i = 2;
+    Tdata_i = 2;
     tempDep_i = 1;
     varSST_i = 1;
     timeConst_i = 1;
@@ -234,11 +234,33 @@ end
 
 %% plotting // fixing params here
 
+%%%%%%% changing FF to flat
+
+% load inputData.mat
+% 
+% ff = Boden2016;
+% 
+% ff_paris = [Boden2016(:,1), Boden2016(:,2) ; 2020, 4.5 ; 2100 , 4.5];
+% year_paris = 1850:(1/12):2100;
+% ffParis_interp0 = (interp1(ff_paris(:,1),ff_paris(:,2),year_paris)).';
+% ffParis_interp = [year_paris', ffParis_interp0];
+% ff = ffParis_interp;
+% 
+% LU = Houghton2017;
+% LU_paris = [Houghton2017(:,1),Houghton2017(:,2) ; 2100, Houghton2017(end,2)];
+% luParis_interp0 = (interp1(LU_paris(:,1),LU_paris(:,2),year_paris)).';
+% luParis_interp = [year_paris', luParis_interp0];
+% LU = luParis_interp;
+
+%end_year_plot = 2100;
+
+%%%%%%
+
 if end_year ~= end_year
     [dtdelpCO2a_obs,dpCO2a_obs,~,~,CO2a_obs] = getObservedCO2_3(ts,start_year,end_year);
-    [temp_anom] = tempRecord3(Tdata_i,start_year,end_year,dt);
+    [temp_anom] = tempRecord3(Tdata_i,start_year,end_year_plot,dt);
     [ff, LU] = getSourceSink5(year, ts, LU_i); % for updated FF & LU
-    [fas,sstAnom] = jooshildascale_annotate2(start_year,end_year,ts,ff,varSST,Tconst);
+    [fas,sstAnom] = jooshildascale_annotate2(start_year,end_year_plot,ts,ff,varSST,Tconst);
 end
 
 % Run the best fit values in the model again to plot

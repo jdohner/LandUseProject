@@ -50,7 +50,10 @@ function [LU_i,opt_i,Tdata_i,tempDep_i,varSST_i,timeConst_i,filt_i,...
         oceanUp_i = 1;
         photResp_i = 1;
         zeroBio_i = 1;
-        rowLabels = {'1900-2010.5','1900-2005.5','1959-2010.5','1900-2000.5'};
+        rowLabels = {'1900-2010','1900-2000','1959-1990','1959-2010',...
+            '1959-2005','1959-2000'};
+%         rowLabels = {'1900-2010.5','1900-2005.5','1959-2010.5','1900-2000.5',...
+%         '1959-1990','1959-2000','1959-2010'};
     elseif strcmp(vary,'C') % loop temp record
         LU_i = 1;
         opt_i = 1;
@@ -174,6 +177,22 @@ function [LU_i,opt_i,Tdata_i,tempDep_i,varSST_i,timeConst_i,filt_i,...
         zeroBio_i = j;
         rowLabels = {'Baseline','Epsilon = 0','\DeltaC_i = 0','Epsilon & \DeltaC_i = 0'};
     
+    else
+        numCases = 1;
+        LU_i = 1;
+        opt_i = 3;
+        Tdata_i = 2;
+        tempDep_i = 1;
+        varSST_i = 1;
+        timeConst_i = 1;
+        filt_i = 1;
+        fert_i = 1;
+        oceanUp_i = 1;
+        photResp_i = 1;
+        zeroBio_i = 1;
+        rowLabels = {'Baseline'};
+    
+        
     end
 
 end
