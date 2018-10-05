@@ -24,9 +24,9 @@ tic
 % J = t-dependent photosynthesis or respiration
 % K = loop through cancelling out eps, ?Ci
 
-vary = 'B';
+vary = 'A';
 
-if strcmp(vary,'A')     numCases = 13;    
+if strcmp(vary,'A')     numCases = 5;    
 elseif strcmp(vary,'B') numCases = 6;
 elseif strcmp(vary,'C') numCases = 4;
 elseif strcmp(vary,'D') numCases = 2;    

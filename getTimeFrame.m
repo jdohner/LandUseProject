@@ -11,7 +11,7 @@ timeFrameVec = [year,ones(length(year),0)];
 
 if opt_i == 1 % full record
     i = find(year == 1900);
-    j = find(year == 2010);
+    j = find(year == 2010.5);
     timeFrameVec(i:j,2) = 1;
     
 elseif opt_i == 2
