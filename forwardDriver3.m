@@ -232,12 +232,12 @@ end
 
 %% plotting // fixing params here
 
-if end_year ~= end_year
-    [dtdelpCO2a_obs,dpCO2a_obs,~,~,CO2a_obs] = getObservedCO2_3(ts,start_year,end_year);
-    [temp_anom] = tempRecord3(Tdata_i,start_year,end_year,dt);
-    [ff, LU] = getSourceSink5(year, ts, LU_i); % for updated FF & LU
-    [fas,sstAnom] = jooshildascale_annotate2(start_year,end_year,ts,ff,varSST,Tconst);
-end
+% if end_year ~= end_year
+%     [dtdelpCO2a_obs,dpCO2a_obs,~,~,CO2a_obs] = getObservedCO2_3(ts,start_year,end_year);
+%     [temp_anom] = tempRecord3(Tdata_i,start_year,end_year,dt);
+%     [ff, LU] = getSourceSink5(year, ts, LU_i); % for updated FF & LU
+%     [fas,sstAnom] = jooshildascale_annotate2(start_year,end_year,ts,ff,varSST,Tconst);
+% end
 
 % Run the best fit values in the model again to plot
 [C1dt,C2dt,delCdt,delC1,delC2] = bioboxtwo(epsilon,Q1,Q2,ts,year,...
@@ -258,6 +258,8 @@ if filt_i == 1 % 10-yr filter applied
 elseif filt_i == 2
     yhat2 = delCdt(:,2);   
 end
+
+%TODO: need filt_i == 3 case above??
 
 % Do "reverse deconvolution" to calculate modeled CO2 change
 i4 = find(fas(:,1) == start_year);
@@ -314,6 +316,9 @@ end
 
 plotRunComparisons(outputArray, numCases,vary)
 
+% TODO: the "if vary == K" is repetitive because plotBioxes also contains
+% same call. started writing plotBioboxes to be used on any vary value,
+% test if works for others?
 if strcmp(vary,'K')
 plotBioboxes(landFluxArray,numCases,vary);
 end
