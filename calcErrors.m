@@ -6,6 +6,7 @@
 % calculate RMSE for each run
 
 % NOTE: errors calculated 1900-2014
+% calculated in flux units (PgC/yr)
 
 function [RMSEunfilt,RMSEfilt,RMSEfiltShort] = calcErrors(ddtUnfilt,ddtFilt);
 

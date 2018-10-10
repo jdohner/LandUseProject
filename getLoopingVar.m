@@ -163,7 +163,7 @@ function [LU_i,opt_i,Tdata_i,tempDep_i,varSST_i,timeConst_i,filt_i,...
     elseif strcmp(vary,'K') % loop zeroing out eps, ?Ci, both
         LU_i = 1;
         opt_i = 3;
-        Tdata_i = 2;
+        Tdata_i = 1;
         tempDep_i = 1;
         varSST_i = 1;
         timeConst_i = 1;
