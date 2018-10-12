@@ -108,7 +108,7 @@ function [LU_i,opt_i,Tdata_i,tempDep_i,varSST_i,timeConst_i,filt_i,...
             'Tconst/100'};
     elseif strcmp(vary,'G') % loop filtering of deconvolution residual
         LU_i = 1;
-        opt_i = 1;
+        opt_i = 3;
         Tdata_i = 1;
         tempDep_i = 1;
         varSST_i = 1;
@@ -162,12 +162,12 @@ function [LU_i,opt_i,Tdata_i,tempDep_i,varSST_i,timeConst_i,filt_i,...
     
     elseif strcmp(vary,'K') % loop zeroing out eps, ?Ci, both
         LU_i = 1;
-        opt_i = 3;
+        opt_i = 1;
         Tdata_i = 1;
         tempDep_i = 1;
         varSST_i = 1;
         timeConst_i = 1;
-        filt_i = 3;
+        filt_i = 1;
         fert_i = 1;
         oceanUp_i = 1;
         photResp_i = 1;
