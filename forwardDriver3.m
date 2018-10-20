@@ -22,7 +22,7 @@ clear all; %close all
 % J = t-dependent photosynthesis or respiration
 % K = loop through cancelling out eps, ?Ci
 
-vary = 'G';
+vary = 'K';
 
 if strcmp(vary,'A')     numCases = 13;    
 elseif strcmp(vary,'B') numCases = 4;
@@ -330,5 +330,9 @@ outputArray
 % function to save parameters in appropriate file name
 %[outputArray] = saveParams(outputArray)
 
+%% plotting output similar to LR figure 5 & 7
+
+
+%plotvsObs(outputArray, run);
 
 
