@@ -50,3 +50,23 @@ legend(legendInfo1,legendInfo2,'location','northwest')
 title(h2,['Observed - Modeled CO_2 , ',legendInfo1, ' & ',legendInfo2, ' Run'],'FontSize',24)
     
 end
+
+% %code for plotting observed co2 and single decon residual below
+% 
+% figure
+% 
+% h1 = subplot(2,1,1)
+% plot(CO2a_obs(:,1),CO2a_obs(:,2),'linewidth',2,'color','k')
+% grid
+% set(h1,'FontSize',18)
+% xlim([1900 2020])
+% 
+% h2 = subplot(2,1,2)
+% plot(decon_resid(:,1),decon_resid(:,2),'linewidth',2)
+% grid
+% set(h2,'FontSize',18)
+% hline = refline([0 0]);
+% hline.Color = [0.7 0.7 0.7];
+% hline.LineStyle = '--';
+% hline.LineWidth = 2;
+% xlim([1900 2020])
