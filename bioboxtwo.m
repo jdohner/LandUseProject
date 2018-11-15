@@ -60,13 +60,13 @@ K2a = 1/60; % slow box to atmosphere
 Ka2 = K2a*C2/Catm;
 
 % set up arrays
-delC1 = [year(:,1) zeros(size(year))];
-delC2 = [year(:,1) zeros(size(year))];
-delCdt(:,1) = year;
-C1dt(:,1) = year;
-C2dt(:,1) = year;
-delC1(length(year)+1,1) = year(length(year),1)+dt;
+delC1 = [year(:,1) zeros(size(year))]; % change in box size since 1850 (PgC)
+delC2 = [year(:,1) zeros(size(year))]; % change in box size since 1850 (PgC)
+delC1(length(year)+1,1) = year(length(year),1)+dt; % adding on spot for last term
 delC2(length(year)+1,1) = year(length(year),1)+dt;
+C1dt(:,1) = year; % allocation from NPP to fast box (PgC/yr)
+C2dt(:,1) = year; % allocation from NPP to slow box (PgC/yr)
+delCdt(:,1) = year; % total flux into land  
 p1 = 1;
 p2 = 1;
 
@@ -117,10 +117,11 @@ for ii = 1:length(year)
     end
     
     % box total change in concentrations (of fast, slow box, respectively)
-    delC1(ii+1,2) = sum(C1dt(:,2))*dt;
+    % change in box size since 1850 (PgC)
+    delC1(ii+1,2) = sum(C1dt(:,2))*dt; % summing PgC/yr, * yr = PgC
     delC2(ii+1,2) = sum(C2dt(:,2))*dt;
 
-    % total flux into land    
+    % total flux into land (PgC/yr)    
     delCdt(ii,2) = C2dt(ii,2) + C1dt(ii,2);
 
 end

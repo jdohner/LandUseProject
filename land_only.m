@@ -5,6 +5,8 @@
 %
 % code for only the land component extracted, fit to T record with set Q10
 % to investigate the role of the changing box size term
+% 
+% fitting already done, just feeding land model the fitted parameters
 
 % suggested inputs:
 % Q1 = 0.8890
@@ -12,8 +14,13 @@
 
 clear all
 
-Q1 = 2.2256;
-epsilon = 0.3349;
+addpath(genpath(...
+    '/Users/juliadohner/Documents/MATLAB/LandUseProject/necessary_data'));
+addpath(genpath(...
+    '/Users/juliadohner/Documents/MATLAB/LU_data_big'));
+
+Q1 = 5.4230;%2.2256;
+epsilon = 0.3049;%0.3349;
 Q2 = 1;
 ts = 12;
 dt = 1/ts;
@@ -46,6 +53,9 @@ delCdt(:,2) = -delCdt(:,2); % change sign of land uptake
 
 C1dt = [C1dt(:,1), C1dt(:,2)*-1];
 C2dt = [C2dt(:,1), C2dt(:,2)*-1];
+
+% ^ 10-year filter not applied after calculating land uptake
+ [delC10] = l_boxcar(delCdt,10,12,1,length(delCdt),1,2);
 
 [landFluxArray] = fillLandFluxArray(landFluxArray,j,C1dt,C2dt,delCdt);
 

@@ -163,7 +163,7 @@ function [LU_i,opt_i,Tdata_i,tempDep_i,varSST_i,timeConst_i,filt_i,...
     elseif strcmp(vary,'K') % loop zeroing out eps, ?Ci, both
         LU_i = 1;
         opt_i = 3; % 1 for 1900-2010.5, 3 for 1959-2010.5
-        Tdata_i = 1;
+        Tdata_i = 3; % 1 for simliar to LR, 3 for updated land temps
         tempDep_i = 1;
         varSST_i = 1;
         timeConst_i = 1;
