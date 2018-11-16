@@ -7,6 +7,7 @@ function plotRunComparisons(outputArray, numCases,vary);
 
 d = 2.31; % ppm to PgC conversion factor (formerly 1/2.31 opp direction)
 
+%% plotting varied input datasets
 if ~isnan(outputArray{2,5}) 
     % varied input datasets plot - ONLY for varied LU, T record,
     % timeconst, filter/no filter decon resid, ocean uptake
@@ -106,12 +107,14 @@ for i = 1:numCases
     hold on
     h1 = subplot(2,1,1);
     plot(ddtUnfilt(:,1),ddtUnfilt(:,2),'Color',colorVec(i,:))
+    %line([ddtUnfilt(1),ddtUnfilt(end,1)],[0,0],'linestyle',':');
     hold off
     
     ddtFilt = outputArray{i+1,9};
     hold on
     h2 = subplot(2,1,2);
     plot(ddtFilt(:,1),ddtFilt(:,2),'Color',colorVec(i,:))
+    %line([ddtFilt(1),ddtFilt(end,1)],[0,0],'linestyle',':');
     hold off
     %legendInfo{i} = [outputArray{i+1,1}];
 end
@@ -147,5 +150,59 @@ grid(h2)
 
 
 end
+
+%% plotting land uptakes
+
+       
+figure('Name','Land Boxes Uptake')
+
+for i = 1:numCases
+
+subplot(numCases,1,i) %baseline run
+
+C1dt = outputArray{i+1,13};
+C2dt = outputArray{i+1,14};
+delCdt = outputArray{i+1,15};
+hold on
+plot(C1dt(:,1),C1dt(:,2)*d,C2dt(:,1),C2dt(:,2)*d)
+plot(delCdt(:,1), delCdt(:,2)*d,'-.')
+hold off    
+line([C1dt(1),C1dt(end,1)],[0,0],'linestyle',':');
+set(gca,'Xlim',[1850 2010.5],'Ylim',[-4 4],'FontSize', 18)
+xticks(1850:10:2010); yticks(-4:2:4)
+title(outputArray{i+1,1})
+legend('Fast box','Slow box','Total','location','northwest')
+xlabel('year','FontSize', 18)
+ylabel('PgC / year','FontSize', 18)
+grid
+
+end
+
+%% plotting changing box sizes
+
+figure('Name','Land Box Sizes')
+
+for i = 1:numCases
+
+subplot(numCases,1,i) %baseline run
+
+delC1 = outputArray{i+1,16};
+delC2 = outputArray{i+1,17};
+hold on
+plot(delC1(:,1),delC1(:,2)*d,delC2(:,1),delC2(:,2)*d)
+hold off    
+line([delC1(1),delC1(end,1)],[0,0],'linestyle',':');
+set(gca,'Xlim',[1850 2010.5],'Ylim',[-12 18],'FontSize', 18)
+xticks(1850:10:2010); yticks(-12:6:18)
+title(outputArray{i+1,1})
+legend('Fast box size change','Slow box size change','location','northwest')
+xlabel('year','FontSize', 18)
+ylabel('PgC / year','FontSize', 18)
+grid
+
+end
+    
+    
+
 
 end

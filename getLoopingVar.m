@@ -50,7 +50,7 @@ function [LU_i,opt_i,Tdata_i,tempDep_i,varSST_i,timeConst_i,filt_i,...
         oceanUp_i = 1;
         photResp_i = 1;
         zeroBio_i = 1;
-        rowLabels = {'1900-2010.5','1900-2005.5','1959-2010.5','1900-2000.5'};
+        rowLabels = {'1900-2010.5','1900-2005.5','1959-2010.5','1959-2000.5'};
     elseif strcmp(vary,'C') % loop temp record
         LU_i = 1;
         opt_i = 1;
@@ -68,12 +68,12 @@ function [LU_i,opt_i,Tdata_i,tempDep_i,varSST_i,timeConst_i,filt_i,...
         % '
     elseif strcmp(vary, 'D') % loop fixed vs variable T
         LU_i = 1;
-        opt_i = 1;
-        Tdata_i = 1;
+        opt_i = 3; % 1 for 1900-2010.5, 3 for 1959-2010.5
+        Tdata_i = 1; % 1 for simliar to LR, 3 for updated land temps
         tempDep_i = j;
         varSST_i = 1;
         timeConst_i = 1;
-        filt_i = 1;
+        filt_i = 1; % 1 for 10yr filt, 2 for 1-yr filt, 3 for unfilt
         fert_i = 1;
         oceanUp_i = 1;
         photResp_i = 1;
@@ -135,7 +135,7 @@ function [LU_i,opt_i,Tdata_i,tempDep_i,varSST_i,timeConst_i,filt_i,...
         rowLabels = {'Med Ocean Uptake','Low Ocean Uptake','High Ocean Uptake'};
     elseif strcmp(vary,'I') % loop co2 vs N fert
         LU_i = 1;
-        opt_i = 1;
+        opt_i = 3;
         Tdata_i = 1;
         tempDep_i = 1;
         varSST_i = 1;
@@ -148,7 +148,7 @@ function [LU_i,opt_i,Tdata_i,tempDep_i,varSST_i,timeConst_i,filt_i,...
         rowLabels = {'CO2-fert','N-fert'};
     elseif strcmp(vary,'J') % loop temp-dependent photosynthesis or respiration
         LU_i = 1;
-        opt_i = 1;
+        opt_i = 3;
         Tdata_i = 1;
         tempDep_i = 1;
         varSST_i = 1;
@@ -163,11 +163,11 @@ function [LU_i,opt_i,Tdata_i,tempDep_i,varSST_i,timeConst_i,filt_i,...
     elseif strcmp(vary,'K') % loop zeroing out eps, ?Ci, both
         LU_i = 1;
         opt_i = 3; % 1 for 1900-2010.5, 3 for 1959-2010.5
-        Tdata_i = 3; % 1 for simliar to LR, 3 for updated land temps
+        Tdata_i = 1; % 1 for simliar to LR, 3 for updated land temps
         tempDep_i = 1;
         varSST_i = 1;
         timeConst_i = 1;
-        filt_i = 3; % 1 for 10yr filt, 2 for 1-yr filt, 3 for unfilt
+        filt_i = 1; % 1 for 10yr filt, 2 for 1-yr filt, 3 for unfilt
         fert_i = 1;
         oceanUp_i = 1;
         photResp_i = 1;

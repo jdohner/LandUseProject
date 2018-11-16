@@ -22,7 +22,7 @@ clear all; %close all
 % J = t-dependent photosynthesis or respiration
 % K = loop through cancelling out eps, ?Ci
 
-vary = 'D';
+vary = 'K';
 
 if strcmp(vary,'A')     numCases = 13;    
 elseif strcmp(vary,'B') numCases = 4;
@@ -53,10 +53,11 @@ end
 
 %% define time frame, cases
 
-outputArray = cell(numCases+1,12);
+outputArray = cell(numCases+1,17);
 outputArray(1,:) = {'Run Version','Q10','epsilon','gamma','input data',...
     'atmcalc2','obsCalcDiff','ddtUnfilt','ddtFilt','RMSEfilt 1900-2014'...
-    'RMSEfilt 1958-2014','RMSEunfilt 1958-2014'};
+    'RMSEfilt 1958-2014','RMSEunfilt 1958-2014','C1dt','C2dt','delCdt',...
+    'delC1','delC2'};
 
 if strcmp(vary,'K') % create array to hold land box flux values
     landFluxArray = cell(numCases,4);
@@ -306,7 +307,7 @@ C2dt = [C2dt(:,1), C2dt(:,2)*-1];
 [RMSEunfilt,RMSEfilt,RMSEfiltShort] = calcErrors(ddtUnfilt,ddtFilt);
 [outputArray] = fillArray(j,Q1,epsilon,gamma,inputData,atmcalc2,...
     obsCalcDiff,outputArray,ddtUnfilt,ddtFilt,RMSEunfilt,RMSEfiltShort,...
-    RMSEfilt);
+    RMSEfilt,C1dt,C2dt,delCdt,delC1,delC2);
 
 if strcmp(vary,'K')
     [landFluxArray] = fillLandFluxArray(landFluxArray,j,C1dt,C2dt,delCdt);

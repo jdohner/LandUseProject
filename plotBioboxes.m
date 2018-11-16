@@ -31,7 +31,7 @@ if strcmp(vary,'K')
     plot(C1dt(:,1),C1dt(:,2)*d,C2dt(:,1),C2dt(:,2)*d)
     plot(delCdt(:,1), delCdt(:,2)*d,'-.')
     hold off    
-    line([C1dt(1),C1dt(end)],[0,0],'linestyle',':');
+    line([C1dt(1),C1dt(end,1)],[0,0],'linestyle',':');
     set(gca,'Xlim',[1850 2010.5],'Ylim',[-4 4],'FontSize', 18)
     xticks(1850:10:2010); yticks(-4:2:4)
     title(landFluxArray{i+1,1})
@@ -48,7 +48,7 @@ else
     
     figure('Name','Land Boxes Uptake')
     plot(C1dt(:,1),C1dt(:,2),C2dt(:,1),C2dt(:,2),delCdt(:,1), delCdt(:,2))
-    line([C1dt(1),C1dt(end)],[0,0],'linestyle',':');
+    line([C1dt(1),C1dt(end,1)],[0,0],'linestyle',':');
     set(gca,'Xlim',[1850 2010.5]) 
     title('Land Boxes Flux')
     legend('Flux into fast box','Flux into slow box','Total land flux','location','northwest')
