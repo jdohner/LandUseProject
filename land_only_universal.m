@@ -30,7 +30,7 @@ clear all; %close all
 % J = t-dependent photosynthesis or respiration
 % K = loop through cancelling out eps, ?Ci
 
-vary = 'K';
+vary = 'I';
 
 if strcmp(vary,'A')     numCases = 13;    
 elseif strcmp(vary,'B') numCases = 4;
@@ -119,7 +119,8 @@ save('runInfo','start_year','end_year','ts','year','fert_i',...
 
 if fert_i == 1   
     gamma = 0;
-else % nitrogen fertilization
+elseif fert_i == 2 % nitrogen fertilization
+    eps = 0;
     gamma = 1; % set this!
 end
 

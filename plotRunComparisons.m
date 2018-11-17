@@ -128,8 +128,8 @@ set(h1,'FontSize',18)
 ylabel(h1,'PgC/yr','FontSize', 18)
 set(h1,'FontSize',18)
 xlim(h1,[1840 2016])
-ylim(h1,[-4 4])
-yticks(h1,[-4:4])
+ylim(h1,[-5 75])
+yticks(h1,[-5:25:75])
 grid(h1)
 
 title(h2,'Obs-Model Flux Discrepancy (smoothed)')
@@ -139,8 +139,8 @@ set(h2,'FontSize',18)
 ylabel(h2,'PgC/yr','FontSize', 18)
 set(h2,'FontSize',18)
 xlim(h2,[1840 2016])
-ylim(h2,[-4 4])
-yticks(h2,[-4:4])
+ylim(h2,[-5 75])
+yticks(h2,[-5:25:75])
 grid(h2)
 
 
@@ -192,8 +192,8 @@ hold on
 plot(delC1(:,1),delC1(:,2)*d,delC2(:,1),delC2(:,2)*d)
 hold off    
 line([delC1(1),delC1(end,1)],[0,0],'linestyle',':');
-set(gca,'Xlim',[1850 2010.5],'Ylim',[-12 18],'FontSize', 18)
-xticks(1850:10:2010); yticks(-12:6:18)
+set(gca,'Xlim',[1850 2010.5],'Ylim',[-40 120],'FontSize', 18)
+xticks(1850:10:2010); yticks(-40:40:120)
 title(outputArray{i+1,1})
 legend('Fast box size change','Slow box size change','location','northwest')
 xlabel('year','FontSize', 18)
