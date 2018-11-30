@@ -30,7 +30,7 @@ clear all; %close all
 % J = t-dependent photosynthesis or respiration
 % K = loop through cancelling out eps, ?Ci
 
-vary = 'I';
+vary = 'K';
 
 if strcmp(vary,'A')     numCases = 13;    
 elseif strcmp(vary,'B') numCases = 4;
@@ -82,11 +82,11 @@ addpath(genpath(...
 
 [dtdelpCO2a_obs,dpCO2a_obs,~,~,CO2a_obs] = getObservedCO2_2(ts,start_year,end_year);
 
-Q1 = 5.4230;%2.2256;
+Q1 = 4.2248; %5.4230;%2.2256;
 Q2 = 1;
-epsilon = 0.3855; %0.3049;%0.3349;
+epsilon = 0.3831; %0.3855; %0.3049;%0.3349;
 
-
+% current vals for all vars = 1
 
 % Q2 = 1;
 % ts = 12;
@@ -124,10 +124,13 @@ elseif fert_i == 2 % nitrogen fertilization
     gamma = 1; % set this!
 end
 
-if tempDep_i == 2
+% if tempDep_i == 2
+%     Q1 = 1;
+% end
+
+if tempDep_i == 2 || zeroBio_i == 4 % temp-independent
     Q1 = 1;
 end
-
 
 [temp_anom] = tempRecord3(Tdata_i,start_year,end_year,dt);
 

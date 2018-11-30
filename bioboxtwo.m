@@ -78,9 +78,10 @@ if zeroBio_i == 2 % zero out epsilon
 elseif zeroBio_i == 3 % zero out delC1
     p1 = 1;
     p2 = 0;
-elseif zeroBio_i == 4 % zero out both epsilon and delC1
-    p1 = 0;
-    p2 = 0;
+% elseif zeroBio_i == 4 % set Q10 = 1
+%     %p1 = 0;
+%     %p2 = 0;
+%     Q1 = 1;
 end
     
     

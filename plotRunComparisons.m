@@ -6,6 +6,7 @@
 function plotRunComparisons(outputArray, numCases,vary);
 
 d = 2.31; % ppm to PgC conversion factor (formerly 1/2.31 opp direction)
+d1 = 1/d; % PgC to ppm
 
 %% plotting varied input datasets
 if ~isnan(outputArray{2,5}) 
@@ -57,13 +58,13 @@ for i = 1:numCases
     ddtUnfilt = outputArray{i+1,8};
     hold on
     h1 = subplot(3,1,2);
-    plot(ddtUnfilt(:,1),ddtUnfilt(:,2),'Color',colorVec(i,:))
+    plot(ddtUnfilt(:,1),ddtUnfilt(:,2),'Color',colorVec(i,:),'linewidth',2)
     hold off
     
     ddtFilt = outputArray{i+1,9};
     hold on
     h2 = subplot(3,1,3);
-    plot(ddtFilt(:,1),ddtFilt(:,2),'Color',colorVec(i,:))
+    plot(ddtFilt(:,1),ddtFilt(:,2),'Color',colorVec(i,:),'linewidth',2)
     hold off
     %legendInfo{i} = [outputArray{i+1,1}];
 end
@@ -106,14 +107,14 @@ for i = 1:numCases
     ddtUnfilt = outputArray{i+1,8};
     hold on
     h1 = subplot(2,1,1);
-    plot(ddtUnfilt(:,1),ddtUnfilt(:,2),'Color',colorVec(i,:))
+    plot(ddtUnfilt(:,1),ddtUnfilt(:,2)*d1,'Color',colorVec(i,:),'linewidth',2)
     %line([ddtUnfilt(1),ddtUnfilt(end,1)],[0,0],'linestyle',':');
     hold off
     
     ddtFilt = outputArray{i+1,9};
     hold on
     h2 = subplot(2,1,2);
-    plot(ddtFilt(:,1),ddtFilt(:,2),'Color',colorVec(i,:))
+    plot(ddtFilt(:,1),ddtFilt(:,2)*d1,'Color',colorVec(i,:),'linewidth',2)
     %line([ddtFilt(1),ddtFilt(end,1)],[0,0],'linestyle',':');
     hold off
     %legendInfo{i} = [outputArray{i+1,1}];
@@ -125,22 +126,22 @@ title(h1, 'Obs-Model Flux Discrepancy (unsmoothed)')
 legend(h1,legendInfo,'location','northwest')
 xlabel(h1,'Year','FontSize', 18)
 set(h1,'FontSize',18)
-ylabel(h1,'PgC/yr','FontSize', 18)
+ylabel(h1,'ppm/yr','FontSize', 18)
 set(h1,'FontSize',18)
 xlim(h1,[1840 2016])
-ylim(h1,[-5 75])
-yticks(h1,[-5:25:75])
+ylim(h1,[-2 2])
+yticks(h1,[-2:0.5:2])
 grid(h1)
 
 title(h2,'Obs-Model Flux Discrepancy (smoothed)')
 legend(h2,legendInfo,'location','northwest')
 xlabel(h2,'Year','FontSize', 18)
 set(h2,'FontSize',18)
-ylabel(h2,'PgC/yr','FontSize', 18)
+ylabel(h2,'ppm/yr','FontSize', 18)
 set(h2,'FontSize',18)
 xlim(h2,[1840 2016])
-ylim(h2,[-5 75])
-yticks(h2,[-5:25:75])
+ylim(h2,[-1 1])
+yticks(h2,[-1:0.5:1])
 grid(h2)
 
 
@@ -201,8 +202,42 @@ ylabel('PgC / year','FontSize', 18)
 grid
 
 end
-    
-    
 
 
+%% plotting error PDFs
+
+figure('name','Errors PDF');
+
+for i = 1:numCases
+    
+    subplot(numCases,1,i) %baseline run 
+    error = outputArray{i+1,7};
+
+    histogram(error(:,2)*d1,'Normalization','pdf');
+    set(gca,'FontSize',16);
+    title(outputArray{i+1,1})
+    xlabel('ppm','FontSize',16);
+    %ylabel('probability', 'FontSize',16);
+    ylim([0 0.8])
+    xlim([-2 4])
+end
+
+% flux error PDFs
+figure('name','Flux Errors PDF');
+
+for i = 1:numCases
+    
+    subplot(numCases,1,i) %baseline run
+    errorFlux = outputArray{i+1,8};
+    % errorFluxFilt = outputArray{i+1,9};
+
+    histogram(errorFlux(:,2)*d1,'Normalization','pdf');
+    set(gca,'FontSize',16);
+    title(outputArray{i+1,1})
+    xlabel('ppm/yr','FontSize',16);
+    %ylabel('probability', 'FontSize',16);
+    ylim([0 1.4])
+    xlim([-2 2])
+
+    
 end

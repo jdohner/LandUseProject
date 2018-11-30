@@ -29,6 +29,10 @@ else
     Q1 = 1;
 end
 
+if zeroBio_i == 4
+    Q1 = 1;
+end
+
 Q2 = 1; 
 
 

@@ -22,7 +22,7 @@ clear all; %close all
 % J = t-dependent photosynthesis or respiration
 % K = loop through cancelling out eps, ?Ci
 
-vary = 'D';
+vary = 'C';
 
 if strcmp(vary,'A')     numCases = 13;    
 elseif strcmp(vary,'B') numCases = 4;
@@ -96,7 +96,7 @@ for j = 1:numCases
     fert_i,oceanUp_i,photResp_i,zeroBio_i,rowLabels] = getLoopingVar(vary,j);
 
 
-if tempDep_i == 2 % temp-independent
+if tempDep_i == 2 || zeroBio_i == 4 % temp-independent
     beta = [0.5,1];
 end
 
