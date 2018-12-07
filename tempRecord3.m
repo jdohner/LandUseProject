@@ -55,29 +55,67 @@ elseif Tdata_i == 4
     temp_anom0 = [year0,data3];
     
 elseif Tdata_i == 5
-    % IV = Nino 3.4 index
-    % 1870-April 2018 | monthly
-    ESRLstart = 1870;
-    ESRLend = 2018+(3/12);
-    data0 = csvread('ESRLNOAA_Nino34_1870.csv');
-    year0 = (ESRLstart:dt:ESRLend)';
-    data1 = data0(:,2:13);
-    data2 = reshape(data1',[],1);
-    data3 = data2(1:length(year0));
-    temp_anom0 = [year0,data3];
+    % Rodenbeck weighted temperature anomalies
+    % neeT in 'Tmol/yr' // proportional to weighted avg air T
+    neeTdata0 = ncread('Rodenbeck_weightedT.nc','neeT');
+    neeTdata = neeTdata0(:,5); % reg 5, according to Rodenbeck
+    % output time in seconds since 2000-01-01
+    mtimeData = ncread('Rodenbeck_weightedT.nc','mtime');
+    % output time as fractional year (spaced as 0.9885 days, centered ...
+    % at 0.5 day)
+    myearData = ncread('Rodenbeck_weightedT.nc','myear');
     
-elseif Tdata_i == 6
-    % V = tropical T
-    % N/A
+    % shorten data before taking monthly averages
+%     i = find(temp_anom0 == start_year);
+%     j = find(temp_anom0 == end_year);
+%     temp_anom = temp_anom0(i:j,:);
     
-elseif Tdata_i == 7
-    % VI = Global Historical Climate Network 
-    % N/A
+    % all data daily, need to put into monthly
+    i1 = find(myearData >= 2017,1); % first 2017 timepoint
+    i2 = i1-1; % last 2016 timepoint
+    for i = 
     
-elseif Tdata_i == 8
-    % VII = MLOST 3.5 from NOAA
-    % N/A
     
+    % region information
+%     regNameData = ncread('Rodenbeck_weightedT.nc','regname');
+%     regTypeData = ncread('Rodenbeck_weightedT.nc','regtype');
+%     regAreaData = ncread('Rodenbeck_weightedT.nc','regarea');
+    
+% elseif Tdata_i == 5
+%     % step change in temp anomaly
+%     year0 = (CRUstart:dt:CRUend)';
+%     data0 = zeros(length(year0),1);
+%     i = find(year0 == 1975);
+%     for j = i:length(data0)
+%         data0(j,1) = 1;
+%     end
+%     temp_anom0 = [year0,data0];
+    
+    
+% elseif Tdata_i == 5
+%     % IV = Nino 3.4 index
+%     % 1870-April 2018 | monthly
+%     ESRLstart = 1870;
+%     ESRLend = 2018+(3/12);
+%     data0 = csvread('ESRLNOAA_Nino34_1870.csv');
+%     year0 = (ESRLstart:dt:ESRLend)';
+%     data1 = data0(:,2:13);
+%     data2 = reshape(data1',[],1);
+%     data3 = data2(1:length(year0));
+%     temp_anom0 = [year0,data3];
+%     
+% elseif Tdata_i == 6
+%     % V = tropical T
+%     % N/A
+%     
+% elseif Tdata_i == 7
+%     % VI = Global Historical Climate Network 
+%     % N/A
+%     
+% elseif Tdata_i == 8
+%     % VII = MLOST 3.5 from NOAA
+%     % N/A
+%     
 elseif Tdata_i == 1
     % temp record from LR/my attempts to match LR (use for debugging)
     load landwt_T_2011.mat % 1850-2010

@@ -22,9 +22,9 @@ clear all; %close all
 % J = t-dependent photosynthesis or respiration
 % K = loop through cancelling out eps, ?Ci
 
-vary = 'C';
+vary = 'A';
 
-if strcmp(vary,'A')     numCases = 13;    
+if strcmp(vary,'A')     numCases = 4;    
 elseif strcmp(vary,'B') numCases = 4;
 elseif strcmp(vary,'C') numCases = 4;
 elseif strcmp(vary,'D') numCases = 2;    
@@ -35,6 +35,7 @@ elseif strcmp(vary,'H') numCases = 3;
 elseif strcmp(vary,'I') numCases = 2;
 elseif strcmp(vary,'J') numCases = 2;
 elseif strcmp(vary,'K') numCases = 4;
+elseif strcmp(vary,'L') numCases = 4;
 else % see README for cases
     numCases = 1;
     LU_i = 1;
@@ -93,7 +94,7 @@ for j = 1:numCases
     
 % get the indices for variables being looped/held fixed    
 [LU_i,opt_i,Tdata_i,tempDep_i,varSST_i,timeConst_i,filt_i,...
-    fert_i,oceanUp_i,photResp_i,zeroBio_i,rowLabels] = getLoopingVar(vary,j);
+    fert_i,oceanUp_i,photResp_i,zeroBio_i,Tstep_i,rowLabels] = getLoopingVar(vary,j);
 
 
 if tempDep_i == 2 || zeroBio_i == 4 % temp-independent
@@ -102,9 +103,13 @@ end
 
 save('runInfo','start_year','end_year','ts','year','fert_i',...
     'oceanUp_i','tempDep_i','varSST_i','filt_i',...
-    'rowLabels','opt_i','photResp_i','timeConst_i','zeroBio_i');
+    'rowLabels','opt_i','photResp_i','timeConst_i','zeroBio_i','Tstep_i');
 
+if strcmp(vary,'L') == 0
 [temp_anom] = tempRecord3(Tdata_i,start_year,end_year,dt);
+else 
+    [temp_anom] = tempRecord4(Tstep_i,start_year,end_year,dt);
+end
     
 [ff, LU] = getSourceSink6(LU_i); % for updated FF & LU
 

@@ -84,7 +84,7 @@ elseif zeroBio_i == 3 % zero out delC1
 %     Q1 = 1;
 end
     
-    
+p1 = 0;
 
 for ii = 1:length(year)
     % fast box (equation (3) in Rafelski 2009
