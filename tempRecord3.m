@@ -70,10 +70,11 @@ elseif Tdata_i == 5
 %     j = find(temp_anom0 == end_year);
 %     temp_anom = temp_anom0(i:j,:);
     
-    % all data daily, need to put into monthly
-    i1 = find(myearData >= 2017,1); % first 2017 timepoint
-    i2 = i1-1; % last 2016 timepoint
-    for i = 
+%%%%TODO here
+%     % all data daily, need to put into monthly
+%     i1 = find(myearData >= 2017,1); % first 2017 timepoint
+%     i2 = i1-1; % last 2016 timepoint
+%     for i = 
     
     
     % region information

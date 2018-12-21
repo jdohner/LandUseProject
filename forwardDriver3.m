@@ -21,10 +21,12 @@ clear all; %close all
 % I = co2 vs N fert
 % J = t-dependent photosynthesis or respiration
 % K = loop through cancelling out eps, ?Ci
+% L = loop temperature step records
+% M = loop Houghton, BLUE cases
 
-vary = 'A';
+vary = 'M';
 
-if strcmp(vary,'A')     numCases = 4;    
+if strcmp(vary,'A')     numCases = 2;    
 elseif strcmp(vary,'B') numCases = 4;
 elseif strcmp(vary,'C') numCases = 4;
 elseif strcmp(vary,'D') numCases = 2;    
@@ -36,6 +38,7 @@ elseif strcmp(vary,'I') numCases = 2;
 elseif strcmp(vary,'J') numCases = 2;
 elseif strcmp(vary,'K') numCases = 4;
 elseif strcmp(vary,'L') numCases = 4;
+elseif strcmp(vary,'M') numCases = 9;
 else % see README for cases
     numCases = 1;
     LU_i = 1;
@@ -88,13 +91,14 @@ addpath(genpath(...
 %% fitting parameters for cases
 
 beta = [0.5;2]; % initial guesses for model fit (epsilon, q10)
-saveInputData; % load and process FF and LU data
+%saveInputData; % load and process FF and LU data
 
 for j = 1:numCases
     
 % get the indices for variables being looped/held fixed    
 [LU_i,opt_i,Tdata_i,tempDep_i,varSST_i,timeConst_i,filt_i,...
-    fert_i,oceanUp_i,photResp_i,zeroBio_i,Tstep_i,rowLabels] = getLoopingVar(vary,j);
+    fert_i,oceanUp_i,photResp_i,zeroBio_i,Tstep_i,BLUE_i,rowLabels] ...
+    = getLoopingVar(vary,j);
 
 
 if tempDep_i == 2 || zeroBio_i == 4 % temp-independent
@@ -111,9 +115,11 @@ else
     [temp_anom] = tempRecord4(Tstep_i,start_year,end_year,dt);
 end
     
-[ff, LU] = getSourceSink6(LU_i); % for updated FF & LU
+[ff, LU] = getSourceSink6(LU_i,BLUE_i,vary); % for updated FF & LU
 
 save('ff','ff')
+
+
 
 [fas,sstAnom] = jooshildascale(start_year,end_year,ts,ff,varSST_i,Tconst);
 
@@ -301,6 +307,10 @@ elseif strcmp(vary,'G');
     %inputData = delCdt;
 elseif strcmp(vary,'H');
     inputData = [fas(:,1),fas(:,2).*Aoc];
+elseif strcmp(vary,'L');
+    inputData = temp_anom;
+elseif strcmp(vary,'M')
+    inputData = LU;
 else
     inputData = NaN;
 end

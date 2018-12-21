@@ -12,7 +12,7 @@ d1 = 1/d; % PgC to ppm
 if ~isnan(outputArray{2,5}) 
     % varied input datasets plot - ONLY for varied LU, T record,
     % timeconst, filter/no filter decon resid, ocean uptake
-    figure('NumberTitle', 'off', 'Name', 'Input Data');
+    figure('NumberTitle', 'off', 'Name', 'Three-Panel Plot');
     legendInfo = {};
     colorVec = lines(numCases);
     subplot(3,1,1)
@@ -44,8 +44,8 @@ if ~isnan(outputArray{2,5})
         yticks([-2:2])
         ylabel('degrees C','FontSize', 18)
     else
-        ylim([-1 2])
-        yticks([-1:2])
+        ylim([-1 3])
+        yticks([-1:3])
         ylabel('PgC/yr','FontSize', 18)
     end
     grid
@@ -89,8 +89,8 @@ set(h2,'FontSize',18)
 ylabel(h2,'PgC/yr','FontSize', 18)
 set(h2,'FontSize',18)
 xlim(h2,[1840 2016])
-ylim(h2,[-4 4])
-yticks(h2,[-4:4])
+ylim(h2,[-3 3])
+yticks(h2,[-3:3])
 grid(h2)
 
 
@@ -107,14 +107,14 @@ for i = 1:numCases
     ddtUnfilt = outputArray{i+1,8};
     hold on
     h1 = subplot(2,1,1);
-    plot(ddtUnfilt(:,1),ddtUnfilt(:,2)*d1,'Color',colorVec(i,:),'linewidth',2)
+    plot(ddtUnfilt(:,1),ddtUnfilt(:,2),'Color',colorVec(i,:),'linewidth',2)
     %line([ddtUnfilt(1),ddtUnfilt(end,1)],[0,0],'linestyle',':');
     hold off
     
     ddtFilt = outputArray{i+1,9};
     hold on
     h2 = subplot(2,1,2);
-    plot(ddtFilt(:,1),ddtFilt(:,2)*d1,'Color',colorVec(i,:),'linewidth',2)
+    plot(ddtFilt(:,1),ddtFilt(:,2),'Color',colorVec(i,:),'linewidth',2)
     %line([ddtFilt(1),ddtFilt(end,1)],[0,0],'linestyle',':');
     hold off
     %legendInfo{i} = [outputArray{i+1,1}];
@@ -126,23 +126,77 @@ title(h1, 'Obs-Model Flux Discrepancy (unsmoothed)')
 legend(h1,legendInfo,'location','northwest')
 xlabel(h1,'Year','FontSize', 18)
 set(h1,'FontSize',18)
-ylabel(h1,'ppm/yr','FontSize', 18)
+ylabel(h1,'PgC/yr','FontSize', 18)
 set(h1,'FontSize',18)
 xlim(h1,[1840 2016])
-ylim(h1,[-2 2])
-yticks(h1,[-2:0.5:2])
+ylim(h1,[-4 4])
+yticks(h1,[-4:4])
 grid(h1)
 
 title(h2,'Obs-Model Flux Discrepancy (smoothed)')
 legend(h2,legendInfo,'location','northwest')
 xlabel(h2,'Year','FontSize', 18)
 set(h2,'FontSize',18)
-ylabel(h2,'ppm/yr','FontSize', 18)
+ylabel(h2,'PgC/yr','FontSize', 18)
 set(h2,'FontSize',18)
 xlim(h2,[1840 2016])
-ylim(h2,[-1 1])
-yticks(h2,[-1:0.5:1])
+ylim(h2,[-3 2])
+yticks(h2,[-3:2])
 grid(h2)
+
+
+%% just the unsmoothed (for J. Pongratz)
+
+
+figure('NumberTitle', 'off', 'Name', 'Obs-Model Flux - Unsmoothed');
+
+for i = 1:numCases
+    legendInfo{i} = [outputArray{i+1,1}];
+    
+    ddtUnfilt = outputArray{i+1,8};
+    hold on
+    plot(ddtUnfilt(:,1),ddtUnfilt(:,2),'Color',colorVec(i,:),'linewidth',2);
+    %line([ddtUnfilt(1),ddtUnfilt(end,1)],[0,0],'linestyle',':');
+    hold off
+    
+end
+hold off
+
+% want to set plot features indivudally for subplots
+title('Obs-Model Flux Discrepancy (unsmoothed)')
+legend(legendInfo,'location','northwest')
+xlabel('Year','FontSize', 18)
+ylabel('PgC/yr','FontSize', 18)
+xlim([1840 2016])
+ylim([-2 2])
+yticks([-2:0.5:2])
+grid
+
+line([ddtUnfilt(1),ddtUnfilt(end,1)],[0,0],'linestyle',':');
+
+%% just LULCC inputs for J Pongratz II
+
+    % varied input datasets plot - ONLY for varied LU, T record,
+    % timeconst, filter/no filter decon resid, ocean uptake
+    figure('NumberTitle', 'off', 'Name', 'Input Data');
+    legendInfo = {};
+    colorVec = lines(numCases);
+    hold on
+
+    for i = 1:numCases
+        inputData = outputArray{i+1,5};
+        legendInfo{i} = [outputArray{i+1,1}];
+
+        plot(inputData(:,1),(inputData(:,2).*d),'Color',colorVec(i,:),'linewidth',2)
+    end
+    hold off
+
+    legend(legendInfo,'location','northwest')
+    xlabel('Year','FontSize', 18)
+    set(gca,'FontSize',18)
+    
+    set(gca,'FontSize',18)
+    xlim([1840 2016])
 
 
 %% 3-panel plot
@@ -151,6 +205,29 @@ grid(h2)
 
 
 end
+
+%% just LULCC inputs for J Pongratz II
+
+    % varied input datasets plot - ONLY for varied LU, T record,
+    % timeconst, filter/no filter decon resid, ocean uptake
+    figure('NumberTitle', 'off', 'Name', 'Input Data');
+    legendInfo = {};
+    hold on
+
+    for i = 1:numCases
+        inputData = outputArray{i+1,5};
+        legendInfo{i} = [outputArray{i+1,1}];
+
+        plot(inputData(:,1),(inputData(:,2).*d),'linewidth',2)
+    end
+    hold off
+
+    legend(legendInfo,'location','northwest')
+    xlabel('Year','FontSize', 18)
+    ylabel('PgC/yr','FontSize',18)
+    xlim([1840 2016])
+    grid
+
 
 %% plotting land uptakes
 

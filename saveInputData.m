@@ -8,7 +8,14 @@
 
 function saveInputData
 
-year = (1850:(1/12):2015.5)';
+addpath(genpath(...
+    '/Users/juliadohner/Documents/MATLAB/LandUseProject/necessary_data'));
+addpath(genpath(...
+    '/Users/juliadohner/Documents/MATLAB/LU_data_big'));
+
+start_year = 1850;
+end_year = 2015.5;
+year = (start_year:(1/12):end_year)';
 ts = 12; % timesteps per year
 dt = 1/ts;
 
@@ -34,11 +41,11 @@ Boden2016(:,2) = FFinterp*d;
     
     clear LUdata LUinterp;
 
-% hansis 2015
+% hansis 2015 (column I in file sent by J. Pongratz)
     % 1849-2016 | GtC/yr | annual
     LUdata = csvread('Pongratz2016_GCP_meanPasture_peat.csv'); %Hansis GCP
     LUinterp = (interp1(LUdata(:,1),LUdata(:,2),year));
-    Hansis2015 = [year, LUinterp*d];
+    Hansis2015_I = [year, LUinterp*d];
     clear LUdata LUinterp;
 
 % hough 03 (Rafelski "high land use")
@@ -243,11 +250,78 @@ Boden2016(:,2) = FFinterp*d;
     % annual 1500 to 2005
     % need first and 5th columns
     clear LUdata LUinterp;
+    
+% hansis 2015 (column B in file sent by J. Pongratz)
+    % 1501-2012 | GtC/yr | annual
+    % taking 1850, extending to 2015.5
+    LUdata0 = csvread('BLUE_B_normalCdensities_Hansis2015.csv',349); %Hansis GCP
+    LUdata1 = [LUdata0(:,1);end_year];
+    LUdata2 = [LUdata0(:,2);LUdata0(length(LUdata0),2)];
+    LUdata = [LUdata1 , LUdata2];
+    LUinterp = (interp1(LUdata(:,1),LUdata(:,2),year));
+    Hansis2015_B = [year, LUinterp*d];
+    clear LUdata LUinterp;
+    
+% hansis 2015 (column C in file sent by J. Pongratz)
+    % 1501-2012 | GtC/yr | annual
+    % taking 1850, extending to 2015.5
+    LUdata0 = csvread('BLUE_C_lowerCdensities_Hansis2015.csv',349); %Hansis GCP
+    LUdata1 = [LUdata0(:,1);end_year];
+    LUdata2 = [LUdata0(:,2);LUdata0(length(LUdata0),2)];
+    LUdata = [LUdata1 , LUdata2];
+    LUinterp = (interp1(LUdata(:,1),LUdata(:,2),year));
+    Hansis2015_C = [year, LUinterp*d];
+    clear LUdata LUinterp;
+    
+% hansis 2015 (column D in file sent by J. Pongratz)
+    % 1849-2016 | GtC/yr | annual
+    LUdata = csvread('BLUE_D_default_rangelandsAsPasture_GCP.csv'); %Hansis GCP
+    LUinterp = (interp1(LUdata(:,1),LUdata(:,2),year));
+    Hansis2015_D = [year, LUinterp*d];
+    clear LUdata LUinterp;
+    
+% hansis 2015 (column E in file sent by J. Pongratz)
+    % 1849-2016 | GtC/yr | annual
+    LUdata = csvread('BLUE_E_default_rangelandsNotAsPasture.csv'); %Hansis GCP
+    LUinterp = (interp1(LUdata(:,1),LUdata(:,2),year));
+    Hansis2015_E = [year, LUinterp*d];
+    clear LUdata LUinterp;
+    
+% hansis 2015 (column F in file sent by J. Pongratz)
+    % 1849-2016 | GtC/yr | annual
+    LUdata0 = csvread('BLUE_F_default_meanPasture.csv'); %Hansis GCP
+    LUdata = LUdata0(1:168,:);
+    LUinterp = (interp1(LUdata(:,1),LUdata(:,2),year));
+    Hansis2015_F = [year, LUinterp*d];
+    clear LUdata LUinterp;
+    
+% hansis 2015 (column G in file sent by J. Pongratz)
+    % 1849-2016 | GtC/yr | annual
+    LUdata = csvread('BLUE_G_defaultPlusPeat.csv'); %Hansis GCP
+    LUinterp = (interp1(LUdata(:,1),LUdata(:,2),year));
+    Hansis2015_G = [year, LUinterp*d];
+    clear LUdata LUinterp;
+    
+% hansis 2015 (column H in file sent by J. Pongratz)
+    % 1849-2016 | GtC/yr | annual
+    LUdata = csvread('BLUE_H_defaultNotPasture_plusPeat.csv'); %Hansis GCP
+    LUinterp = (interp1(LUdata(:,1),LUdata(:,2),year));
+    Hansis2015_H = [year, LUinterp*d];
+    clear LUdata LUinterp;
+    
+% % hansis 2015 (column I in file sent by J. Pongratz)
+%     % 1849-2016 | GtC/yr | annual
+%     LUdata = csvread('BLUE_I_meanGH_GCP.csv'); %Hansis GCP
+%     LUinterp = (interp1(LUdata(:,1),LUdata(:,2),year));
+%     Hansis2015_I = [year, LUinterp*d];
+%     clear LUdata LUinterp;
 
-save('inputData','Boden2016','Houghton2017','Hansis2015','Houghton2003',...
+save('inputData','Boden2016','Houghton2017','Hansis2015_I','Houghton2003',...
     'ConstantLU','Constant2LU','GCP2017','Houghton2003low','CABLE2016',...
     'CABLE2016high','LPXBern2016_HYDE','LPXBern2016_LUH',...
-    'ORCHIDEEMICT2016','OCN2016','CLM45_2016','Yue2005','Yue2005_noAge')        
+    'ORCHIDEEMICT2016','OCN2016','CLM45_2016','Yue2005','Yue2005_noAge',...
+    'Hansis2015_B','Hansis2015_C','Hansis2015_D','Hansis2015_E',...
+    'Hansis2015_F','Hansis2015_G','Hansis2015_H')        
 
 end
 

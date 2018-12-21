@@ -6,7 +6,8 @@
 % Sets indicdes of variables to be looped and vars to be held constant
 
 function [LU_i,opt_i,Tdata_i,tempDep_i,varSST_i,timeConst_i,filt_i,...
-    fert_i,oceanUp_i,photResp_i,zeroBio_i,Tstep_i,rowLabels] = getLoopingVar(vary,j);
+    fert_i,oceanUp_i,photResp_i,zeroBio_i,Tstep_i,BLUE_i,rowLabels] ...
+    = getLoopingVar(vary,j);
 
 
     % which variable to loop through?
@@ -35,6 +36,7 @@ function [LU_i,opt_i,Tdata_i,tempDep_i,varSST_i,timeConst_i,filt_i,...
         photResp_i = 1;
         zeroBio_i = 1;
         Tstep_i = 1;
+        BLUE_i = 1;
         rowLabels = {'Houghton 2017';'Hansis 2015';'Houghton 2003';'Constant';...
         'Constant*2';'GCP';'Houghton 2003 low';...
         'CABLE';'CABLE high';'LPX HYDE';'LPX LUH';'ORCHIDEE-MICT';'OC-N'}; %;...
@@ -52,6 +54,7 @@ function [LU_i,opt_i,Tdata_i,tempDep_i,varSST_i,timeConst_i,filt_i,...
         photResp_i = 1;
         zeroBio_i = 1;
         Tstep_i = 1;
+        BLUE_i = 1;
         rowLabels = {'1900-2010.5','1900-2005.5','1959-2010.5','1959-2000.5'};
     elseif strcmp(vary,'C') % loop temp record
         LU_i = 1;
@@ -66,6 +69,7 @@ function [LU_i,opt_i,Tdata_i,tempDep_i,varSST_i,timeConst_i,filt_i,...
         photResp_i = 1;
         zeroBio_i = 1;
         Tstep_i = 1;
+        BLUE_i = 1;
         rowLabels = {'LR debug','HadCRUT4','CRUTEM4','CRUTEM4v','Nino 3.4'};
         % 'Tropical T','Global Historical Climate Network','MLOST 3.5',..
         % '
@@ -82,6 +86,7 @@ function [LU_i,opt_i,Tdata_i,tempDep_i,varSST_i,timeConst_i,filt_i,...
         photResp_i = 1;
         zeroBio_i = 1;
         Tstep_i = 1;
+        BLUE_i = 1;
         rowLabels = {'Variable T','Fixed T'};
     elseif strcmp(vary,'E') % loop fixed vs variable SST 
         LU_i = 1;
@@ -96,6 +101,7 @@ function [LU_i,opt_i,Tdata_i,tempDep_i,varSST_i,timeConst_i,filt_i,...
         photResp_i = 1;
         zeroBio_i = 1;
         Tstep_i = 1;
+        BLUE_i = 1;
         rowLabels = {'Fixed SST','Variable SST'};
     elseif strcmp(vary,'F') % loop time constant values
         LU_i = 1;
@@ -110,6 +116,7 @@ function [LU_i,opt_i,Tdata_i,tempDep_i,varSST_i,timeConst_i,filt_i,...
         photResp_i = 1;
         zeroBio_i = 1;
         Tstep_i = 1;
+        BLUE_i = 1;
         rowLabels = {'Tconst/1','Tconst/2','Tconst/4','Tconst/8',...
             'Tconst/100'};
     elseif strcmp(vary,'G') % loop filtering of deconvolution residual
@@ -125,6 +132,7 @@ function [LU_i,opt_i,Tdata_i,tempDep_i,varSST_i,timeConst_i,filt_i,...
         photResp_i = 1;
         zeroBio_i = 1;
         Tstep_i = 1;
+        BLUE_i = 1;
         rowLabels = {'10-year Filter','1-year Filter','Unfiltered',...
             'Unfilt-filt 10-year','Unfilt-filt 1-year'};
     elseif strcmp(vary,'H') % loop ocean uptake
@@ -140,6 +148,7 @@ function [LU_i,opt_i,Tdata_i,tempDep_i,varSST_i,timeConst_i,filt_i,...
         photResp_i = 1;
         zeroBio_i = 1;
         Tstep_i = 1;
+        BLUE_i = 1;
         rowLabels = {'Med Ocean Uptake','Low Ocean Uptake','High Ocean Uptake'};
     elseif strcmp(vary,'I') % loop co2 vs N fert
         LU_i = 1;
@@ -154,6 +163,7 @@ function [LU_i,opt_i,Tdata_i,tempDep_i,varSST_i,timeConst_i,filt_i,...
         photResp_i = 1;
         zeroBio_i = 1;
         Tstep_i = 1;
+        BLUE_i = 1;
         rowLabels = {'CO2-fert','N-fert'};
     elseif strcmp(vary,'J') % loop temp-dependent photosynthesis or respiration
         LU_i = 1;
@@ -168,6 +178,7 @@ function [LU_i,opt_i,Tdata_i,tempDep_i,varSST_i,timeConst_i,filt_i,...
         photResp_i = j;
         zeroBio_i = 1;
         Tstep_i = 1;
+        BLUE_i = 1;
         rowLabels = {'T-dep Respiration','T-dep Photosynthesis'};
     
     elseif strcmp(vary,'K') % loop zeroing out eps, ?Ci, both
@@ -183,6 +194,7 @@ function [LU_i,opt_i,Tdata_i,tempDep_i,varSST_i,timeConst_i,filt_i,...
         photResp_i = 1;
         zeroBio_i = j;
         Tstep_i = 1;
+        BLUE_i = 1;
         rowLabels = {'Baseline','Epsilon = 0','\DeltaC_i = 0','Q_1_0 = 1'};
     
         
@@ -199,7 +211,25 @@ function [LU_i,opt_i,Tdata_i,tempDep_i,varSST_i,timeConst_i,filt_i,...
         photResp_i = 1;
         zeroBio_i = 1;
         Tstep_i = j;
+        BLUE_i = 1;
         rowLabels = {'1 at 1975-','1 from 1975-1995','15 at 1975-','15 from 1975-1995'};
+    
+    
+    elseif strcmp(vary,'M') % loop BLUE LULCC emissions records
+        LU_i = 1;
+        opt_i = 1; % 1 for 1900-2010.5, 3 for 1959-2010.5
+        Tdata_i = 1; % 1 for simliar to LR, 3 for updated land temps
+        tempDep_i = 1;
+        varSST_i = 1;
+        timeConst_i = 1;
+        filt_i = 1; % 1 for 10yr filt, 2 for 1-yr filt, 3 for unfilt
+        fert_i = 1;
+        oceanUp_i = 1;
+        photResp_i = 1;
+        zeroBio_i = 1;
+        Tstep_i = 1;
+        BLUE_i = j;
+        rowLabels = {'Houghton 2017','B','C','D','E','F','G','H','I'};
     
     end
     
