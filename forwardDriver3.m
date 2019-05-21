@@ -24,7 +24,7 @@ clear all; %close all
 % L = loop temperature step records
 % M = loop Houghton, BLUE cases
 
-vary = 'M';
+vary = 'A';
 
 if strcmp(vary,'A')     numCases = 2;    
 elseif strcmp(vary,'B') numCases = 4;
@@ -349,6 +349,9 @@ outputArray
 %% plotting output similar to LR figure 5 & 7
 
 
-%plotvsObs(outputArray, run);
+%plotvsObs2(outputArray, run);
+run1 = 1;
+run2 = 2;
+plotvsObs(run1,run2,outputArray, CO2a_obs,year);
 
 

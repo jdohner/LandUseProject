@@ -74,7 +74,7 @@ function [LU_i,opt_i,Tdata_i,tempDep_i,varSST_i,timeConst_i,filt_i,...
         % 'Tropical T','Global Historical Climate Network','MLOST 3.5',..
         % '
     elseif strcmp(vary, 'D') % loop fixed vs variable T
-        LU_i = 1;
+        LU_i = 2; % 2 for Hansis BLUE
         opt_i = 1; % 1 for 1900-2010.5, 3 for 1959-2010.5
         Tdata_i = 1; % 1 for simliar to LR, 3 for updated land temps
         tempDep_i = j;
