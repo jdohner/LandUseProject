@@ -23,8 +23,11 @@ clear all; %close all
 % K = loop through cancelling out eps, ?Ci
 % L = loop temperature step records
 % M = loop Houghton, BLUE cases
+% N = generate new ensemble member (randomly pick from CO2a,FF,ocean)
 
-vary = 'A';
+vary = 'N';
+
+nEnsemble = 10; % only used for vary = 'N' case
 
 if strcmp(vary,'A')     numCases = 2;    
 elseif strcmp(vary,'B') numCases = 4;
@@ -39,6 +42,7 @@ elseif strcmp(vary,'J') numCases = 2;
 elseif strcmp(vary,'K') numCases = 4;
 elseif strcmp(vary,'L') numCases = 4;
 elseif strcmp(vary,'M') numCases = 9;
+elseif strcmp(vary,'N') numCases = nEnsemble;
 else % see README for cases
     numCases = 1;
     LU_i = 1;
@@ -52,6 +56,7 @@ else % see README for cases
     oceanUp_i = 1;
     photResp_i = 1;
     zeroBio_i = 1;
+    ensemble_i = 1;
 end
 
 
@@ -62,6 +67,9 @@ outputArray(1,:) = {'Run Version','Q10','epsilon','gamma','input data',...
     'atmcalc2','obsCalcDiff','ddtUnfilt','ddtFilt','RMSEfilt 1900-2014'...
     'RMSEfilt 1958-2014','RMSEunfilt 1958-2014','C1dt','C2dt','delCdt',...
     'delC1','delC2'};
+
+noisyCO2aRecords = cell(numCases+1,2);
+noisyCO2aRecords(1,:) = {'Run Version','noisyCO2aRecord'};
 
 if strcmp(vary,'K') % create array to hold land box flux values
     landFluxArray = cell(numCases,4);
@@ -85,8 +93,9 @@ addpath(genpath(...
 addpath(genpath(...
     '/Users/juliadohner/Documents/MATLAB/LU_data_big'));
 
-[dtdelpCO2a_obs,dpCO2a_obs,~,~,CO2a_obs] = getObservedCO2_2(ts,start_year,end_year);
-
+if strcmp(vary,'N') == 0
+    [dtdelpCO2a_obs,dpCO2a_obs,~,~,CO2a_obs] = getObservedCO2_2(ts,start_year,end_year);
+end
 
 %% fitting parameters for cases
 
@@ -97,8 +106,8 @@ for j = 1:numCases
     
 % get the indices for variables being looped/held fixed    
 [LU_i,opt_i,Tdata_i,tempDep_i,varSST_i,timeConst_i,filt_i,...
-    fert_i,oceanUp_i,photResp_i,zeroBio_i,Tstep_i,BLUE_i,rowLabels] ...
-    = getLoopingVar(vary,j);
+    fert_i,oceanUp_i,photResp_i,zeroBio_i,Tstep_i,BLUE_i,ensemble_i,...
+    rowLabels] = getLoopingVar(vary,j);
 
 
 if tempDep_i == 2 || zeroBio_i == 4 % temp-independent
@@ -106,11 +115,17 @@ if tempDep_i == 2 || zeroBio_i == 4 % temp-independent
 end
 
 save('runInfo','start_year','end_year','ts','year','fert_i',...
-    'oceanUp_i','tempDep_i','varSST_i','filt_i',...
-    'rowLabels','opt_i','photResp_i','timeConst_i','zeroBio_i','Tstep_i');
+    'oceanUp_i','tempDep_i','varSST_i','filt_i','rowLabels',...
+    'opt_i','photResp_i','timeConst_i','zeroBio_i','Tstep_i','ensemble_i');
+
+if strcmp(vary,'N')==1
+    [dtdelpCO2a_obs,dpCO2a_obs,~,~,CO2a_obs,CO2a_obs_archive] = ...
+    getObservedCO2_wNoise(ts,start_year,end_year,vary);
+end
+
 
 if strcmp(vary,'L') == 0
-[temp_anom] = tempRecord3(Tdata_i,start_year,end_year,dt);
+    [temp_anom] = tempRecord3(Tdata_i,start_year,end_year,dt);
 else 
     [temp_anom] = tempRecord4(Tstep_i,start_year,end_year,dt);
 end
@@ -323,6 +338,11 @@ C2dt = [C2dt(:,1), C2dt(:,2)*-1];
 [outputArray] = fillArray(j,Q1,epsilon,gamma,inputData,atmcalc2,...
     obsCalcDiff,outputArray,ddtUnfilt,ddtFilt,RMSEunfilt,RMSEfiltShort,...
     RMSEfilt,C1dt,C2dt,delCdt,delC1,delC2);
+
+if strcmp(vary,'N')
+    noisyCO2aRecords(j+1,1) = rowLabels(j);
+    noisyCO2aRecords(j+1,2) = {CO2a_obs};
+end
 
 if strcmp(vary,'K')
     [landFluxArray] = fillLandFluxArray(landFluxArray,j,C1dt,C2dt,delCdt);

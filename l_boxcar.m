@@ -2,6 +2,9 @@
 
 function [avg_func] = l_boxcar(func,boxlength,dt,starttime,endtime,datecol,numcol)
 
+%avg_func = zeros((endtime-(boxlength/2)*dt),2); 
+% ^added to address "Undefined function or variable 'avg_func'." error, but
+% not necessary for some vary cases - only throws for vary = 'O'
 
 for i = (starttime+(boxlength/2)*dt):(endtime-(boxlength/2)*dt)
     avg_func(i,1) = func(i,datecol);
