@@ -248,7 +248,7 @@ function [LU_i,opt_i,Tdata_i,tempDep_i,varSST_i,timeConst_i,filt_i,...
         rowLabels = {'Houghton 2017','B','C','D','E','F','G','H','I'};
         
     elseif strcmp(vary,'N') % loop to generate ensemble members
-        LU_i = 4;
+        LU_i = 1;
         opt_i = 1; % 1 for 1900-2010.5, 3 for 1959-2010.5
         Tdata_i = 1; % 1 for simliar to LR, 3 for updated land temps
         tempDep_i = 1;
