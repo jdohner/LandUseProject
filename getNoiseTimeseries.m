@@ -49,7 +49,7 @@ mu = 0.5;
 sigma = 0.5/3; % want numbers to fall between 0 and 1 (99.7% of data w/in 3 standard deviations)
 
 for j = 1:nTimeseries % in each column
-    for i = 1:length(dpCO2a_obs(:,1)) % in each row
+    for i = 1:length(dpCO2a_obs(:,1)) % in each row %note: change dpco2a_obs to co2a_obs in all instances
         noiseTimeseries(i+1,j) = normrnd(mu,sigma)...
             + 0.244*noiseTimeseries(i,j);
     end
