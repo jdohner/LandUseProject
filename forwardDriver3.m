@@ -25,7 +25,7 @@ clear all; %close all
 % M = loop Houghton, BLUE cases
 % N = generate new ensemble member (randomly pick from CO2a,FF,ocean)
 
-vary = 'N';
+vary = 'A';
 
 nEnsemble = 10; % only used for vary = 'N' case
 
@@ -118,9 +118,10 @@ save('runInfo','start_year','end_year','ts','year','fert_i',...
     'oceanUp_i','tempDep_i','varSST_i','filt_i','rowLabels',...
     'opt_i','photResp_i','timeConst_i','zeroBio_i','Tstep_i','ensemble_i');
 
+% generate noisy CO2 record if in ensemble mode
 if strcmp(vary,'N')==1
     [dtdelpCO2a_obs,dpCO2a_obs,~,~,CO2a_obs,CO2a_obs_archive] = ...
-    getObservedCO2_wNoise(ts,start_year,end_year,vary);
+    getObservedCO2_2wNoise(ts,start_year,end_year,vary);
 end
 
 
@@ -129,14 +130,22 @@ if strcmp(vary,'L') == 0
 else 
     [temp_anom] = tempRecord4(Tstep_i,start_year,end_year,dt);
 end
-    
+
+% get ff and LU (includes ability to get noisy ff)
 [ff, LU] = getSourceSink6(LU_i,BLUE_i,vary); % for updated FF & LU
 
 save('ff','ff')
 
 
-
-[fas,sstAnom] = jooshildascale(start_year,end_year,ts,ff,varSST_i,Tconst);
+% calculate ocean sink from ff
+if strcmp(vary,'N')
+    % want to feed the ensemble mode the already-created noisy co2 record
+    % will need to adjust start and end dates to the ocean (because co2
+    % generated again within jooshildascale code)
+    [fas,sstAnom] = jooshildascale_wNoise(start_year,end_year,ts,ff,varSST_i,Tconst,vary);
+else
+    [fas,sstAnom] = jooshildascale(start_year,end_year,ts,ff,varSST_i,Tconst);
+end
 
 % scaling ocean uptake
 if oceanUp_i == 3 % high

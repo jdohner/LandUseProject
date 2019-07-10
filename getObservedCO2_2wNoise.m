@@ -11,7 +11,7 @@
 % detailed description.
         
 function [dtdelpCO2a_obs,dpCO2a_obs,year,dt,CO2a_obs,CO2a_obs_archive] = ...
-    getObservedCO2_wNoise(ts,start_year,end_year,vary)
+    getObservedCO2_2wNoise(ts,start_year,end_year,vary)
 
 dt = 1/ts;
 

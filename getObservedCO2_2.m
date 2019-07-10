@@ -66,6 +66,7 @@ j1 = find(co2_combine(:,1) >= end_year,1);
 co2_trunc = co2_combine(i1:j1,:);
 
 %% Calculate change in atmospheric concentration since 1850
+% NOTE: this says since 1850, but in reality it's since start year
 dpCO2a_obs(:,1) = co2_trunc(:,1); 
 dpCO2a_obs(:,2) = co2_trunc(:,2)-co2_trunc(1,2);
 % does not start at 0
