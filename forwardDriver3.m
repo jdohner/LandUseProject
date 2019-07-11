@@ -80,6 +80,7 @@ Tconst = 18.2; % surface temperature, deg C, from Joos 1996
 ts = 12; % timesteps per year
 dt = 1/ts;
 start_year = 1850;
+start_yearOcean = 1800;
 end_year = 2015.5; 
 year = (start_year:(1/ts):end_year)';
 Aoc = 3.62E14; % surface area of ocean, m^2, from Joos 1996
@@ -121,7 +122,7 @@ save('runInfo','start_year','end_year','ts','year','fert_i',...
 % generate noisy CO2 record if in ensemble mode
 if strcmp(vary,'N')==1
     [dtdelpCO2a_obs,dpCO2a_obs,~,~,CO2a_obs,CO2a_obs_archive] = ...
-    getObservedCO2_2wNoise(ts,start_year,end_year,vary);
+    getObservedCO2_2wNoise(ts,start_year,start_yearOcean,end_year,vary);
 end
 
 
@@ -141,7 +142,7 @@ if strcmp(vary,'N')
     % want to feed the ensemble mode the already-created noisy co2 record
     % will need to adjust start and end dates to the ocean (because co2
     % generated again within jooshildascale code)
-    [fas,sstAnom] = jooshildascale_wNoise(start_year,end_year,ts,ff,varSST_i,Tconst,vary);
+    [fas,sstAnom] = jooshildascale_wNoise(start_year,start_yearOcean,end_year,ts,ff,varSST_i,Tconst,vary);
 else
     [fas,sstAnom] = jooshildascale(start_year,end_year,ts,ff,varSST_i,Tconst);
 end

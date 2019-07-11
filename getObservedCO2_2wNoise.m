@@ -11,7 +11,7 @@
 % detailed description.
         
 function [dtdelpCO2a_obs,dpCO2a_obs,year,dt,CO2a_obs,CO2a_obs_archive] = ...
-    getObservedCO2_2wNoise(ts,start_year,end_year,vary)
+    getObservedCO2_2wNoise(ts,start_year,start_yearOcean,end_year,vary)
 
 dt = 1/ts;
 
@@ -56,47 +56,52 @@ year_full(:,1) = [MLOSPOiceinterp(:,1) ; CO2_2016mo(i:end,1)];
 % starts at beginning of MLOSPO, ends at end of 2016 record
 co2_combine_0(:,1) = year_full; 
 co2_combine_0(:,2) = [MLOSPOiceinterp(1:end,2); CO2_2016mo(i:end,2)];
+% store as original CO2 record (no noise added)
+CO2a_obs_archive = co2_combine_0;
 
 %% add noise to CO2 record
 
 % add noise to co2_combine here - gets used in rest of code
 if strcmp(vary,'N')
     
-    % store truncated version of original CO2a_obs record
-    m1 = find(co2_combine_0(:,1) >= start_year,1);
-    n1 = find(co2_combine_0(:,1) >= end_year,1);
-    CO2a_obs_archive = co2_combine_0(m1:n1,:);
-    
     [noisyCO2a_obs] = getNoisyCO2a(co2_combine_0);
     % year that comes out above attached to noisyCO2a_obs is the same as 
     % the year in co2_combine_0
     co2_combine = noisyCO2a_obs;
     
-
 end
 
 
 %% calculate changes in CO2
 
 m = find(co2_combine(:,1) >= start_year,1); % find index for start_year
+m1 = find(co2_combine(:,1) >= start_yearOcean,1); % find index for start_year
 n = find(co2_combine(:,1) >= end_year,1); % find index for end_year
+
 
 % calculate dtdelpCO2a (CO2 increment with monthly resolution (ppm/year))
 % calculating since 1640
 % (ts/2) in bounds accounts for mid-month offset
-for n = ((ts/2)+1):(length(co2_combine)-(ts/2))
-    dtdelpCO2a(n,1) = co2_combine(n,1);
-    dtdelpCO2a(n,2) = co2_combine(n+(ts/2),2) - co2_combine(n-(ts/2),2);
+for j = ((ts/2)+1):(length(co2_combine)-(ts/2))
+    dtdelpCO2a(j,1) = co2_combine(j,1);
+    dtdelpCO2a(j,2) = co2_combine(j+(ts/2),2) - co2_combine(j-(ts/2),2);
 end
 
 % calculate dpCO2a (change in CO2a since start_year)
 dpCO2a_obs(:,1) = co2_combine(m:n,1); 
 dpCO2a_obs(:,2) = co2_combine(m:n,2)-co2_combine(m,2);
 
+% calculate dpCO2a for ocean code
+dpCO2a_obsOcean(:,1) = co2_combine(m1:n,1); 
+dpCO2a_obsOcean(:,2) = co2_combine(m1:n,2)-co2_combine(m1,2);
+
 % truncate other outputs to match start & end years
 CO2a_obs = co2_combine(m:n,:); 
 dtdelpCO2a_obs = dtdelpCO2a(m:n,:); 
 
-year = CO2a_obs(:,1);
+year = dpCO2a_obs(:,1);
+yearOcean = dpCO2a_obsOcean(:,1);
+
+save('CO2forOcean','dpCO2a_obsOcean','dt','yearOcean');
 
 end
