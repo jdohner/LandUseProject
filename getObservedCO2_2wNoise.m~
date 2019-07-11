@@ -15,7 +15,7 @@ function [dtdelpCO2a_obs,dpCO2a_obs,year,dt,CO2a_obs,CO2a_obs_archive] = ...
 
 dt = 1/ts;
 
-%% load and combine CO2 records
+%% load and combi
 
 load dataMlospo_meure2011.mat % loads mlospo_meure data vector
 
@@ -35,9 +35,7 @@ meureInterp_CO2 = interp1(meure_years,meure_CO2,meureInterp_years,'spline');
 MLOSPOiceinterp(:,1) = meureInterp_years; % ends Feb 2010
 MLOSPOiceinterp(:,2) = meureInterp_CO2;
 
-%%%%%%%%
-
-% everything past where co2_2011 ends
+%% everything past where co2_2011 ends
 
 % starts at year 1, incremented by year
 CO2_2016 = csvread('mergedCO2_2016.csv'); % to match LR, use this
@@ -57,7 +55,6 @@ year_full(:,1) = [MLOSPOiceinterp(:,1) ; CO2_2016mo(i:end,1)];
 co2_combine_0(:,1) = year_full; 
 co2_combine_0(:,2) = [MLOSPOiceinterp(1:end,2); CO2_2016mo(i:end,2)];
 
-%% add noise to CO2 record
 
 % add noise to co2_combine here - gets used in rest of code
 if strcmp(vary,'N')
@@ -76,12 +73,8 @@ if strcmp(vary,'N')
 end
 
 
-%% calculate changes in CO2
+%% Calculate dtdelpCO2a (CO2 increment with monthly resolution (ppm/year))
 
-m = find(co2_combine(:,1) >= start_year,1); % find index for start_year
-n = find(co2_combine(:,1) >= end_year,1); % find index for end_year
-
-% calculate dtdelpCO2a (CO2 increment with monthly resolution (ppm/year))
 % calculating since 1640
 % (ts/2) in bounds accounts for mid-month offset
 for n = ((ts/2)+1):(length(co2_combine)-(ts/2))
@@ -89,7 +82,12 @@ for n = ((ts/2)+1):(length(co2_combine)-(ts/2))
     dtdelpCO2a(n,2) = co2_combine(n+(ts/2),2) - co2_combine(n-(ts/2),2);
 end
 
-% calculate dpCO2a (change in CO2a since start_year)
+%% calculate dpCO2a (change in CO2a since start_year)
+
+m = find(co2_combine(:,1) >= start_year,1); % find index for start_year
+n = find(co2_combine(:,1) >= end_year,1); % find index for end_year
+
+% calculating from start to end year
 dpCO2a_obs(:,1) = co2_combine(m:n,1); 
 dpCO2a_obs(:,2) = co2_combine(m:n,2)-co2_combine(m,2);
 
