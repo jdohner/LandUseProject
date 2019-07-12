@@ -19,8 +19,6 @@ c = 1.722E17; % unit converter, umol m^3 ppm^-1 kg^-1, from Joos 1996
 h = 75; % mixed layer depth, m, from Joos 1996
 kg = 1/9.06; % gas exchange rate, yr^-1, from Joos 1996
 
-% right now generating new noisy co2 record, but I want to use the one that
-% was generated previously
 
 if strcmp(vary,'N')
     load CO2forOcean;
@@ -61,6 +59,10 @@ end
 i3 = find(fas(:,1) >= start_year,1);
 j3 = find(fas(:,1) >= end_year,1);
 fas = fas(i3:j3,:);
+
+if strcmp(vary,'N')
+    fas = getNoisyFas(fas);
+end
 
 
 
