@@ -25,7 +25,7 @@ clear all; %close all
 % M = loop Houghton, BLUE cases
 % N = generate new ensemble member (randomly pick from CO2a,FF,ocean)
 
-vary = 'N';
+vary = 'A';
 
 nEnsemble = 10; % only used for vary = 'N' case
 
