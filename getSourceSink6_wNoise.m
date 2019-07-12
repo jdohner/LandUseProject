@@ -23,7 +23,7 @@ load inputData.mat
 
 % option to generate noisy FF record
 if strcmp(vary,'N')
-    [ff] = getNoisyCO2a(Boden2016);
+    [ff] = getNoisyFF(Boden2016);
 else 
     ff = Boden2016;
 end
