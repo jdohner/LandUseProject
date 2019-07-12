@@ -95,22 +95,18 @@ if start_yearOcean < start_year
     dpCO2a_obsOcean(:,1) = co2_combine(m1:n,1); 
     dpCO2a_obsOcean(:,2) = co2_combine(m1:n,2)-co2_combine(m1,2);
     
-    % for regular dpCO2a, take longer dpCO2a_ocean and truncate
     j = find(dpCO2a_obsOcean(:,1) >= start_year,1); % find index for start_year
     dpCO2a_obs(:,1) = dpCO2a_obsOcean(j:end,1); 
     dpCO2a_obs(:,2) = dpCO2a_obsOcean(j:end,2);
-
 else
-    % calculate dpCO2a (change in CO2a since start_year)
-    dpCO2a_obs(:,1) = co2_combine(m:n,1); 
-    dpCO2a_obs(:,2) = co2_combine(m:n,2)-co2_combine(m,2);
-    
-    j = find(dpCO2a_obs(:,1) >= start_yearOcean,1); % find index for start_year
-     % for ocean dpCO2a, take longer dpCO2a and truncate
-    dpCO2a_obsOcean(:,1) = dpCO2a_obs(j:end,1); 
-    dpCO2a_obsOcean(:,2) = dpCO2a_obs(j:end,2);
     
 end
+
+
+% calculate dpCO2a (change in CO2a since start_year)
+dpCO2a_obs(:,1) = co2_combine(m:n,1); 
+dpCO2a_obs(:,2) = co2_combine(m:n,2)-co2_combine(m,2);
+
 
 
 % truncate other outputs to match start & end years
