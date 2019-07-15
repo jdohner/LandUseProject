@@ -10,8 +10,6 @@
 
 function [noisyFas] = getNoisyFas(fas)
 
-% Ballantyne et al. (2012) method
-
 % create blank vector
 % +1 so have starter value for the AR step (to trace back 1 before start)
 noiseTimeseries = zeros(length(fas(:,1)+2),1);

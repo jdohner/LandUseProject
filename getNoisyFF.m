@@ -26,7 +26,7 @@ for i = 1:length(ff(:,1)) % in each row
     noiseTimeseries(i+1) = 0.95*noiseTimeseries(i) + normrnd(mu,sigma);
 end
 
-% normalize so that 2*standard deviation in noiseTimeseries (y(t)) is 0.5
+% normalize so that 2*standard deviation in noiseTimeseries (y(t)) is 5%
 s2 = 0.05/2;
 s1 = std(noiseTimeseries);
 c = s2/s1;

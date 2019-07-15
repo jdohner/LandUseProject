@@ -21,14 +21,6 @@ function [ff,LU] = getSourceSink6_wNoise(LU_i,BLUE_i,vary)
 
 load inputData.mat
 
-% option to generate noisy FF record
-if strcmp(vary,'N')
-    [ff] = getNoisyFF(Boden2016);
-else 
-    ff = Boden2016;
-end
-
-
 
 if strcmp(vary,'M') == 0
 
@@ -124,5 +116,14 @@ elseif strcmp(vary,'M') == 1
     end
 
 end
+
+% option to generate noisy FF record
+if strcmp(vary,'N')
+    [ff] = getNoisyFF(Boden2016);
+    [LU] = getNoisyLU(LU);
+else 
+    ff = Boden2016;
+end
+
 
 end
