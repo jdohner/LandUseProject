@@ -5,7 +5,7 @@
 % march 21, 2018
 % author: julia dohner, with code adapted from lauren rafelski
 
-
+% testing/starting out ensembles_simplified branch
 
 clear all; %close all
 
