@@ -17,7 +17,7 @@ legendInfo2 = [outputArray{run2+1,1}];
 Catm_modeled1 = outputArray{run1+1,6};
 Catm_modeled2 = outputArray{run2+1,6};
 
-figure
+figure('Name', 'CO2a, Obs-Modeled');
 h1 = subplot(2,1,1);
 plot(year,Catm_modeled1,year,Catm_modeled2)
 hold on

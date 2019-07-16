@@ -61,10 +61,14 @@ CO2a_obs_archive = co2_combine_0;
 
 %% add noise to CO2 record
 
-[noisyCO2a_obs] = getNoisyCO2a(co2_combine_0);
-% year that comes out above attached to noisyCO2a_obs is the same as 
-% the year in co2_combine_0
-co2_combine = noisyCO2a_obs;
+if strcmp(vary,'N')
+    [noisyCO2a_obs] = getNoisyCO2a(co2_combine_0);
+    % year that comes out above attached to noisyCO2a_obs is the same as 
+    % the year in co2_combine_0
+    co2_combine = noisyCO2a_obs;
+else
+    co2_combine = CO2a_obs_archive;
+end
     
 %% calculate changes in CO2
 
