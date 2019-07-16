@@ -57,6 +57,8 @@ end
 % calculate the flux for the last time point
 fas(length(yearOcean),1) = yearOcean(length(yearOcean));
 fas(length(yearOcean),2) = (kg/Aoc)*(dpCO2a(length(yearOcean),2) - dpCO2s(length(yearOcean),2));
+% units for kg: gas exchange coefficient (yr^-1 * m^-2)
+% units for fas: ppm*yr^-1*m^-2
 
 zero1 = find(delDIC(:,1) == 0);
 delDIC(zero1,2) = NaN;

@@ -61,7 +61,7 @@ j3 = find(fas(:,1) >= end_year,1);
 fas = fas(i3:j3,:);
 
 if strcmp(vary,'N')
-    fas = getNoisyFas(fas);
+    fas = getNoisyFas(fas,Aoc);
 end
 
 

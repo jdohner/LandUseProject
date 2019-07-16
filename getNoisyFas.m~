@@ -27,7 +27,11 @@ end
 d = 1/2.31; % PgC to ppm conversion factor
 
 % normalize so that 1-sigma standard deviation in noiseTimeseries (y(t)) is 0.5
-s2 = 0.5*d/Aoc; % 0.5 PgC/year uncertainty converted to ppm*yr^-1*m^-2
+2sigma = 0.5*d); % 0.5 PgC/year uncertainty converted to ppm/yr
+
+
+s2 = 0.05; 
+
 s1 = std(noiseTimeseries);
 c = s2/s1;
 %noiseTimeseries = noiseTimeseries.*(s2/s1);
