@@ -31,25 +31,23 @@ for i = 1:length(allVals_CO2a)
     maxdtdelpCO2a(i,2) = max(allVals_dtdelpCO2a(i,2:end));
 end
 
-% plotting shaded area of max and min modeled CO2a values
 figure
-x = year';
+x = year;
 plot(minCO2a(:,1),minCO2a(:,2),'r','LineWidth',2);
 hold on;
 plot(maxCO2a(:,1),maxCO2a(:,2),'b','LineWidth',2);
-x2 = [year',fliplr(year')];
-inBetween = [minCO2a(:,2)',fliplr(maxCO2a(:,2)')];
-fill(x2,inBetween,'g');
+x2 = [year,fliplrOy
 
-% plotting shaded area of max and min modeled dtdelpCO2a values
-figure
-x = year';
-plot(mindtdelpCO2a(:,1),mindtdelpCO2a(:,2),'r','LineWidth',2);
+x = 1 : 300;
+curve1 = log(x);
+curve2 = 2*log(x);
+plot(x, curve1, 'r', 'LineWidth', 2);
 hold on;
-plot(maxdtdelpCO2a(:,1),maxdtdelpCO2a(:,2),'b','LineWidth',2);
-x2 = [year',fliplr(year')];
-inBetween = [mindtdelpCO2a(:,2)',fliplr(maxdtdelpCO2a(:,2)')];
-fill(x2,inBetween,'g');
+plot(x, curve2, 'b', 'LineWidth', 2);
+x2 = [x, fliplr(x)];
+inBetween = [curve1, fliplr(curve2)];
+fill(x2, inBetween, 'g');
+   
 
 d = 2.31; % ppm to PgC conversion factor (formerly 1/2.31 opp direction)
 d1 = 1/d; % PgC to ppm

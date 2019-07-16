@@ -68,3 +68,8 @@ elseif filt_i == 5 % unfilt - filt 1-year
     
 
 end
+
+% decon_resid is 5 years shorter than full record
+save('decon_resid','decon_resid');
+
+

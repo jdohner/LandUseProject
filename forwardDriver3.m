@@ -26,7 +26,7 @@ end
 
 outputArray = cell(numCases+1,17);
 outputArray(1,:) = {'Run Version','Q10','epsilon','gamma','input data',...
-    'atmcalc2','obsCalcDiff','ddtUnfilt','ddtFilt','RMSEfilt 1900-2014'...
+    'CO2a_model','obsCalcDiff','ddtUnfilt','ddtFilt','RMSEfilt 1900-2014'...
     'RMSEfilt 1958-2014','RMSEunfilt 1958-2014','C1dt','C2dt','delCdt',...
     'delC1','delC2'};
 
@@ -60,7 +60,6 @@ addpath(genpath(...
 %% fitting parameters for cases
 
 beta = [0.5;2]; % initial guesses for model fit (epsilon, q10)
-%saveInputData; % load and process FF and LU data
 
 for j = 1:numCases
     
@@ -105,28 +104,15 @@ decon_resid0 = [year, dtdelpCO2a_obs(:,2)-ff(:,2)+Aoc*fas(:,2)-LU(:,2)];
 % (ice core)
 
 [decon_resid] = applyFilter(filt_i, decon_resid0, end_year);
-
-% decon_resid is 5 years shorter than full record
-save('decon_resid','decon_resid');
     
-
 %% IMPORTANT PART - find model fit using a nonlinear regression 
 
 i = find(decon_resid(:,1) == 1900);
 [betahat,resid,J] = nlinfit(temp_anom,decon_resid(i:end,2),...
     'land_fitQs',beta);
 
-%% Look at covariances and correlations between model result and calculated land uptake 
-
-[N,P] = size(temp_anom);
-covariance = inv(J(1:1177,:)'*J(1:1177,:))*sum(resid(1:1177,:).^2)/(N-P); 
-[isize,jsize] = size(covariance);
-
-for k=1:isize
-    for x=1:jsize
-        correlation(k,j) = covariance(k,x)/sqrt(covariance(k,k)*covariance(x,x));
-    end
-end
+% Look at covariances and correlations between model result and calculated land uptake 
+[covariance,correlation] = getCovCorr(temp_anom,J,resid);
 
 % Get uncertainties of best fit values
 ci = nlparci(betahat,resid,J);
@@ -183,6 +169,7 @@ i6 = find(co2_diff(:,1) == 1959);
 j6 = find(co2_diff(:,1) == 1979);
 meandiff = mean(co2_diff(i6:j6,2)); % mean difference over 1959-1979
 CO2a_model2 = CO2a_model(:,2)+meandiff; % TODO: make this [year2, CO2a_model(:,2)+meandiff]; will have to change var processing afterwards
+% CO2a_model2 is formerly atmcalc2
 
 obsCalcDiff = [year, CO2a_obs(:,2) - CO2a_model2(:,1)]; 
 
@@ -207,7 +194,7 @@ end
 
 end
 
-plotEnsembles(outputArray, numCases,vary);
+plotEnsembles(outputArray, numCases,vary,year);
 
 % saving the output array
 outputArray
