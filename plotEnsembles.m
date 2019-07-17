@@ -38,6 +38,15 @@ for i = 1:length(allVals_CO2a)
     meandtdelpCO2a(i,2) = mean(allVals_dtdelpCO2a(i,2:end));
 end
 
+%% shadederrorbars plots
+
+addpath(genpath(...
+    '/Users/juliadohner/Documents/MATLAB/MATLAB_toolkits'));
+
+%shadedErrorBar(year,m
+
+
+%% handmade translucent plots
 % plotting shaded area of max and min modeled CO2a values
 figure('Name', 'Modeled CO2a Spread');
 x = year';
