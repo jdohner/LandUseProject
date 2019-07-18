@@ -25,11 +25,11 @@ end
 
 %% define time frame, cases
 
-outputArray = cell(numCases+1,17);
+outputArray = cell(numCases+1,18);
 outputArray(1,:) = {'Run Version','Q10','epsilon','gamma','input data',...
     'CO2a_model','obsCalcDiff','ddtUnfilt','ddtFilt','RMSEfilt 1900-2014'...
     'RMSEfilt 1958-2014','RMSEunfilt 1958-2014','C1dt','C2dt','delCdt',...
-    'delC1','delC2'};
+    'delC1','delC2','dtdelpCO2a_model'};
 
 noisyCO2aRecords = cell(numCases+1,2);
 noisyCO2aRecords(1,:) = {'Run Version','noisyCO2aRecord'};
@@ -187,7 +187,7 @@ C2dt = [C2dt(:,1), C2dt(:,2)*-1];
 [RMSEunfilt,RMSEfilt,RMSEfiltShort] = calcErrors(ddtUnfilt,ddtFilt);
 [outputArray] = fillArray(j,Q1,epsilon,gamma,inputData,CO2a_model2,...
     obsCalcDiff,outputArray,ddtUnfilt,ddtFilt,RMSEunfilt,RMSEfiltShort,...
-    RMSEfilt,C1dt,C2dt,delCdt,delC1,delC2);
+    RMSEfilt,C1dt,C2dt,delCdt,delC1,delC2,dtdelpCO2a_model);
 
 if strcmp(vary,'N')
     noisyCO2aRecords(j+1,1) = rowLabels(j);
@@ -228,10 +228,10 @@ for i=1:3
 end
 
 
-plotEnsembles(outputArray, numCases,year,nLU);
+plotEnsembles(LUensembleArray,nLU);
 
 % saving the output array
-outputArray
+outputArray;
 
 % plotting output similar to LR figure 5 & 7
 run1 = 1;

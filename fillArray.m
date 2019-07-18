@@ -11,7 +11,7 @@ function [outputArray] = fillArray(j,Q1,epsilon,gamma,inputData,...
                                     atmCalc2,obsCalcDiff,outputArray,...
                                     ddtUnfilt,ddtFilt,RMSEunfilt,...
                                     RMSEfiltShort,RMSEfilt,C1dt,C2dt,...
-                                    delCdt,delC1,delC2)
+                                    delCdt,delC1,delC2,dtdelpCO2a_model)
 
 load runInfo.mat
 
@@ -32,6 +32,7 @@ outputArray(j+1,14) = {C2dt};
 outputArray(j+1,15) = {delCdt};
 outputArray(j+1,16) = {delC1}; %change in fast box size since 1850
 outputArray(j+1,17) = {delC2}; %change in slow box size since 1850
+outputArray(j+1,18) = {dtdelpCO2a_model};
 
 
 end
