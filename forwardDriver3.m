@@ -7,13 +7,14 @@
 
 % testing/starting out ensembles_simplified branch
 
-clear all; %close all
+clear all; 
 
 % which variable to loop through?
 % A = land use (13 cases)
 % N = generate new ensemble member (randomly pick from CO2a,FF,ocean)
 
 vary = 'N';
+scheme = 'bb';
 
 nEnsemble = 10; % only used for vary = 'N' case
 nLU = 3; % three LU cases: Houghton, BLUE, constant
@@ -25,11 +26,11 @@ end
 
 %% define time frame, cases
 
-outputArray = cell(numCases+1,18);
+outputArray = cell(numCases+1,19);
 outputArray(1,:) = {'Run Version','Q10','epsilon','gamma','input data',...
     'CO2a_model','obsCalcDiff','ddtUnfilt','ddtFilt','RMSEfilt 1900-2014'...
     'RMSEfilt 1958-2014','RMSEunfilt 1958-2014','C1dt','C2dt','delCdt',...
-    'delC1','delC2','dtdelpCO2a_model'};
+    'delC1','delC2','dtdelpCO2a_model','AGR_model_filt'};
 
 noisyCO2aRecords = cell(numCases+1,2);
 noisyCO2aRecords(1,:) = {'Run Version','noisyCO2aRecord'};
@@ -48,20 +49,12 @@ end_year = 2015.5;
 year = (start_year:(1/ts):end_year)';
 Aoc = 3.62E14; % surface area of ocean, m^2, from Joos 1996
 co2_preind = 600/2.12; % around 283 ppm (preindustrial)
-
-
-%% load data
+beta = [0.5;2]; % initial guesses for model fit (epsilon, q10)
 
 addpath(genpath(...
     '/Users/juliadohner/Documents/MATLAB/LandUseProject/necessary_data'));
 addpath(genpath(...
     '/Users/juliadohner/Documents/MATLAB/LU_data_big'));
-
-
-%% fitting parameters for cases
-
-beta = [0.5;2]; % initial guesses for model fit (epsilon, q10)
-
 
 
 for j = 1:numCases
@@ -78,7 +71,8 @@ end
 
 save('runInfo','start_year','end_year','ts','year','fert_i',...
     'oceanUp_i','tempDep_i','varSST_i','filt_i','rowLabels',...
-    'opt_i','photResp_i','timeConst_i','zeroBio_i','Tstep_i','ensemble_i');
+    'opt_i','photResp_i','timeConst_i','zeroBio_i','Tstep_i',...
+    'ensemble_i','scheme');
 
 
 [dtdelpCO2a_obs,dpCO2a_obs,~,~,CO2a_obs,CO2a_obs_archive] = ...
@@ -106,7 +100,18 @@ decon_resid0 = [year, dtdelpCO2a_obs(:,2)-ff(:,2)+Aoc*fas(:,2)-LU(:,2)];
 % don't use 10 year mean before 1957, because data are already smoothed
 % (ice core)
 
-[decon_resid] = applyFilter(filt_i, decon_resid0, end_year);
+[decon_resid] = applyFilter(filt_i, decon_resid0, end_year,scheme);
+
+% i = find(decon_resid0(:,1) == 1958);
+% 
+windowSize = 120; % 10-year window at monthly resolution
+b = (1/windowSize)*ones(1,windowSize); % num,denom for rational transfer fx
+a = 1;
+% decon_resid = year;
+% %decon_resid(:,2) = filter(b,a,decon_resid0(:,2));
+% decon_resid(:,2) = [decon_resid0(1:i,2) ; filter(b,a,decon_resid0(i+1:end,2))];
+
+
     
 %% IMPORTANT PART - find model fit using a nonlinear regression 
 
@@ -150,7 +155,9 @@ delCdt(:,2) = -delCdt(:,2); % change sign of land uptake
 %[delC10] = l_boxcar(delCdt,10,12,1,length(delCdt),1,2);
 
 if filt_i == 1 % 10-yr filter applied
-    [delC10] = l_boxcar(delCdt,10,12,1,length(delCdt),1,2);
+    %[delC10] = l_boxcar(delCdt,10,12,1,length(delCdt),1,2);
+    delC10 = year;
+    delC10(:,2) = filter(b,a,delCdt(:,2));
     yhat2 = delC10(:,2);
 elseif filt_i == 2
     yhat2 = delCdt(:,2);   
@@ -165,6 +172,7 @@ j4 = find(fas(:,1) == end_year);
 % newat is the modeled dtdelpCO2a (CO2 increment with monthly resolution (ppm/year))
 % a.k.a. atmospheric growth rate
 dtdelpCO2a_model =  [year, ff(:,2) - Aoc*fas(:,2) + LU(:,2) + delCdt(:,2)];
+%AGR_model_filt = 
 CO2a_model = [year, co2_preind+cumsum(dtdelpCO2a_model(:,2)/12)];
 
 co2_diff = [year,CO2a_obs(:,2)-CO2a_model(:,2)];
@@ -183,11 +191,13 @@ inputData = NaN;
 C1dt = [C1dt(:,1), C1dt(:,2)*-1];
 C2dt = [C2dt(:,1), C2dt(:,2)*-1];
 
+AGR_model_filt = 1;
+
 [ddtUnfilt,ddtFilt] = calcDerivs(obsCalcDiff);
 [RMSEunfilt,RMSEfilt,RMSEfiltShort] = calcErrors(ddtUnfilt,ddtFilt);
 [outputArray] = fillArray(j,Q1,epsilon,gamma,inputData,CO2a_model2,...
     obsCalcDiff,outputArray,ddtUnfilt,ddtFilt,RMSEunfilt,RMSEfiltShort,...
-    RMSEfilt,C1dt,C2dt,delCdt,delC1,delC2,dtdelpCO2a_model);
+    RMSEfilt,C1dt,C2dt,delCdt,delC1,delC2,dtdelpCO2a_model,AGR_model_filt);
 
 if strcmp(vary,'N')
     noisyCO2aRecords(j+1,1) = rowLabels(j);
@@ -228,7 +238,7 @@ for i=1:3
 end
 
 
-plotEnsembles(LUensembleArray,nLU);
+plotEnsembles(LUensembleArray,nLU,scheme);
 
 % saving the output array
 outputArray;

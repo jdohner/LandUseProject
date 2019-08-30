@@ -69,7 +69,7 @@ i = find(decon_resid == 1900);
 yhat0 = decon_resid(i:end,:); % yhat is 1900-end
 
 % timeFrameVec goes 1850-2015.5 (1987x2)
-[timeFrameVec] = getTimeFrame(opt_i,year);
+[timeFrameVec] = getTimeFrame(opt_i,year,scheme);
 
 save('timeFrameVec','timeFrameVec');
 

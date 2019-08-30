@@ -2,18 +2,29 @@
 
 function [avg_func] = l_boxcar(func,boxlength,dt,starttime,endtime,datecol,numcol)
 
-%avg_func = zeros((endtime-(boxlength/2)*dt),2); 
-% ^added to address "Undefined function or variable 'avg_func'." error, but
-% not necessary for some vary cases - only throws for vary = 'O'
+% %avg_func = zeros((endtime-(boxlength/2)*dt),2); 
+% % ^added to address "Undefined function or variable 'avg_func'." error, but
+% % not necessary for some vary cases - only throws for vary = 'O'
+% 
+% for i = (starttime+(boxlength/2)*dt):(endtime-(boxlength/2)*dt)
+%     avg_func(i,1) = func(i,datecol);
+%     avg_func(i,2) = sum(func(i-(boxlength/2)*dt:i+(boxlength/2)*dt,numcol))/(boxlength*dt+1);
+% end
+% 
+% % this boxcar function is buggy and i doesn't start at 1, so first few
+% % values are left unfilled
+% 
+% % to fill the first values (col 2):
+% idx = find(avg_func~=0, 1, 'first'); % find index of first non-zero element
+% avg_func(1:idx-1,2) = avg_func(idx,2);
 
-for i = (starttime+(boxlength/2)*dt):(endtime-(boxlength/2)*dt)
-    avg_func(i,1) = func(i,datecol);
-    avg_func(i,2) = sum(func(i-(boxlength/2)*dt:i+(boxlength/2)*dt,numcol))/(boxlength*dt+1);
-end
+%% using MATLAB function
 
-% this boxcar function is buggy and i doesn't start at 1, so first few
-% values are left unfilled
+windowSize = 120; % 10-year window at monthly resolution
+b = (1/windowSize)*ones(1,windowSize); % num,denom for rational transfer fx
+a = 1;
 
-% to fill the first values (col 2):
-idx = find(avg_func~=0, 1, 'first'); % find index of first non-zero element
-avg_func(1:idx-1,2) = avg_func(idx,2);
+avg_func = func(:,1);
+%decon_resid(:,2) = filter(b,a,decon_resid0(:,2));
+avg_func(:,2) = [func(1:starttime,2) ; filter(b,a,func(starttime+1:endtime,2))];
+

@@ -4,10 +4,10 @@
 % 
 % author: julia dohner
 
-function [decon_resid] = applyFilter(filt_i, decon_resid0, end_year)
+function [decon_resid] = applyFilter(filt_i, decon_resid0, end_year,scheme)
 
 if filt_i == 1 % 10-year filter
-    % using filtered data for everything after 
+    % using filtered data for everything after 1957
     i = find(decon_resid0(:,1) == 1952);
     k = find(decon_resid0(:,1) >= (1956+(11/12)),1);
 
@@ -68,6 +68,26 @@ elseif filt_i == 5 % unfilt - filt 1-year
     
 
 end
+
+if strcmp(scheme,'aa') % 10-year filter after 1900
+    i = find(decon_resid0(:,1) == 1895);
+    k = find(decon_resid0(:,1) >= 1900,1);
+
+    [decon_filt0] = l_boxcar(decon_resid0,10,12,i,length(decon_resid0),1,2);
+    decon_resid(1:k,:) = decon_resid0(1:k,:);
+    decon_resid((k+1):(length(decon_filt0)),:) = decon_filt0((k+1):end,:);
+
+elseif strcmp(scheme,'bb') % 10-year filter after 1957
+    % using filtered data for everything after 1957
+    i = find(decon_resid0(:,1) == 1952);
+    k = find(decon_resid0(:,1) >= (1956+(11/12)),1);
+
+    [decon_filt0] = l_boxcar(decon_resid0,10,12,i,length(decon_resid0),1,2);
+    decon_resid(1:k,:) = decon_resid0(1:k,:);
+    decon_resid((k+1):(length(decon_filt0)),:) = decon_filt0((k+1):end,:);
+    
+end
+
 
 % decon_resid is 5 years shorter than full record
 save('decon_resid','decon_resid');

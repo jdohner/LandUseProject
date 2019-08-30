@@ -3,7 +3,7 @@
 % julia dohner
 % july 24, 2018
 
-function plotEnsembles(LUensembleArray,nLU)
+function plotEnsembles(LUensembleArray,nLU,scheme)
 
 addpath(genpath(...
     '/Users/juliadohner/Documents/MATLAB/MATLAB_toolkits'));
