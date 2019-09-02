@@ -5,7 +5,7 @@
 %
 % code to replicate figures 5 & 7 from rafelski et al. 2009
 
-function plotvsObs(run1,run2,outputArray, CO2a_obs,year);
+function plotvsObs(run1,run2,outputArray, CO2a_obs,year,scheme);
 
 % note: obs co2 record is smoothed
 

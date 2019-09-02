@@ -14,7 +14,7 @@ clear all;
 % N = generate new ensemble member (randomly pick from CO2a,FF,ocean)
 
 vary = 'N';
-scheme = 'bb';
+scheme = 'aa';
 
 nEnsemble = 10; % only used for vary = 'N' case
 nLU = 3; % three LU cases: Houghton, BLUE, constant
@@ -140,24 +140,23 @@ else % nitrogen fertilization
 end
 
 
-%% plotting // fixing params here
-
-% Run the best fit values in the model again to plot
+%% Run the best fit values in the model again to plot
 [C1dt,C2dt,delCdt,delC1,delC2] = bioboxtwo(epsilon,Q1,Q2,ts,year,...
     dpCO2a_obs,temp_anom,gamma,photResp_i,timeConst_i,zeroBio_i);
 
 
 delCdt(:,2) = -delCdt(:,2); % change sign of land uptake
 
+%% apply 10-year filter to model result
 
 % TODO combine the two lines below
 % 10 year moving boxcar average of model result
 %[delC10] = l_boxcar(delCdt,10,12,1,length(delCdt),1,2);
 
 if filt_i == 1 % 10-yr filter applied
-    %[delC10] = l_boxcar(delCdt,10,12,1,length(delCdt),1,2);
-    delC10 = year;
-    delC10(:,2) = filter(b,a,delCdt(:,2));
+    [delC10] = l_boxcar(delCdt,10,12,1,length(delCdt),1,2);
+%     delC10 = year;
+%     delC10(:,2) = filter(b,a,delCdt(:,2));
     yhat2 = delC10(:,2);
 elseif filt_i == 2
     yhat2 = delCdt(:,2);   
@@ -165,13 +164,18 @@ end
 
 %TODO: need filt_i == 3 case above??
 
-% Do "reverse deconvolution" to calculate modeled CO2 change
+%% quantify goodness of fit using mean squared error
+
+
+
+%% Do "reverse deconvolution" to calculate modeled CO2 change
 i4 = find(fas(:,1) == start_year);
 j4 = find(fas(:,1) == end_year);
 
 % newat is the modeled dtdelpCO2a (CO2 increment with monthly resolution (ppm/year))
 % a.k.a. atmospheric growth rate
-dtdelpCO2a_model =  [year, ff(:,2) - Aoc*fas(:,2) + LU(:,2) + delCdt(:,2)];
+% calculated with delC10 (10-year filter applied)
+dtdelpCO2a_model =  [year, ff(:,2) - Aoc*fas(:,2) + LU(:,2) + yhat2];
 %AGR_model_filt = 
 CO2a_model = [year, co2_preind+cumsum(dtdelpCO2a_model(:,2)/12)];
 
@@ -208,7 +212,7 @@ if LU_i == 1
     save('Houghton_ensemble','outputArray','numCases','year');
 elseif LU_i == 2
     save('BLUE_ensemble','outputArray','numCases','year');
-elseif LU_i == 4
+elseif LU_i == 3
     save('Constant_ensemble','outputArray','numCases','year');
 end
 
@@ -237,16 +241,18 @@ for i=1:3
     
 end
 
+%amassEnsembleData
+
 
 plotEnsembles(LUensembleArray,nLU,scheme);
 
-% saving the output array
+% saving the output array (?)
 outputArray;
 
 % plotting output similar to LR figure 5 & 7
 run1 = 1;
 run2 = 2;
-plotvsObs(run1,run2,outputArray, CO2a_obs,year);
+plotvsObs(run1,run2,outputArray, CO2a_obs,year,scheme);
 
 
 

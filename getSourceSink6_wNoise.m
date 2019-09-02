@@ -29,12 +29,12 @@ if strcmp(vary,'M') == 0
 
     elseif LU_i == 2 % hansis 2015
         LU = Hansis2015_I;
-
-    elseif LU_i == 3 % hough 03 (Rafelski "high land use")
-        LU = Houghton2003;
-
-    elseif LU_i == 4 % constant land use case
+        
+    elseif LU_i == 3 % constant land use case
         LU = ConstantLU;
+
+    elseif LU_i == 4 % hough 03 (Rafelski "high land use")
+        LU = Houghton2003;
 
     elseif LU_i == 5 % constant*2 land use case
         LU = Constant2LU;

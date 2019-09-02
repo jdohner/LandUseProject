@@ -79,7 +79,7 @@ if strcmp(scheme,'aa') % 10-year filter after 1900
 
 elseif strcmp(scheme,'bb') % 10-year filter after 1957
     % using filtered data for everything after 1957
-    i = find(decon_resid0(:,1) == 1952);
+    i = find(decon_resid0(:,1) == 1952); 
     k = find(decon_resid0(:,1) >= (1956+(11/12)),1);
 
     [decon_filt0] = l_boxcar(decon_resid0,10,12,i,length(decon_resid0),1,2);

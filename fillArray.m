@@ -35,6 +35,7 @@ outputArray(j+1,16) = {delC1}; %change in fast box size since 1850
 outputArray(j+1,17) = {delC2}; %change in slow box size since 1850
 outputArray(j+1,18) = {dtdelpCO2a_model};
 outputArray(j+1,19) = {AGR_model_filt};
+%outputArray(j+1,20) = {delC10};
 
 
 end
