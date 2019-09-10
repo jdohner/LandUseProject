@@ -5,7 +5,7 @@
 
 function plotRunComparisons(outputArray, numCases,vary);
 
-d = 2.31; % ppm to PgC conversion factor (formerly 1/2.31 opp direction)
+d = 2.124; % ppm to PgC conversion factor (formerly 1/2.31 opp direction)
 d1 = 1/d; % PgC to ppm
 
 %% plotting varied input datasets

@@ -12,7 +12,7 @@ function plotBioboxes(landFluxArray,numCases,vary)
 % C2dt: flux into slow box
 % delCdt: total flux into land
 
-d = 2.31; % conversion from ppm to PgC
+d = 2.124; % conversion from ppm to PgC
 
 
 if strcmp(vary,'K')

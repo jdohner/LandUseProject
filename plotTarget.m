@@ -14,7 +14,7 @@ addpath(genpath(...
 addpath(genpath(...
     '/Users/juliadohner/Dropbox/Science Communication/S3_2018/Presentation'));
 
-d = 1/2.31; % PgC to ppm conversion factor
+d = 1/2.124; % PgC to ppm conversion factor
 
 load decon_resid; % model-calculated residual
 
@@ -116,7 +116,7 @@ title('GCP CO_2 Atmospheric Growth Rate')
 
 
 ts = 12; % timesteps per year
-d = 2.31; % ppm to PgC conversion factor (formerly 1/2.31 opp direction)
+d = 2.134; % ppm to PgC conversion factor (formerly 1/2.31 opp direction)
 d1 = 1/d; % PgC to ppm conversion
 
 load baseline1900_CO2a;

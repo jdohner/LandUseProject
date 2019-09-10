@@ -6,7 +6,7 @@
 load inputData.mat
 colorVec = hsv(11);
 
-d = 2.31;
+d = 2.124; %GtC to ppm conversion
 
 figure
 hold on

@@ -7,15 +7,12 @@
 % (epsilon and Q10)
 % putting into tables (instead of saveParams.m)
 
-function [outputArray] = fillArray(j,Q1,epsilon,gamma,inputData,...
-                                    atmCalc2,obsCalcDiff,outputArray,...
-                                    ddtUnfilt,ddtFilt,RMSEunfilt,...
-                                    RMSEfiltShort,RMSEfilt,C1dt,C2dt,...
-                                    delCdt,delC1,delC2,dtdelpCO2a_model,...
-                                    AGR_model_filt,vary)
+function [outputArray] = fillArray2(j)
+
+
 
 load runInfo.mat
-
+load allVars
 
 if strcmp(vary,'N')
     number = int2str(j);

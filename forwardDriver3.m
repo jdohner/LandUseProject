@@ -9,14 +9,16 @@
 
 clear all; 
 
+tic
+
 % which variable to loop through?
 % A = land use (13 cases)
 % N = generate new ensemble member (randomly pick from CO2a,FF,ocean)
 
 vary = 'N';
-scheme = 'aa';
+scheme = 'bb';
 
-nEnsemble = 10; % only used for vary = 'N' case
+nEnsemble = 500; % only used for vary = 'N' case
 nLU = 3; % three LU cases: Houghton, BLUE, constant
 
 if strcmp(vary,'A')     numCases = 2;    
@@ -31,6 +33,11 @@ outputArray(1,:) = {'Run Version','Q10','epsilon','gamma','input data',...
     'CO2a_model','obsCalcDiff','ddtUnfilt','ddtFilt','RMSEfilt 1900-2014'...
     'RMSEfilt 1958-2014','RMSEunfilt 1958-2014','C1dt','C2dt','delCdt',...
     'delC1','delC2','dtdelpCO2a_model','AGR_model_filt'};
+
+
+errorArray = cell(numCases+1,7);
+errorArray(1,:) = {'Run Version','covariance','correlation','Jacobian',...
+    'resid','ci','MSE'};
 
 noisyCO2aRecords = cell(numCases+1,2);
 noisyCO2aRecords(1,:) = {'Run Version','noisyCO2aRecord'};
@@ -62,7 +69,7 @@ for j = 1:numCases
 % get the indices for variables being looped/held fixed    
 [LU_i,opt_i,Tdata_i,tempDep_i,varSST_i,timeConst_i,filt_i,...
     fert_i,oceanUp_i,photResp_i,zeroBio_i,Tstep_i,BLUE_i,ensemble_i,...
-    rowLabels] = getLoopingVar(vary,j);
+    rowLabels] = getLoopingVar(vary,j,scheme);
 
 
 if tempDep_i == 2 || zeroBio_i == 4 % temp-independent
@@ -116,14 +123,16 @@ a = 1;
 %% IMPORTANT PART - find model fit using a nonlinear regression 
 
 i = find(decon_resid(:,1) == 1900);
-[betahat,resid,J] = nlinfit(temp_anom,decon_resid(i:end,2),...
+[betahat,resid,Jacobian] = nlinfit(temp_anom,decon_resid(i:end,2),...
     'land_fitQs',beta);
 
 % Look at covariances and correlations between model result and calculated land uptake 
-[covariance,correlation] = getCovCorr(temp_anom,J,resid);
+[cov,corr] = getCovCorr(temp_anom,Jacobian,resid);
 
 % Get uncertainties of best fit values
-ci = nlparci(betahat,resid,J);
+ci = nlparci(betahat,resid,Jacobian);
+
+
 
 
 %% Redefine values of epsilon, gamma and Q1
@@ -166,7 +175,8 @@ end
 
 %% quantify goodness of fit using mean squared error
 
-
+[MSE] = calcMSE(temp_anom,betahat,resid,Jacobian,ci,yhat2,filt_i,...
+    scheme,year,decon_resid);
 
 %% Do "reverse deconvolution" to calculate modeled CO2 change
 i4 = find(fas(:,1) == start_year);
@@ -198,53 +208,45 @@ C2dt = [C2dt(:,1), C2dt(:,2)*-1];
 AGR_model_filt = 1;
 
 [ddtUnfilt,ddtFilt] = calcDerivs(obsCalcDiff);
-[RMSEunfilt,RMSEfilt,RMSEfiltShort] = calcErrors(ddtUnfilt,ddtFilt);
+[RMSEunfilt,RMSEfilt,RMSEfiltShort] = calcAGR_RMSE(ddtUnfilt,ddtFilt);
 [outputArray] = fillArray(j,Q1,epsilon,gamma,inputData,CO2a_model2,...
     obsCalcDiff,outputArray,ddtUnfilt,ddtFilt,RMSEunfilt,RMSEfiltShort,...
-    RMSEfilt,C1dt,C2dt,delCdt,delC1,delC2,dtdelpCO2a_model,AGR_model_filt);
+    RMSEfilt,C1dt,C2dt,delCdt,delC1,delC2,dtdelpCO2a_model,...
+    AGR_model_filt,vary);
 
 if strcmp(vary,'N')
-    noisyCO2aRecords(j+1,1) = rowLabels(j);
+    %noisyCO2aRecords(j+1,1) = rowLabels(j);
+    number = int2str(j);
+    noisyCO2aRecords(j+1,1) = {strcat('Member',number)};
     noisyCO2aRecords(j+1,2) = {CO2a_obs};
 end
 
+[errorArray] = fillErrorArray(j,vary,errorArray,rowLabels,...
+    cov,corr,Jacobian,resid,ci,MSE);
+
 if LU_i == 1
     save('Houghton_ensemble','outputArray','numCases','year');
+    save('Houghton_errors','errorArray','numCases','year');
 elseif LU_i == 2
     save('BLUE_ensemble','outputArray','numCases','year');
+    save('BLUE_errors','errorArray','numCases','year');
 elseif LU_i == 3
     save('Constant_ensemble','outputArray','numCases','year');
+    save('Constant_errors','errorArray','numCases','year');
+elseif LU_i == 8
+    save('CABLE_ensemble','outputArray','numCases','year');
+    save('CABLE_errors','errorArray','numCases','year');
 end
 
 
 end
 
-LUensembleArray = cell(nLU+1,4);
-LUensembleArray(1,:) = {'LU case','outputArray','numCases','year'};
 
-for i=1:3
-    if i == 1
-        load Houghton_ensemble;
-        label = 'Houghton';
-    elseif i == 2
-        load BLUE_ensemble;
-        label = 'BLUE';
-    else
-        load Constant_ensemble;
-        label = 'constant';
-    end
-    
-    LUensembleArray(i+1,1) = {label};
-    LUensembleArray(i+1,2) = {outputArray};
-    LUensembleArray(i+1,3) = {numCases};
-    LUensembleArray(i+1,4) = {year};
-    
-end
-
-%amassEnsembleData
-
+[LUensembleArray] = fillLUensembleArray(nLU);
 
 plotEnsembles(LUensembleArray,nLU,scheme);
+
+%plotErrors(LUensembleArray,nLU,scheme,year,numCases);
 
 % saving the output array (?)
 outputArray;
@@ -254,5 +256,19 @@ run1 = 1;
 run2 = 2;
 plotvsObs(run1,run2,outputArray, CO2a_obs,year,scheme);
 
+nEnsemble % print 
+scheme % print
+
+if LU_i == 1
+    disp('H&N')
+elseif LU_i == 2
+    disp('BLUE')
+elseif LU_i == 3
+    disp('const')
+elseif LU_i == 8
+    disp('CABLE')
+end
+
+toc 
 
 

@@ -23,7 +23,7 @@ elseif opt_i == 2
     timeFrameVec(i:j,2) = 1;
     
 elseif opt_i == 3
-    i = find(year == 1959);
+    i = find(year == 1958);
     j = find(year == 2010.5);
     timeFrameVec(i:j,2) = 1;
     
@@ -44,6 +44,6 @@ if strcmp(scheme,'aa')
     
 elseif strcmp(scheme,'bb')
     i = find(year >= (1957+(11/12)),1);
-    j = find(year == 2000.5);
+    j = find(year == 2010.5);
     timeFrameVec(i+1:j,2) = 1;
 end

@@ -13,7 +13,7 @@ h2 = figure('Name','Obs-Calc CO2a Difference');
 h3 = figure('Name','Obs-Calc AGR Difference');
 legendInfo = {};
 %colorVec = hsv(nLU);
-colorVec = {'-g';'-b';'-r'};
+colorVec = {'-g';'-b';'-r';'-y'};
 hold all
 
 ts = 12;
@@ -21,7 +21,7 @@ start_year = 1850;
 start_yearOcean = 1800;
 end_year = 2015.5;
 vary = 'A'; % don't get noisy AGR record for comparison
-[dtdelpCO2a_obs,~,~,~,~,~] = ...
+[dtdelpCO2a_obs,~,~,~,~,~] = ... % in ppm
     getObservedCO2_2wNoise(ts,start_year,start_yearOcean,end_year,vary);
 
 % apply 10-year filter on observed AGR
@@ -37,17 +37,16 @@ elseif strcmp(scheme,'bb')
     AGRobs_filt(1:k,:) = AGRobs_filt0(1:k,:);
     AGRobs_filt((k+1):(length(AGRobs_filt0)),:) = AGRobs_filt0((k+1):end,:);
     
-    
-    %AGRobs_filt = l_boxcar(dtdelpCO2a_obs,10,12,1,length(dtdelpCO2a_obs(:,2)),1,2);
 end
 
 
 
-for i = 1:nLU-1
+for i = 1:nLU
     legendInfo{i} = LUensembleArray{i+1,1};
     outputArray = LUensembleArray{i+1,2};
-    numCases = LUensembleArray{i+1,3};
-    year = LUensembleArray{i+1,4};
+    % errorArray = LUensembleArray{i+1,3};
+    numCases = LUensembleArray{i+1,4};
+    year = LUensembleArray{i+1,5};
     
     year1 = year';
 
@@ -57,17 +56,6 @@ for i = 1:nLU-1
         amassEnsembleData(outputArray,numCases,AGRobs_filt,year);
     
     [sigmaCO2error,sigmaAGRdiff] = calcSigma(allVals_CO2error,allVals_AGRdiff);
-
-%     for j = 1:numCases
-%         allVals_CO2a(:,j) = outputArray{j+1,6};
-% 
-%         obsCalcDiff = outputArray{j+1,7};
-%         allVals_CO2error(:,j) = obsCalcDiff(:,2);
-%         
-%         % dtdelpCO2a_model is calculated from yhat2 therefore is filtered
-%         dtdelpCO2a_model = outputArray{j+1,18};
-%         allVals_AGRdiff(:,j) = dtdelpCO2a_model(:,2)-AGRobs_filt(:,2);
-%     end
     
     set(0,'CurrentFigure',h1)
     shadedErrorBar(year1,allVals_CO2a',{@mean,@std},'lineprops',colorVec{i,:},'patchSaturation',0.33);
@@ -83,6 +71,7 @@ hold off
 title('Modeled CO2a Ensembles')
 legend(legendInfo,'location','northwest')
 xlabel('Year','FontSize', 18)
+ylabel('ppm CO2','FontSize',18)
 if strcmp(scheme,'aa')
     xlim([1900 2020]);
 elseif strcmp(scheme,'bb')
@@ -98,6 +87,7 @@ hline = refline(0,[0,0]);
 hline.LineStyle = ':';
 legend(legendInfo,'location','northwest')
 xlabel('Year','FontSize', 18)
+ylabel('ppm CO2','FontSize',18)
 if strcmp(scheme,'aa')
     xlim([1900 2020]);
 elseif strcmp(scheme,'bb')
@@ -113,6 +103,7 @@ hline = refline(0,[0,0]);
 hline.LineStyle = ':';
 legend(legendInfo,'location','northwest')
 xlabel('Year','FontSize', 18)
+ylabel('ppm CO2/year','FontSize',18)
 if strcmp(scheme,'aa')
     xlim([1900 2020]);
 elseif strcmp(scheme,'bb')

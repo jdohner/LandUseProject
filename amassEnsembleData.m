@@ -14,6 +14,7 @@ blankVec = zeros(length(year),numCases);
 allVals_CO2a = blankVec;
 allVals_CO2error = blankVec;
 allVals_AGRdiff = blankVec;
+allVals_MSE = blankVec;
 
 for j = 1:numCases
     allVals_CO2a(:,j) = outputArray{j+1,6};
@@ -24,6 +25,8 @@ for j = 1:numCases
     % dtdelpCO2a_model is calculated from yhat2 therefore is filtered
     dtdelpCO2a_model = outputArray{j+1,18};
     allVals_AGRdiff(:,j) = dtdelpCO2a_model(:,2)-AGRobs_filt(:,2);
+    
+    
 end
 
 

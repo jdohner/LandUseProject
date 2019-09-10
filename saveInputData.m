@@ -22,7 +22,7 @@ dt = 1/ts;
 addpath(genpath(...
     '/Users/juliadohner/Documents/MATLAB/LU_data_big'));
 
-d = 1/2.31; % gigaton to ppm conversion factor
+d = 1/2.124; % gigaton to ppm conversion factor
 d1 = 0.001; % teragram to petagram conversion factor
    
 % FF data | Boden et al. (2017) via GCP 2017 v1.3

@@ -24,7 +24,7 @@ for i = 1:length(fas(:,1)) % in each row
     noiseTimeseries(i+1) = 0.9*noiseTimeseries(i) + normrnd(mu,sigma);
 end
 
-d = 1/2.31; % PgC to ppm conversion factor
+d = 1/2.124; % PgC to ppm conversion factor
 
 % normalize so that 1-sigma standard deviation in noiseTimeseries (y(t)) is 0.5
 s2 = 0.5*d/Aoc; % 0.5 PgC/year uncertainty converted to ppm*yr^-1*m^-2

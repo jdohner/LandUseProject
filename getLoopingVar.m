@@ -7,7 +7,7 @@
 
 function [LU_i,opt_i,Tdata_i,tempDep_i,varSST_i,timeConst_i,filt_i,...
     fert_i,oceanUp_i,photResp_i,zeroBio_i,Tstep_i,BLUE_i,ensemble_i,...
-    rowLabels] = getLoopingVar(vary,j);
+    rowLabels] = getLoopingVar(vary,j,scheme);
 
 
     % which variable to loop through?
@@ -248,8 +248,13 @@ function [LU_i,opt_i,Tdata_i,tempDep_i,varSST_i,timeConst_i,filt_i,...
         rowLabels = {'Houghton 2017','B','C','D','E','F','G','H','I'};
         
     elseif strcmp(vary,'N') % loop to generate ensemble members
-        LU_i = 2;
-        opt_i = 3; % 1 for 1900-2010.5, 3 for 1959-2010.5
+        LU_i = 3;
+        if strcmp(scheme,'aa')
+            opt_i = 1;
+        elseif strcmp(scheme,'bb')
+            opt_i = 3;
+        end
+        %opt_i = 3; % 1 for 1900-2010.5, 3 for 1958-2010.5
         Tdata_i = 1; % 1 for simliar to LR, 3 for updated land temps
         tempDep_i = 1;
         varSST_i = 1;

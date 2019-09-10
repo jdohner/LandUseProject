@@ -8,7 +8,7 @@
 % NOTE: errors calculated 1900-2014
 % calculated in flux units (PgC/yr)
 
-function [RMSEunfilt,RMSEfilt,RMSEfiltShort] = calcErrors(ddtUnfilt,ddtFilt);
+function [RMSEunfilt,RMSEfilt,RMSEfiltShort] = calcAGR_RMSE(ddtUnfilt,ddtFilt);
 
 % unfilt - calculate error for 1958-end
 i = find(ddtUnfilt(:,1) == 1958); % 1900 for debugging purposes %1958);
