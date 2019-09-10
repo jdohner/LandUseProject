@@ -18,7 +18,7 @@ tic
 vary = 'N';
 scheme = 'bb';
 
-nEnsemble = 500; % only used for vary = 'N' case
+nEnsemble = 2; % only used for vary = 'N' case
 nLU = 3; % three LU cases: Houghton, BLUE, constant
 
 if strcmp(vary,'A')     numCases = 2;    
@@ -123,11 +123,12 @@ a = 1;
 %% IMPORTANT PART - find model fit using a nonlinear regression 
 
 i = find(decon_resid(:,1) == 1900);
+year_fitted = year(i:end);
 [betahat,resid,Jacobian] = nlinfit(temp_anom,decon_resid(i:end,2),...
     'land_fitQs',beta);
 
 % Look at covariances and correlations between model result and calculated land uptake 
-[cov,corr] = getCovCorr(temp_anom,Jacobian,resid);
+[cov,corr] = getCovCorr(temp_anom,Jacobian,resid,year_fitted);
 
 % Get uncertainties of best fit values
 ci = nlparci(betahat,resid,Jacobian);

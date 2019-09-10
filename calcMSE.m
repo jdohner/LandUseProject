@@ -13,8 +13,10 @@
 % error
 % C - covariance of
 
-function [MSE] = calcMSE(temp_anom,betahat,resid,Jacobian,ci,yhat2,filt_i,...
-    scheme,year,decon_resid)
+function [MSE] = calcMSE(temp_anom,betahat,resid,Jacobian,ci,B_hat,filt_i,...
+    scheme,year,B)
+% B_hat is modeled land uptake (equivalent to yhat2)
+% B is decon_resid calculated target
 
 if strcmp(scheme,'aa') % filt/fit 1900-2015
     i = find(year(:,1) == 1900);
@@ -25,10 +27,10 @@ elseif strcmp(scheme,'bb') % filt/fit 1958-2015
 end
     
 % look at MSE for 1900-2015
-e = yhat2(i:i2)-decon_resid(i:i2,2);
-misfit = e'*e/length(yhat2(i:i2));
+e = B_hat(i:i2)-B(i:i2,2);
+misfit = e'*e/length(B_hat(i:i2));
 
-MSE = immse(yhat2(i:i2),decon_resid(i:i2,2));
+MSE = immse(B_hat(i:i2),B(i:i2,2));
 
 
 %% below not particularly useful
@@ -43,10 +45,10 @@ error = betahat(1)-ci(1);
 % 3. covariance between (1) and (2) to get 2x2 matrix
 % but not particularly useful beacues not centered at 0
 % this could perhaps be related to MSE, but AS doesn't think useful
-C = cov(decon_resid(i:(end-1),2),yhat2(i:(end-1)));
+C = cov(B(i:(end-1),2),B_hat(i:(end-1)));
 
 % similar meaning to C, therefore also not that useful
-[R,P,RLO,RUP] = corrcoef(yhat2(i:(end-1)),decon_resid(i:(end-1),2));
+[R,P,RLO,RUP] = corrcoef(B_hat(i:(end-1)),B(i:(end-1),2));
 
 R(1,2)^2;
 
