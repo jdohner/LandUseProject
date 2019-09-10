@@ -55,7 +55,7 @@ for i = 1:nLU
     [allVals_CO2a,allVals_CO2error,allVals_AGRdiff] = ...
         amassEnsembleData(outputArray,numCases,AGRobs_filt,year);
     
-    [sigmaCO2error,sigmaAGRdiff] = calcSigma(allVals_CO2error,allVals_AGRdiff);
+    %[sigmaCO2error,sigmaAGRdiff] = calcSigma(allVals_CO2error,allVals_AGRdiff);
     
     set(0,'CurrentFigure',h1)
     shadedErrorBar(year1,allVals_CO2a',{@mean,@std},'lineprops',colorVec{i,:},'patchSaturation',0.33);
