@@ -8,6 +8,7 @@
 % Rafelski's code by appending the record she used to an updated different
 % record
 
+% I = lr_debug
 % I = HadCRUT4_2018_05
 % II = CRUTEM4_2018_05
 % III = CRUTEM4v

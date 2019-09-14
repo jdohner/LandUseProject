@@ -24,6 +24,9 @@ for i = 1:length(fas(:,1)) % in each row
     noiseTimeseries(i+1) = 0.9*noiseTimeseries(i) + normrnd(mu,sigma);
 end
 
+% apply 12-month moving filter to noise
+noiseTimeseries = smoothdata(noiseTimeseries,'movmean',12);
+
 d = 1/2.124; % PgC to ppm conversion factor
 
 % normalize so that 1-sigma standard deviation in noiseTimeseries (y(t)) is 0.5
@@ -34,7 +37,7 @@ c = s2/s1;
 %noiseTimeseries = noiseTimeseries.*(s2/s1);
 
 noisyFas(:,1) = fas(:,1);
-noisyFas(:,2) = fas(:,2)+(c*noiseTimeseries(2:end));
+noisyFas(:,2) = fas(:,2)+(noiseTimeseries(2:end));%(c*noiseTimeseries(2:end));
 
 
 end

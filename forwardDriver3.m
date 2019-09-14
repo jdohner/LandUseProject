@@ -16,9 +16,9 @@ tic
 % N = generate new ensemble member (randomly pick from CO2a,FF,ocean)
 
 vary = 'N';
-scheme = 'bb';
+scheme = 'aa';
 
-nEnsemble = 2; % only used for vary = 'N' case
+nEnsemble = 1000; % only used for vary = 'N' case
 nLU = 3; % three LU cases: Houghton, BLUE, constant
 
 if strcmp(vary,'A')     numCases = 2;    
@@ -28,12 +28,12 @@ end
 
 %% define time frame, cases
 
-outputArray = cell(numCases+1,4);
+outputArray = cell(numCases+1,5);
 % % % outputArray(1,:) = {'Run Version','Q10','epsilon','gamma','input data',...
 % % %     'CO2a_model','obsCalcDiff','ddtUnfilt','ddtFilt','RMSEfilt 1900-2014'...
 % % %     'RMSEfilt 1958-2014','RMSEunfilt 1958-2014','C1dt','C2dt','delCdt',...
 % % %     'delC1','delC2','dtdelpCO2a_model','AGR_model_filt'};
-outputArray(1,:) = {'Run Version','Q10','epsilon','yhat2'};
+outputArray(1,:) = {'Run Version','Q10','epsilon','yhat2','decon_resid'};
 
 errorArray = cell(numCases+1,7);
 errorArray(1,:) = {'Run Version','covariance','correlation','Jacobian',...
@@ -68,7 +68,7 @@ for j = 1:numCases
     
 % get the indices for variables being looped/held fixed    
 [LU_i,opt_i,Tdata_i,tempDep_i,varSST_i,timeConst_i,filt_i,...
-    fert_i,oceanUp_i,photResp_i,zeroBio_i,Tstep_i,BLUE_i,ensemble_i,...
+    fert_i,oceanUp_i,photResp_i,zeroBio_i,~,BLUE_i,ensemble_i,...
     rowLabels] = getLoopingVar(vary,j,scheme);
 
 
@@ -85,16 +85,17 @@ save('runInfo','start_year','end_year','ts','year','fert_i',...
 [dtdelpCO2a_obs,dpCO2a_obs,~,~,CO2a_obs,CO2a_obs_archive] = ...
 getObservedCO2_2wNoise(ts,start_year,start_yearOcean,end_year,vary);
 
-
-[temp_anom] = tempRecord4(Tstep_i,start_year,end_year,dt);
+[temp_anom] = tempRecord3(Tdata_i,start_year,end_year,dt);
+%[temp_anom] = tempRecord4(Tstep_i,start_year,end_year,dt); % from looking
+%at T steps
 
 % calculate ocean sink from ff
 if strcmp(vary,'N')
     [ff, LU] = getSourceSink6_wNoise(LU_i,BLUE_i,vary); % for updated FF & LU
-    [fas,sstAnom] = jooshildascale_wNoise(start_year,start_yearOcean,end_year,ts,ff,varSST_i,Tconst,vary);
+    [fas,sstAnom] = jooshildascale_wNoise(start_year,start_yearOcean,end_year,varSST_i,Tconst,vary);
 else
     [ff, LU] = getSourceSink6(LU_i,BLUE_i,vary); % for updated FF & LU
-    [fas,sstAnom] = jooshildascale(start_year,end_year,ts,ff,varSST_i,Tconst);
+    [fas,sstAnom] = jooshildascale(start_year,end_year,varSST_i,Tconst);
 end
 
 save('ff','ff')
@@ -214,7 +215,7 @@ AGR_model_filt = 1;
 % % %     obsCalcDiff,outputArray,ddtUnfilt,ddtFilt,RMSEunfilt,RMSEfiltShort,...
 % % %     RMSEfilt,C1dt,C2dt,delCdt,delC1,delC2,dtdelpCO2a_model,...
 % % %     AGR_model_filt,vary);
-[outputArray] = fillArray(j,Q1,epsilon,yhat2,vary);
+[outputArray] = fillArray(j,Q1,epsilon,yhat2,decon_resid,vary,outputArray);
 
 if strcmp(vary,'N')
     %noisyCO2aRecords(j+1,1) = rowLabels(j);
@@ -227,39 +228,98 @@ end
     cov,corr,Jacobian,resid,ci,MSE);
 
 if LU_i == 1
-    save('Houghton_ensemble','outputArray','numCases','year');
-    save('Houghton_errors','errorArray','numCases','year');
+    if nEnsemble == 10
+        if strcmp(scheme,'aa')
+            save('H&N_ensemble_10aa','outputArray','errorArray','numCases','year');
+        elseif strcmp(scheme,'bb')
+            save('H&N_ensemble_10bb','outputArray','errorArray','numCases','year');
+        end
+    elseif nEnsemble == 500
+        if strcmp(scheme,'aa')
+            save('H&N_ensemble_500aa','outputArray','errorArray','numCases','year');
+        elseif strcmp(scheme,'bb')
+            save('H&N_ensemble_500bb','outputArray','errorArray','numCases','year');
+        end
+    elseif nEnsemble == 1000
+        if strcmp(scheme,'aa')
+            save('H&N_ensemble_1000aa','outputArray','errorArray','numCases','year');
+        elseif strcmp(scheme,'bb')
+            save('H&N_ensemble_1000bb','outputArray','errorArray','numCases','year');
+        end  
+    end
+        
+    %save('Houghton_errors','errorArray','numCases','year');
 elseif LU_i == 2
-    save('BLUE_ensemble','outputArray','numCases','year');
-    save('BLUE_errors','errorArray','numCases','year');
-elseif LU_i == 3
-    save('Constant_ensemble','outputArray','numCases','year');
-    save('Constant_errors','errorArray','numCases','year');
+    if nEnsemble == 10
+        if strcmp(scheme,'aa')
+            save('BLUE_ensemble_10aa','outputArray','errorArray','numCases','year');
+        elseif strcmp(scheme,'bb')
+            save('BLUE_ensemble_10bb','outputArray','errorArray','numCases','year');
+        end
+    elseif nEnsemble == 500
+        if strcmp(scheme,'aa')
+            save('BLUE_ensemble_500aa','outputArray','errorArray','numCases','year');
+        elseif strcmp(scheme,'bb')
+            save('BLUE_ensemble_500bb','outputArray','errorArray','numCases','year');
+        end
+    elseif nEnsemble == 1000
+        if strcmp(scheme,'aa')
+            save('BLUE_ensemble_1000aa','outputArray','errorArray','numCases','year');
+        elseif strcmp(scheme,'bb')
+            save('BLUE_ensemble_1000bb','outputArray','errorArray','numCases','year');
+        end  
+    end
+    %save('BLUE_errors','errorArray','numCases','year');
+elseif LU_i == 3  
+    if nEnsemble == 10
+        if strcmp(scheme,'aa')
+            save('Constant_ensemble_10aa','outputArray','errorArray','numCases','year');
+        elseif strcmp(scheme,'bb')
+            save('Constant_ensemble_10bb','outputArray','errorArray','numCases','year');
+        end
+    elseif nEnsemble == 500
+        if strcmp(scheme,'aa')
+            save('Constant_ensemble_500aa','outputArray','errorArray','numCases','year');
+        elseif strcmp(scheme,'bb')
+            save('Constant_ensemble_500bb','outputArray','errorArray','numCases','year');
+        end
+    elseif nEnsemble == 1000
+        if strcmp(scheme,'aa')
+            save('Constant_ensemble_1000aa','outputArray','errorArray','numCases','year');
+        elseif strcmp(scheme,'bb')
+            save('Constant_ensemble_1000bb','outputArray','errorArray','numCases','year');
+        end  
+    end
+    %save('Constant_errors','errorArray','numCases','year');
 elseif LU_i == 8
-    save('CABLE_ensemble','outputArray','numCases','year');
-    save('CABLE_errors','errorArray','numCases','year');
+    if nEnsemble == 10
+        if strcmp(scheme,'aa')
+            save('CABLE_ensemble_10aa','outputArray','errorArray','numCases','year');
+        elseif strcmp(scheme,'bb')
+            save('CABLE_ensemble_10bb','outputArray','errorArray','numCases','year');
+        end
+    elseif nEnsemble == 500
+        if strcmp(scheme,'aa')
+            save('CABLE_ensemble_500aa','outputArray','errorArray','numCases','year');
+        elseif strcmp(scheme,'bb')
+            save('CABLE_ensemble_500bb','outputArray','errorArray','numCases','year');
+        end
+    elseif nEnsemble == 1000
+        if strcmp(scheme,'aa')
+            save('CABLE_ensemble_1000aa','outputArray','errorArray','numCases','year');
+        elseif strcmp(scheme,'bb')
+            save('CABLE_ensemble_1000bb','outputArray','errorArray','numCases','year');
+        end  
+    end
+    %save('CABLE_errors','errorArray','numCases','year');
 end
 
 
 end
-
-
-[LUensembleArray] = fillLUensembleArray(nLU);
-
-plotEnsembles(LUensembleArray,nLU,scheme);
-
-%plotErrors(LUensembleArray,nLU,scheme,year,numCases);
-
-% saving the output array (?)
-outputArray;
-
-% plotting output similar to LR figure 5 & 7
-run1 = 1;
-run2 = 2;
-plotvsObs(run1,run2,outputArray, CO2a_obs,year,scheme);
 
 nEnsemble % print 
 scheme % print
+
 
 if LU_i == 1
     disp('H&N')
@@ -271,6 +331,25 @@ elseif LU_i == 8
     disp('CABLE')
 end
 
-toc 
+
+toc
+
+[LUensembleArray] = fillLUensembleArray(nLU,nEnsemble,scheme);
+
+plotEnsembles(LUensembleArray,nLU,scheme);
+
+%plotErrors(LUensembleArray,nLU,scheme,year,numCases);
+
+% printing the output array 
+%outputArray
+
+% plotting output similar to LR figure 5 & 7
+run1 = 1;
+run2 = 2;
+plotvsObs(run1,run2,outputArray, CO2a_obs,year,scheme);
+
+
+
+%toc 
 
 

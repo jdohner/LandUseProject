@@ -41,8 +41,8 @@ function [LU_i,opt_i,Tdata_i,tempDep_i,varSST_i,timeConst_i,filt_i,...
         Tstep_i = 1;
         BLUE_i = 1;
         ensemble_i = 1;
-        rowLabels = {'Houghton 2017';'Hansis 2015';'Constant';'Houghton 2003';...
-        'Constant*2';'GCP';'Houghton 2003 low';...
+        rowLabels = {'H&N 2017';'Hansis 2015';'Constant';'H&N 2003';...
+        'Constant*2';'GCP';'H&N 2003 low';...
         'CABLE';'CABLE high';'LPX HYDE';'LPX LUH';'ORCHIDEE-MICT';'OC-N'}; %;...
         %'CLM45';'Yue 2018';'Yue 2018 noAge'};
     elseif strcmp(vary,'B') % loop opt time frame
@@ -245,17 +245,17 @@ function [LU_i,opt_i,Tdata_i,tempDep_i,varSST_i,timeConst_i,filt_i,...
         Tstep_i = 1;
         BLUE_i = j;
         ensemble_i = 1;
-        rowLabels = {'Houghton 2017','B','C','D','E','F','G','H','I'};
+        rowLabels = {'H&N 2017','B','C','D','E','F','G','H','I'};
         
     elseif strcmp(vary,'N') % loop to generate ensemble members
-        LU_i = 3;
+        LU_i = 1;
         if strcmp(scheme,'aa')
             opt_i = 1;
         elseif strcmp(scheme,'bb')
             opt_i = 3;
         end
         %opt_i = 3; % 1 for 1900-2010.5, 3 for 1958-2010.5
-        Tdata_i = 1; % 1 for simliar to LR, 3 for updated land temps
+        Tdata_i = 3; % 1 for simliar to LR, 3 for updated land temps
         tempDep_i = 1;
         varSST_i = 1;
         timeConst_i = 1;

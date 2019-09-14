@@ -26,10 +26,14 @@ for i = 1:length(ff(:,1)) % in each row
     noiseTimeseries(i+1) = 0.95*noiseTimeseries(i) + normrnd(mu,sigma);
 end
 
+% apply 12-month moving filter to noise
+noiseTimeseries = smoothdata(noiseTimeseries,'movmean',12);
+
 % normalize so that 2*standard deviation in noiseTimeseries (y(t)) is 5%
 s2 = 0.05/2;
 s1 = std(noiseTimeseries);
-c = s2/s1;
+%c = s2/s1;
+c = 1;
 %noiseTimeseries = noiseTimeseries.*(s2/s1);
 
 noisyFF(:,1) = ff(:,1);

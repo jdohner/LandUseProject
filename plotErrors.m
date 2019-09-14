@@ -25,14 +25,14 @@ for i = 1:nLU
     
     subplot(nLU,1,i);
     histogram(allVals_RMSE);
-    legendInfo = LUensembleArray{i+1,1};
-    legend(legendInfo);
+    legendInfo{i} = LUensembleArray{i+1,1};
+    %legend(legendInfo);
     
     legend(legendInfo,'location','northwest')
     xlabel('RMSE (ppm)','FontSize', 18)
     ylabel('instances','FontSize',18)
     xlim([0 0.5]);
-    ylim([0 10]);
+    ylim([0 150]);
     set(gca,'FontSize',18)
     grid 
     

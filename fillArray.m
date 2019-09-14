@@ -8,7 +8,7 @@
 % putting into tables (instead of saveParams.m)
 
 
-function [outputArray] = fillArray(j,Q1,epsilon,yhat2,vary)
+function [outputArray] = fillArray(j,Q1,epsilon,yhat2,decon_resid,vary,outputArray)
 % % % function [outputArray] = fillArray(j,Q1,epsilon,gamma,inputData,...
 % % %                                     atmCalc2,obsCalcDiff,outputArray,...
 % % %                                     ddtUnfilt,ddtFilt,RMSEunfilt,...
@@ -25,11 +25,11 @@ if strcmp(vary,'N')
 else 
     outputArray(j+1,1) = rowLabels(j);
 end
-{'Run Version','Q10','epsilon','yhat2'};
 
 outputArray(j+1,2) = {Q1};
 outputArray(j+1,3) = {epsilon};
 outputArray(j+1,4) = {yhat2};
+outputArray(j+1,5) = {decon_resid};
 
 
 % % % outputArray(j+1,2) = {Q1};
