@@ -7,6 +7,16 @@
 % script to calculate standard deviation across ensemble
 % to normalize the error timeseries for getNoisyFas
 
+%% new method (sept 16 2019)
+
+for i = 1:1000
+end
+
+
+
+
+%% old method 
+
 Tconst = 18.2; % surface temperature, deg C, from Joos 1996
 start_year = 1850;
 start_yearOcean = 1800;

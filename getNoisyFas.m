@@ -10,34 +10,22 @@
 
 function [noisyFas] = getNoisyFas(fas,Aoc)
 
-% create blank vector
-% +1 so have starter value for the AR step (to trace back 1 before start)
-noiseTimeseries = zeros(length(fas(:,1)+2),1);
+year = fas(:,1);
 
-% adding noise in gaussian distribution
-mu = 0;
-sigma = 1; 
+AR1 = 0.9;
+AR2 = 0;
 
-% from Ballantyne:
-% y(t) = lag1*y(t-1) + eps(t) where eps(t) is Gaussian rand noise
-for i = 1:length(fas(:,1)) % in each row
-    noiseTimeseries(i+1) = 0.9*noiseTimeseries(i) + normrnd(mu,sigma);
-end
-
-% apply 12-month moving filter to noise
-noiseTimeseries = smoothdata(noiseTimeseries,'movmean',12);
+[noiseTimeseries] = generateEpsNoise(AR1,AR2,year);
 
 d = 1/2.124; % PgC to ppm conversion factor
 
-% normalize so that 1-sigma standard deviation in noiseTimeseries (y(t)) is 0.5
-s2 = (0.5*d/Aoc)*(sqrt(2)); % 0.5 PgC/year uncertainty converted to ppm*yr^-1*m^-2
-% multiply above by root 2 to compensate for not averaging D&J vals
-s1 = std(noiseTimeseries);
+% normalize to published 1-sigma standard deviation
+s2 = (0.5*d/Aoc); % 0.5 PgC/year uncertainty converted to ppm*yr^-1*m^-2
+s1 = 0.0658; % mean of stabilized std of 1,000 instances of noise timeseries
 c = s2/s1;
-%noiseTimeseries = noiseTimeseries.*(s2/s1);
 
 noisyFas(:,1) = fas(:,1);
-noisyFas(:,2) = fas(:,2)+(noiseTimeseries(2:end));%(c*noiseTimeseries(2:end));
+noisyFas(:,2) = fas(:,2)+(c*noiseTimeseries);
 
 
 end

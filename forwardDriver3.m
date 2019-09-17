@@ -18,7 +18,7 @@ tic
 vary = 'N';
 scheme = 'aa';
 
-nEnsemble = 1000; % only used for vary = 'N' case
+nEnsemble = 500; % only used for vary = 'N' case
 nLU = 3; % three LU cases: Houghton, BLUE, constant
 
 if strcmp(vary,'A')     numCases = 2;    
@@ -68,7 +68,7 @@ for j = 1:numCases
     
 % get the indices for variables being looped/held fixed    
 [LU_i,opt_i,Tdata_i,tempDep_i,varSST_i,timeConst_i,filt_i,...
-    fert_i,oceanUp_i,photResp_i,zeroBio_i,~,BLUE_i,ensemble_i,...
+    fert_i,oceanUp_i,photResp_i,zeroBio_i,Tstep_i,BLUE_i,ensemble_i,...
     rowLabels] = getLoopingVar(vary,j,scheme);
 
 
