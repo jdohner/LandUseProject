@@ -120,7 +120,7 @@ end
 % option to generate noisy FF record
 if strcmp(vary,'N')
     [ff] = getNoisyFF(Boden2016);
-    %[LU] = getNoisyLU(LU);
+    [LU] = getNoisyLU(LU);
 else 
     ff = Boden2016;
 end

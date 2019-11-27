@@ -83,7 +83,7 @@ save('runInfo','start_year','end_year','ts','year','fert_i',...
 
 
 [dtdelpCO2a_obs,dpCO2a_obs,~,~,CO2a_obs,CO2a_obs_archive] = ...
-getObservedCO2_2wNoise(ts,start_year,start_yearOcean,end_year,vary);
+getObservedCO2_2wNoise(ts,start_year,start_yearOcean,end_year,vary,j,numCases);
 
 [temp_anom] = tempRecord3(Tdata_i,start_year,end_year,dt);
 %[temp_anom] = tempRecord4(Tstep_i,start_year,end_year,dt); % from looking
@@ -91,8 +91,8 @@ getObservedCO2_2wNoise(ts,start_year,start_yearOcean,end_year,vary);
 
 % calculate ocean sink from ff
 if strcmp(vary,'N')
-    [ff, LU] = getSourceSink6_wNoise(LU_i,BLUE_i,vary); % for updated FF & LU
-    [fas,sstAnom] = jooshildascale_wNoise(start_year,start_yearOcean,end_year,varSST_i,Tconst,vary);
+    [ff, LU] = getSourceSink6_wNoise(LU_i,BLUE_i,vary,j,numCases); % for updated FF & LU
+    [fas,sstAnom] = jooshildascale_wNoise(start_year,start_yearOcean,end_year,varSST_i,Tconst,vary,j,numCases);
 else
     [ff, LU] = getSourceSink6(LU_i,BLUE_i,vary); % for updated FF & LU
     [fas,sstAnom] = jooshildascale(start_year,end_year,varSST_i,Tconst);

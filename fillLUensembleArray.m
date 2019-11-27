@@ -6,7 +6,7 @@
 %
 % fills cell array with relevant values for LU ensemble runs
 
-function [LUensembleArray] = fillLUensembleArray(nLU,nEnsemble,scheme)
+function [LUensembleArray] = fillLUensembleArray(nLU)
 
 LUensembleArray = cell(nLU+1,5);
 LUensembleArray(1,:) = {'LU case','outputArray','errorArray',...
@@ -31,103 +31,32 @@ LUensembleArray(1,:) = {'LU case','outputArray','errorArray',...
 %         label = 'CABLE';
     %end
 
-for i=1:nLU
+for i=1:4
     if i == 1
-        if nEnsemble == 10
-            if strcmp(scheme,'aa')
-                load H&N_ensemble_10aa;
-            elseif strcmp(scheme,'bb')
-                load H&N_ensemble_10bb;
-            end
-        elseif nEnsemble == 500
-            if strcmp(scheme,'aa')
-                load H&N_ensemble_500aa;
-            elseif strcmp(scheme,'bb')
-                load H&N_ensemble_10aa;
-            end
-        elseif nEnsemble == 1000
-            if strcmp(scheme,'aa')
-                load H&N_ensemble_1000aa;
-            elseif strcmp(scheme,'bb')
-                load H&N_ensemble_1000bb;
-            end
-        end
-        label = 'H&N';
-        
+        load Houghton_ensemble_10;
+        load ('Houghton_errors_10');
+        label = 'Houghton';
     elseif i == 2
-        if nEnsemble == 10
-            if strcmp(scheme,'aa')
-                load BLUE_ensemble_10aa;
-            elseif strcmp(scheme,'bb')
-                load BLUE_ensemble_10bb;
-            end
-        elseif nEnsemble == 500
-            if strcmp(scheme,'aa')
-                load BLUE_ensemble_500aa;
-            elseif strcmp(scheme,'bb')
-                load BLUE_ensemble_10aa;
-            end
-        elseif nEnsemble == 1000
-            if strcmp(scheme,'aa')
-                load BLUE_ensemble_1000aa;
-            elseif strcmp(scheme,'bb')
-                load BLUE_ensemble_1000bb;
-            end
-        end
+        load BLUE_ensemble_10;
+        load BLUE_errors_10;
         label = 'BLUE';
-        
     elseif i == 3
-        if nEnsemble == 10
-            if strcmp(scheme,'aa')
-                load Constant_ensemble_10aa;
-            elseif strcmp(scheme,'bb')
-                load Constant_ensemble_10bb;
-            end
-        elseif nEnsemble == 500
-            if strcmp(scheme,'aa')
-                load Constant_ensemble_500aa;
-            elseif strcmp(scheme,'bb')
-                load Constant_ensemble_10aa;
-            end
-        elseif nEnsemble == 1000
-            if strcmp(scheme,'aa')
-                load Constant_ensemble_1000aa;
-            elseif strcmp(scheme,'bb')
-                load Constant_ensemble_1000bb;
-            end
-        end
+        load Constant_ensemble_10;
+        load Constant_errors_10;
         label = 'constant';
     else
-        if nEnsemble == 10
-            if strcmp(scheme,'aa')
-                load CABLE_ensemble_10aa;
-            elseif strcmp(scheme,'bb')
-                load CABLE_ensemble_10bb;
-            end
-        elseif nEnsemble == 500
-            if strcmp(scheme,'aa')
-                load CABLE_ensemble_500aa;
-            elseif strcmp(scheme,'bb')
-                load CABLE_ensemble_10aa;
-            end
-        elseif nEnsemble == 1000
-            if strcmp(scheme,'aa')
-                load CABLE_ensemble_1000aa;
-            elseif strcmp(scheme,'bb')
-                load CABLE_ensemble_1000bb;
-            end
-        end
+        load CABLE_ensemble_10;
+        load CABLE_errors_10;
         label = 'CABLE';
     end
-
     
-
     LUensembleArray(i+1,1) = {label};
     LUensembleArray(i+1,2) = {outputArray};
     LUensembleArray(i+1,3) = {errorArray};
     LUensembleArray(i+1,4) = {numCases};
     LUensembleArray(i+1,5) = {year};
 
+    
 end
 
 end

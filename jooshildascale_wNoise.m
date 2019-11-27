@@ -10,7 +10,7 @@
 
 
 
-function [fas,sstAnom] = jooshildascale_wNoise(start_year,start_yearOcean,end_year,varSST_i,Tconst,vary)
+function [fas,sstAnom] = jooshildascale_wNoise(start_year,start_yearOcean,end_year,~,~,varSST_i,Tconst,vary)
 
 ts = 12; % number of data points/year
 %start_yearOcean = 1800;

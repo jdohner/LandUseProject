@@ -2,7 +2,7 @@
 
 
 
-function [fas,sstAnom] = jooshildascale(start_year,end_year,varSST_i,Tconst);
+function [fas,sstAnom] = jooshildascale(start_year,end_year,~,~,varSST_i,Tconst);
 
 ts = 12; % number of data points/year
 start_yearOcean = 1800;
