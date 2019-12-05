@@ -248,7 +248,7 @@ function [LU_i,opt_i,Tdata_i,tempDep_i,varSST_i,timeConst_i,filt_i,...
         rowLabels = {'H&N 2017','B','C','D','E','F','G','H','I'};
         
     elseif strcmp(vary,'N') % loop to generate ensemble members
-        LU_i = 2;
+        LU_i = 1;
         if strcmp(scheme,'aa')
             opt_i = 1;
         elseif strcmp(scheme,'bb')

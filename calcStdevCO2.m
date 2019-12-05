@@ -7,7 +7,7 @@
 % script to calculate standard deviation of dec-jan average across ensemble
 % to normalize the error timeseries for getNoisyCO2
 
-function [noisyCO2a_obs] = getNoisyCO2a(CO2a_obs)
+
 
 addpath(genpath(...
     '/Users/juliadohner/Documents/MATLAB/LandUseProject/necessary_data'));

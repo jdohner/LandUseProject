@@ -56,28 +56,25 @@ Boden2016(:,2) = FFinterp*d;
     Houghton2003 = [LUdata(startYr:endYr,1),LUdata(startYr:endYr,2)*d];
     clear LUdata startYr endYr;
         
-% % constant land use case
-%     % complicated because houghton above is interpolated to start and
-%     % end years dictated by driver code, but want a linear
-%     % interpolation between the first and last datapoints in the
-%     % original houghton record
-%     LUdata = csvread('HoughLU_perscomm_2016.csv'); 
-%     const = [LUdata(1,1) LUdata(1,2)*d*d1 ; LUdata(end,1) LUdata(end,2)*d*d1];
-%     constYr = (const(1,1):1/ts:const(2,1))';
-%     LUconst_2016mo(:,1) = constYr;
-%     LUconst_2016mo(:,2) = (interp1(const(:,1),const(:,2),constYr));
-%     i = find(LUconst_2016mo(:,1) == 1920);
-% 
-%     LUconst_2016mo(i:end,2) = LUconst_2016mo(i,2);
-% 
-%     i2 = find(LUconst_2016mo == year(1));
-%     j2 = find(LUconst_2016mo == year(end));
-%     ConstantLU = LUconst_2016mo(i2:j2,:);
-%     
-%     clear LUdata i i2 j2;
-
 % constant land use case
+    % complicated because houghton above is interpolated to start and
+    % end years dictated by driver code, but want a linear
+    % interpolation between the first and last datapoints in the
+    % original houghton record
+    LUdata = csvread('HoughLU_perscomm_2016.csv'); 
+    const = [LUdata(1,1) LUdata(1,2)*d*d1 ; LUdata(end,1) LUdata(end,2)*d*d1];
+    constYr = (const(1,1):1/ts:const(2,1))';
+    LUconst_2016mo(:,1) = constYr;
+    LUconst_2016mo(:,2) = (interp1(const(:,1),const(:,2),constYr));
+    i = find(LUconst_2016mo(:,1) == 1920);
 
+    LUconst_2016mo(i:end,2) = LUconst_2016mo(i,2);
+
+    i2 = find(LUconst_2016mo == year(1));
+    j2 = find(LUconst_2016mo == year(end));
+    ConstantLU = LUconst_2016mo(i2:j2,:);
+    
+    clear LUdata i i2 j2;
 
 % constant*2 land use case
     LUdata = csvread('HoughLU_perscomm_2016.csv'); 
