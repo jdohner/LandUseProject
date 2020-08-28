@@ -3,7 +3,7 @@
 % creating to match LR fitted params for 2009+7/12
 %
 % march 21, 2018
-% author: julia dohner, with code adapted from lauren rafelski
+author: julia dohner, with code adapted from lauren rafelski
 
 % testing/starting out ensembles_simplified branch
 
